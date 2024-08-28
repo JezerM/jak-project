@@ -3,6 +3,7 @@
  * Setup and launcher for the runtime.
  */
 
+#include <pthread.h>
 #include "common/common_types.h"
 #ifdef OS_POSIX
 #include <unistd.h>
@@ -163,14 +164,18 @@ void ee_runner(SystemThreadInterface& iface) {
         (u8*)mmap((void*)0x10000000, EE_MAIN_MEM_SIZE, PROT_EXEC | PROT_READ | PROT_WRITE,
 #ifdef __APPLE__
                   // has no map_populate
-                  MAP_ANONYMOUS | MAP_32BIT | MAP_PRIVATE, 0, 0);
+                  MAP_ANONYMOUS | MAP_32BIT | MAP_PRIVATE | MAP_JIT, 0, 0);
 #else
                   MAP_ANONYMOUS | MAP_32BIT | MAP_PRIVATE | MAP_POPULATE, 0, 0);
 #endif
   } else {
     g_ee_main_mem =
         (u8*)mmap((void*)EE_MAIN_MEM_MAP, EE_MAIN_MEM_SIZE, PROT_EXEC | PROT_READ | PROT_WRITE,
+#ifdef __APPLE__
+                  MAP_ANONYMOUS | MAP_PRIVATE | MAP_JIT, 0, 0);
+#else
                   MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+#endif
   }
 
   if (g_ee_main_mem == (u8*)(-1)) {
@@ -187,7 +192,11 @@ void ee_runner(SystemThreadInterface& iface) {
   iface.initialization_complete();
 
   lg::debug("[EE] Run!");
+#ifdef __APPLE__
+  pthread_jit_write_protect_np(false);  // Switch to write mode in this thread
+#endif
   memset((void*)g_ee_main_mem, 0, EE_MAIN_MEM_SIZE);
+  lg::debug("[EE] MEMSET!");
 
   // prevent access to the first 512 kB of memory.
   // On the PS2 this is the kernel and can't be accessed either.

@@ -806,6 +806,10 @@ u32 ISOThread() {
       isofs->poll_drive();
     }
 
+#ifdef __APPLE__
+    pthread_jit_write_protect_np(false);  // Switch to write mode in this thread
+#endif
+
     // Deal with completed reads.  NOTE - this can close files and terminate return commands!
     ProcessMessageData();
 
