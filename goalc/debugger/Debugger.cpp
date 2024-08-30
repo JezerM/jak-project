@@ -402,7 +402,7 @@ Disassembly Debugger::disassemble_at_rip(const InstructionPointerInfo& info) {
 
       std::vector<u8> function_mem;
       function_mem.resize(func_info->instructions.back().offset +
-                          func_info->instructions.back().instruction.length());
+                          func_info->instructions.back().instruction->length());
       read_memory(function_mem.data(), function_mem.size(),
                   info.map_entry->start_addr + func_info->offset_in_seg);
 

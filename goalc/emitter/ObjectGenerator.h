@@ -72,8 +72,8 @@ class ObjectGenerator {
   IR_Record add_ir(const FunctionRecord& func);
   IR_Record get_future_ir_record(const FunctionRecord& func, int ir_id);
   IR_Record get_future_ir_record_in_same_func(const IR_Record& irec, int ir_id);
-  InstructionRecord add_instr(Instruction inst, IR_Record ir);
-  void add_instr_no_ir(FunctionRecord func, Instruction inst, InstructionInfo::Kind kind);
+  InstructionRecord add_instr(Instruction* inst, IR_Record ir);
+  void add_instr_no_ir(FunctionRecord func, Instruction* inst, InstructionInfo::Kind kind);
   StaticRecord add_static_to_seg(int seg, int min_align = 16);
   std::vector<u8>& get_static_data(const StaticRecord& rec);
   void link_instruction_jump(InstructionRecord jump_instr, IR_Record destination);
@@ -133,7 +133,7 @@ class ObjectGenerator {
   }
 
   struct FunctionData {
-    std::vector<Instruction> instructions;
+    std::vector<Instruction*> instructions;
     std::vector<int> ir_to_instruction;
     std::vector<int> instruction_to_byte_in_data;
     int min_align = 16;

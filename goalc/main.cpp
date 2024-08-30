@@ -6,6 +6,7 @@
 #include "common/repl/repl_wrapper.h"
 #include "common/util/FileUtil.h"
 #include "common/util/diff.h"
+#include "common/util/os.h"
 #include "common/util/string_util.h"
 #include "common/util/term_util.h"
 #include "common/util/unicode_util.h"
@@ -35,6 +36,7 @@ int main(int argc, char** argv) {
   std::string cmd = "";
   std::string username = "#f";
   std::string game = "jak1";
+  std::string target_arch = "";
   int nrepl_port = -1;
   fs::path project_path_override;
 
@@ -44,6 +46,8 @@ int main(int argc, char** argv) {
   app.add_option("-u,--user", username,
                  "Specify the username to use for your user profile in 'goal_src/user/'");
   app.add_option("-p,--port", nrepl_port, "Specify the nREPL port.  Defaults to 8181");
+  app.add_option("--target-arch", target_arch,
+                 "Target architecture to compile for ('x86_64' or 'arm64')");
   app.add_flag("--user-auto", auto_find_user,
                "Attempt to automatically deduce the user, overrides '--user'");
   app.add_option("-g,--game", game, "The game name: 'jak1' or 'jak2'");
@@ -74,6 +78,25 @@ int main(int argc, char** argv) {
     lg::error("Failed to setup logging: {}", e.what());
     return 1;
   }
+
+#if defined CROSS_ARCH_COMPILER
+  if (target_arch == "x86_64") {
+    lg::info("Goal will be compiled to x86_64");
+    get_cpu_info().target_arch = cpu_arch_x86_64;
+  } else if (target_arch == "arm64") {
+    lg::info("Goal will be compiled to arm64");
+    get_cpu_info().target_arch = cpu_arch_arm64;
+  } else if (target_arch != "") {
+    lg::info("Target \"{}\" not recognized. Using CPU architecture.", target_arch.c_str());
+  }
+#else
+  if (target_arch != "") {
+    lg::info("Cross compilation for Goal is not enabled. Target \"{}\" will be ignored.",
+             target_arch.c_str());
+  }
+#endif
+
+  lg::info("OpenGOAL Compiler {}.{}", versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
 
   // Figure out the username
   if (auto_find_user) {

@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
   bool show_version = false;
   std::string game_name = "jak1";
   bool verbose_logging = false;
+  std::string target_arch = "";
   bool disable_avx2 = false;
   bool disable_display = false;
   bool enable_profiling = false;
@@ -113,6 +114,8 @@ int main(int argc, char** argv) {
       "--port", port_number,
       "Specify port number for listener connection (default is 8112 for Jak 1 and 8113 for Jak 2)");
   app.add_flag("--no-avx2", disable_avx2, "Disable AVX2 for testing");
+  app.add_option("--target-arch", target_arch,
+                 "Target architecture to compile for ('x86_64' or 'arm64')");
   app.add_flag("--no-display", disable_display, "Disable video display");
   app.add_flag("--profile", enable_profiling, "Enables profiling immediately from startup");
   app.add_flag("--portable", enable_portable,
@@ -184,6 +187,23 @@ int main(int argc, char** argv) {
     dialogs::create_error_message_dialog(
         "Unmet Requirements", "Your CPU does not support AVX, which is required for OpenGOAL.");
     return -1;
+  }
+#endif
+
+#if defined CROSS_ARCH_COMPILER
+  if (target_arch == "x86_64") {
+    lg::info("Goal will be compiled to x86_64");
+    get_cpu_info().target_arch = cpu_arch_x86_64;
+  } else if (target_arch == "arm64") {
+    lg::info("Goal will be compiled to arm64");
+    get_cpu_info().target_arch = cpu_arch_arm64;
+  } else if (target_arch != "") {
+    lg::info("Target \"{}\" not recognized. Using CPU architecture.", target_arch.c_str());
+  }
+#else
+  if (target_arch != "") {
+    lg::info("Cross compilation for Goal is not enabled. Target \"{}\" will be ignored.",
+             target_arch.c_str());
   }
 #endif
 

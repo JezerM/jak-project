@@ -16,6 +16,7 @@
 #include "ObjectGenerator.h"
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/type_system/TypeSystem.h"
 #include "common/versions/versions.h"
 
@@ -60,7 +61,7 @@ ObjectFileData ObjectGenerator::generate_data_v3(const TypeSystem* ts) {
       for (size_t instr_idx = 0; instr_idx < function.instructions.size(); instr_idx++) {
         const auto& instr = function.instructions[instr_idx];
         u8 temp[128];
-        auto count = instr.emit(temp);
+        auto count = instr->emit(temp);
         ASSERT(count < 128);
         function.instruction_to_byte_in_data.push_back(data.size());
         function.debug->instructions.at(instr_idx).offset =
@@ -108,9 +109,13 @@ ObjectFileData ObjectGenerator::generate_data_v3(const TypeSystem* ts) {
   // step 4.5, collect final result of code/object generation for compiler debugging disassembly
   for (int seg = 0; seg < N_SEG; seg++) {
     for (auto& function : m_function_data_by_seg.at(seg)) {
-      auto start = m_data_by_seg.at(seg).begin() + function.instruction_to_byte_in_data.at(0);
-      auto end = start + function.debug->length;
-      function.debug->generated_code = {start, end};
+      try {
+        auto start = m_data_by_seg.at(seg).begin() + function.instruction_to_byte_in_data.at(0);
+        auto end = start + function.debug->length;
+        function.debug->generated_code = {start, end};
+      } catch (std::out_of_range e) {
+        lg::error("Out of range vector: {}", e.what());
+      }
     }
   }
 
@@ -182,7 +187,7 @@ IR_Record ObjectGenerator::get_future_ir_record_in_same_func(const IR_Record& ir
 /*!
  * Add a new Instruction for the given IR instruction.
  */
-InstructionRecord ObjectGenerator::add_instr(Instruction inst, IR_Record ir) {
+InstructionRecord ObjectGenerator::add_instr(Instruction* inst, IR_Record ir) {
   // only this second condition is an actual error.
   ASSERT(ir.ir_id ==
          int(m_function_data_by_seg.at(ir.seg).at(ir.func_id).ir_to_instruction.size()) - 1);
@@ -200,7 +205,7 @@ InstructionRecord ObjectGenerator::add_instr(Instruction inst, IR_Record ir) {
 }
 
 void ObjectGenerator::add_instr_no_ir(FunctionRecord func,
-                                      Instruction inst,
+                                      Instruction* inst,
                                       InstructionInfo::Kind kind) {
   auto info = InstructionInfo(inst, kind);
   m_function_data_by_seg.at(func.seg).at(func.func_id).instructions.emplace_back(inst);

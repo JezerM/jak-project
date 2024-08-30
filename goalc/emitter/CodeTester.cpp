@@ -7,6 +7,8 @@
  */
 
 #include "common/common_types.h"
+
+#include "goalc/emitter/Instruction.h"
 #ifdef OS_POSIX
 #include <sys/mman.h>
 #elif _WIN32
@@ -50,8 +52,8 @@ std::string CodeTester::dump_to_hex_string(bool nospace) {
 /*!
  * Add an instruction to the buffer.
  */
-void CodeTester::emit(const emitter::Instruction& instr) {
-  code_buffer_size += instr.emit(code_buffer + code_buffer_size);
+void CodeTester::emit(const emitter::Instruction* instr) {
+  code_buffer_size += instr->emit(code_buffer + code_buffer_size);
   ASSERT(code_buffer_size <= code_buffer_capacity);
 }
 

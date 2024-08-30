@@ -31,7 +31,7 @@ class CodeTester {
   void emit_push_all_xmms();
   void emit_pop_all_xmms();
   void emit_return();
-  void emit(const Instruction& instr);
+  void emit(const Instruction* instr);
   u64 execute();
   u64 execute(u64 in0, u64 in1, u64 in2, u64 in3);
 

@@ -8,7 +8,7 @@
 #include "common/util/Assert.h"
 
 namespace emitter {
-namespace IGen {
+namespace IGenArm64 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   MOVES
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -809,5 +809,5 @@ extern Instruction* vpshuflw(Register dst, Register src, u8 imm);
 extern Instruction* vpshufhw(Register dst, Register src, u8 imm);
 
 extern Instruction* vpackuswb(Register dst, Register src0, Register src1);
-};  // namespace IGen
+};  // namespace IGenArm64
 }  // namespace emitter

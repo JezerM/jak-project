@@ -24,6 +24,10 @@ else()
     set(BUILD_STATIC_LIBS OFF)
 endif()
 
+# Potentially statically build the project
+option(CROSS_ARCH_COMPILER "Allow compiling Goal for multiple architectures" OFF)
+message(STATUS "Cross architecture compiler? ${CROSS_ARCH_COMPILER}")
+
 # For clangd
 if (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
     configure_file(
@@ -272,6 +276,11 @@ add_subdirectory(goalc)
 
 # build standalone tools
 add_subdirectory(tools)
+
+if(CROSS_ARCH_COMPILER)
+  target_compile_definitions(gk PUBLIC CROSS_ARCH_COMPILER)
+  target_compile_definitions(compiler PUBLIC CROSS_ARCH_COMPILER)
+endif()
 
 # build the gtest libraries
 if(WIN32)
