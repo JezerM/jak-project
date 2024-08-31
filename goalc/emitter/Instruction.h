@@ -19,15 +19,20 @@ struct InstructionImpl {
 
 struct InstructionARM64 : public InstructionImpl {
   // The ARM instruction stream is a sequence of word-aligned words. Each ARM instruction is a
-  // single 32-bit word in that stream. The encoding of an ARM instruction is:
-  // TODO
-  // https://iitd-plos.github.io/col718/ref/arm-instructionset.pdf
+  // single 32-bit word in that stream.
+  // This instruction stream is encoded as big-endian for simplification purposes. On emit, it will
+  // return little-endian.
+  //
   u32 instruction_encoding;
 
   InstructionARM64(u32 encoding) : instruction_encoding(encoding) {}
 
   uint8_t emit(uint8_t* buffer) const override {
-    memcpy(buffer, &instruction_encoding, 4);
+    u32 little = ((instruction_encoding >> 24) & 0xff) |       // move byte 3 to byte 0
+                 ((instruction_encoding << 8) & 0xff0000) |    // move byte 1 to byte 2
+                 ((instruction_encoding >> 8) & 0xff00) |      // move byte 2 to byte 1
+                 ((instruction_encoding << 24) & 0xff000000);  // byte 0 to byte 3
+    memcpy(buffer, &little, 4);
     return 4;
   }
 
@@ -1038,11 +1043,6 @@ struct InstructionX86 : public InstructionImpl {
   }
 };
 
-#ifdef __aarch64__
-// using Instruction = std::variant<InstructionX86, InstructionARM64>;
 using Instruction = InstructionImpl;
-#else
-using Instruction = InstructionX86;
-#endif
 
 }  // namespace emitter

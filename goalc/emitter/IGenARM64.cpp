@@ -453,7 +453,15 @@ Instruction* static_store(Register value, s64 offset, int size) {
 }
 
 Instruction* static_addr(Register dst, s64 offset) {
-  return new InstructionARM64(0b0);
+  // 01011 000 0000000000001000000 00001
+  // 01011 000 0000000000000000000 00111
+  ASSERT(dst.is_gpr());
+  ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
+
+  u32 instruction = 0b01011 << 27;
+  instruction |= offset << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* static_load_xmm32(Register xmm_dest, s64 offset) {
@@ -480,22 +488,34 @@ Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register valu
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Instruction* ret() {
-  // pg. 1850
-  return new InstructionARM64(0b11010110010111110000001111000000);
+  return new InstructionARM64(0xC0035FD6);
 }
 
 Instruction* push_gpr64(Register reg) {
   // pg. 1998
+  // 11111 000000 111110000 11 11111 00001
+  // 11111 000000 111110000 11 11111 00011
   ASSERT(reg.is_gpr());
-  // TODO - is hw_id needed?
-  return new InstructionARM64(0b11111000001);  // TODO - finish
+  u32 instruction = 0b11111 << 27;
+  instruction |= 0b11111 << 16;
+  instruction |= 0b11 << 10;
+  instruction |= 31 << 5;
+  instruction |= reg.id();
+  return new InstructionARM64(instruction);  // TODO - finish
 }
 
 Instruction* pop_gpr64(Register reg) {
   // pg. 1998
+  // 11111 000010 111110000 11 11111 00001
+  // 11111 000010 111110000 11 11111 00011
   ASSERT(reg.is_gpr());
-  // TODO - is hw_id needed?
-  return new InstructionARM64(0b11111000011);  // TODO - finish
+  u32 instruction = 0b11111 << 27;
+  instruction |= 0b1 << 22;
+  instruction |= 0b11111 << 16;
+  instruction |= 0b11 << 10;
+  instruction |= 31 << 5;
+  instruction |= reg.id();
+  return new InstructionARM64(instruction);  // TODO - finish
 }
 
 Instruction* call_r64(Register reg_) {

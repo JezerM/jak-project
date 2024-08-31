@@ -1,10 +1,6 @@
 
 #include "IGen.h"
 
-#include <any>
-#include <functional>
-#include <memory>
-
 #include "common/util/os.h"
 
 #include "IGenArm64.h"
@@ -17,15 +13,12 @@
 namespace emitter {
 template <typename T>
 T igen_cross(T x86, T arm64) {
-  // std::variant<X, A> value;
 #if defined CROSS_ARCH_COMPILER
   auto target_arch = get_cpu_info().target_arch;
   switch (target_arch) {
     case cpu_arch_arm64:
-      // value = arm64;
       return arm64;
     case cpu_arch_x86_64:
-      // value = x86;
       return x86;
     default:
       break;
