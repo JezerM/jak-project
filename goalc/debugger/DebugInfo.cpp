@@ -10,9 +10,12 @@ std::string FunctionDebugInfo::disassemble_debug_info(bool* had_failure,
                                                       const goos::Reader* reader,
                                                       bool omit_ir) {
   std::string result = fmt::format("[{}]\n", name);
-  result += disassemble_x86_function(generated_code.data(), generated_code.size(), reader, 0x10000,
-                                     0x10000, instructions, code_sources, ir_strings, had_failure,
-                                     true, omit_ir);
+  auto func = disassemble_x86_function;
+  if (get_cpu_info().target_arch == cpu_arch_arm64) {
+    func = disassemble_arm64_function;
+  }
+  result += func(generated_code.data(), generated_code.size(), reader, 0x10000, 0x10000,
+                 instructions, code_sources, ir_strings, had_failure, true, omit_ir);
 
   return result;
 }

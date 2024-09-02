@@ -316,10 +316,17 @@ void IR_GetSymbolValue::do_codegen(emitter::ObjectGenerator* gen,
         irec);
     gen->link_instruction_symbol_mem(instr, m_src->name());
   } else {
+    // TODO: Must use "add" to displace register with offset in arm64, maybe?
+    // However, LINK_SYM_NO_OFFSET_FLAG is too big...
+
+    // auto add_instr = gen->add_instr(
+    //     IGen::add_gpr64_imm(gRegInfo.get_offset_reg(), LINK_SYM_NO_OFFSET_FLAG), irec);
+
     auto instr = gen->add_instr(
         IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s32(
             dst_reg, gRegInfo.get_st_reg(), gRegInfo.get_offset_reg(), LINK_SYM_NO_OFFSET_FLAG),
         irec);
+    // gen->link_instruction_symbol_mem(add_instr, m_src->name());
     gen->link_instruction_symbol_mem(instr, m_src->name());
   }
 }

@@ -44,3 +44,19 @@ std::string disassemble_x86_function(
     bool* had_failure,
     bool print_whole_function,
     bool omit_ir);
+
+std::string disassemble_arm64(u8* data, int len, u64 base_addr);
+std::string disassemble_arm64(u8* data, int len, u64 base_addr, u64 highlight_addr);
+
+std::string disassemble_arm64_function(
+    u8* data,
+    int len,
+    const goos::Reader* reader,
+    u64 base_addr,
+    u64 highlight_addr,
+    const std::vector<InstructionInfo>& x86_instructions,
+    const std::vector<std::shared_ptr<goos::HeapObject>>& code_sources,
+    const std::vector<std::string>& ir_strings,
+    bool* had_failure,
+    bool print_whole_function,
+    bool omit_ir);

@@ -12,6 +12,7 @@
 #include "common/util/Assert.h"
 #include "common/util/FileUtil.h"
 #include "common/util/Timer.h"
+#include "common/util/os.h"
 
 #include "goalc/debugger/disassemble.h"
 #include "goalc/emitter/Register.h"
@@ -383,13 +384,18 @@ Disassembly Debugger::disassemble_at_rip(const InstructionPointerInfo& info) {
       read_memory(mem.data(), INSTR_DUMP_SIZE_REV + INSTR_DUMP_SIZE_FWD,
                   info.real_rip - m_debug_context.base - INSTR_DUMP_SIZE_REV);
       result.failed = true;
+
+      std::string (*func)(u8*, int, u64, u64) = disassemble_x86;
+      if (get_cpu_info().target_arch == cpu_arch_arm64) {
+        func = disassemble_arm64;
+      }
       if (info.knows_object) {
         result.text += fmt::format("In segment {} of obj {}, offset 0x{:x}\n", info.object_seg,
                                    info.object_name, info.object_offset);
-        result.text += disassemble_x86(mem.data(), mem.size(), rip - INSTR_DUMP_SIZE_REV, rip);
+        result.text += func(mem.data(), mem.size(), rip - INSTR_DUMP_SIZE_REV, rip);
       } else {
         result.text += "In unknown code\n";
-        result.text += disassemble_x86(mem.data(), mem.size(), rip - INSTR_DUMP_SIZE_REV, rip);
+        result.text += func(mem.data(), mem.size(), rip - INSTR_DUMP_SIZE_REV, rip);
       }
     } else {
       // we have enough info to do a fancy disassembly!
@@ -422,11 +428,15 @@ Disassembly Debugger::disassemble_at_rip(const InstructionPointerInfo& info) {
           "In function {} in segment {} of obj {}, offset_obj 0x{:x}, offset_func 0x{:x}\n", name,
           info.map_entry->seg_id, info.map_entry->obj_name, obj_offset, info.function_offset);
 
-      result.text += disassemble_x86_function(
-          function_mem.data(), function_mem.size(), m_reader,
-          m_debug_context.base + info.map_entry->start_addr + func_info->offset_in_seg,
-          rip + rip_offset, func_info->instructions, func_info->code_sources, func_info->ir_strings,
-          &result.failed, false, false);
+      auto func = disassemble_x86_function;
+      if (get_cpu_info().target_arch == cpu_arch_arm64) {
+        func = disassemble_arm64_function;
+      }
+      result.text +=
+          func(function_mem.data(), function_mem.size(), m_reader,
+               m_debug_context.base + info.map_entry->start_addr + func_info->offset_in_seg,
+               rip + rip_offset, func_info->instructions, func_info->code_sources,
+               func_info->ir_strings, &result.failed, false, false);
     }
   } else {
     result.failed = true;
@@ -1168,7 +1178,11 @@ std::string Debugger::disassemble_x86_with_symbols(int len, u64 base_addr) const
 
   read_memory(mem.data(), len, base_addr);
 
-  auto result = disassemble_x86(mem.data(), mem.size(), get_x86_base_addr() + base_addr);
+  std::string (*func)(u8*, int, u64) = disassemble_x86;
+  if (get_cpu_info().target_arch == cpu_arch_arm64) {
+    func = disassemble_arm64;
+  }
+  auto result = func(mem.data(), mem.size(), get_x86_base_addr() + base_addr);
 
   // find symbol values!
   const std::string sym_val_string("[r15+r14*1");
