@@ -6,7 +6,7 @@ namespace emitter {
 RegisterInfo RegisterInfo::make_register_info() {
   RegisterInfo info;
 
-#if defined __x86_64__
+  // #if defined __x86_64__
   info.m_info[RAX] = {false, false, "rax"};  // return, temp
   info.m_info[RCX] = {false, false, "rcx"};  // gpr arg 3, temp
   info.m_info[RDX] = {false, false, "rdx"};  // gpr arg 2, temp
@@ -42,42 +42,42 @@ RegisterInfo RegisterInfo::make_register_info() {
   info.m_info[XMM14] = {true, false, "xmm14"};
   info.m_info[XMM15] = {true, false, "xmm15"};
 
-#elif defined __aarch64__
-  info.m_info[X0] = {false, false, "x0"};  // return, temp
-  info.m_info[X1] = {false, false, "x1"};  // gpr arg 3, temp
-  info.m_info[X2] = {false, false, "x2"};  // gpr arg 2, temp
-  info.m_info[X3] = {true, false, "x3"};   // saved
-  info.m_info[X4] = {false, true, "x4"};   // stack pointer
-  info.m_info[X5] = {true, false, "x5"};   // saved
-  info.m_info[X6] = {false, false, "x6"};  // gpr arg 1, temp
-  info.m_info[X7] = {false, false, "x7"};  // gpr arg 0, temp
+  /* #elif defined __aarch64__
+    info.m_info[X0] = {false, false, "x0"};  // return, temp
+    info.m_info[X1] = {false, false, "x1"};  // gpr arg 3, temp
+    info.m_info[X2] = {false, false, "x2"};  // gpr arg 2, temp
+    info.m_info[X3] = {true, false, "x3"};   // saved
+    info.m_info[X4] = {false, true, "x4"};   // stack pointer
+    info.m_info[X5] = {true, false, "x5"};   // saved
+    info.m_info[X6] = {false, false, "x6"};  // gpr arg 1, temp
+    info.m_info[X7] = {false, false, "x7"};  // gpr arg 0, temp
 
-  info.m_info[X8] = {false, false, "x8"};   // gpr arg 4, temp
-  info.m_info[X9] = {false, false, "x9"};   // gpr arg 5, temp
-  info.m_info[X10] = {true, false, "x10"};  // gpr arg 6, saved
-  info.m_info[X11] = {true, false, "x11"};  // gpr arg 7, saved
-  info.m_info[X12] = {true, false, "x12"};  // saved
-  info.m_info[X13] = {false, true, "x13"};  // pp
-  info.m_info[X14] = {false, true, "x14"};  // st
-  info.m_info[X15] = {false, true, "x15"};  // offset.
+    info.m_info[X8] = {false, false, "x8"};   // gpr arg 4, temp
+    info.m_info[X9] = {false, false, "x9"};   // gpr arg 5, temp
+    info.m_info[X10] = {true, false, "x10"};  // gpr arg 6, saved
+    info.m_info[X11] = {true, false, "x11"};  // gpr arg 7, saved
+    info.m_info[X12] = {true, false, "x12"};  // saved
+    info.m_info[X13] = {false, true, "x13"};  // pp
+    info.m_info[X14] = {false, true, "x14"};  // st
+    info.m_info[X15] = {false, true, "x15"};  // offset.
 
-  info.m_info[XMM0] = {false, false, "xmm0"};
-  info.m_info[XMM1] = {false, false, "xmm1"};
-  info.m_info[XMM2] = {false, false, "xmm2"};
-  info.m_info[XMM3] = {false, false, "xmm3"};
-  info.m_info[XMM4] = {false, false, "xmm4"};
-  info.m_info[XMM5] = {false, false, "xmm5"};
-  info.m_info[XMM6] = {false, false, "xmm6"};
-  info.m_info[XMM7] = {false, false, "xmm7"};
-  info.m_info[XMM8] = {true, false, "xmm8"};
-  info.m_info[XMM9] = {true, false, "xmm9"};
-  info.m_info[XMM10] = {true, false, "xmm10"};
-  info.m_info[XMM11] = {true, false, "xmm11"};
-  info.m_info[XMM12] = {true, false, "xmm12"};
-  info.m_info[XMM13] = {true, false, "xmm13"};
-  info.m_info[XMM14] = {true, false, "xmm14"};
-  info.m_info[XMM15] = {true, false, "xmm15"};
-#endif
+    info.m_info[XMM0] = {false, false, "xmm0"};
+    info.m_info[XMM1] = {false, false, "xmm1"};
+    info.m_info[XMM2] = {false, false, "xmm2"};
+    info.m_info[XMM3] = {false, false, "xmm3"};
+    info.m_info[XMM4] = {false, false, "xmm4"};
+    info.m_info[XMM5] = {false, false, "xmm5"};
+    info.m_info[XMM6] = {false, false, "xmm6"};
+    info.m_info[XMM7] = {false, false, "xmm7"};
+    info.m_info[XMM8] = {true, false, "xmm8"};
+    info.m_info[XMM9] = {true, false, "xmm9"};
+    info.m_info[XMM10] = {true, false, "xmm10"};
+    info.m_info[XMM11] = {true, false, "xmm11"};
+    info.m_info[XMM12] = {true, false, "xmm12"};
+    info.m_info[XMM13] = {true, false, "xmm13"};
+    info.m_info[XMM14] = {true, false, "xmm14"};
+    info.m_info[XMM15] = {true, false, "xmm15"};
+  #endif */
 
   info.m_gpr_arg_regs = std::array<Register, N_ARGS>({RDI, RSI, RDX, RCX, R8, R9, R10, R11});
   // skip xmm0 so it can be used for return.

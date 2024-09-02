@@ -1,7 +1,5 @@
 #include "IGenArm64.h"
 
-#include <memory>
-
 #include "IGen.h"
 
 #include "goalc/emitter/Instruction.h"

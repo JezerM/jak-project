@@ -391,7 +391,6 @@ void ObjectGenerator::handle_temp_static_ptr_links(int seg) {
  * m_jump_temp_links_by_seg patching after memory layout is done
  */
 void ObjectGenerator::handle_temp_jump_links(int seg) {
-#ifndef __aarch64__
   for (const auto& link : m_jump_temp_links_by_seg.at(seg)) {
     // we need to compute three offsets, all relative to the start of data.
     // 1). the location of the patch (the immediate of the opcode)
@@ -401,12 +400,13 @@ void ObjectGenerator::handle_temp_jump_links(int seg) {
     ASSERT(link.jump_instr.func_id == link.dest.func_id);
     ASSERT(link.jump_instr.seg == seg);
     ASSERT(link.dest.seg == seg);
-    const auto& jump_instr = function.instructions.at(link.jump_instr.instr_id);
-    ASSERT(jump_instr.get_imm_size() == 4);
+    const auto& jump_instr =
+        (const InstructionX86*)function.instructions.at(link.jump_instr.instr_id);
+    ASSERT(jump_instr->get_imm_size() == 4);
 
     // 1). patch = instruction location + location of imm in instruction.
     int patch_location = function.instruction_to_byte_in_data.at(link.jump_instr.instr_id) +
-                         jump_instr.offset_of_imm();
+                         jump_instr->offset_of_imm();
 
     // 2). source rip = jump instr + 1 location
     int source_rip = function.instruction_to_byte_in_data.at(link.jump_instr.instr_id + 1);
@@ -417,9 +417,6 @@ void ObjectGenerator::handle_temp_jump_links(int seg) {
 
     patch_data<s32>(seg, patch_location, dest_rip - source_rip);
   }
-#else
-// TODO - ARM64
-#endif
 }
 
 /*!
@@ -428,27 +425,23 @@ void ObjectGenerator::handle_temp_jump_links(int seg) {
  * after memory layout is done and before link tables are generated
  */
 void ObjectGenerator::handle_temp_instr_sym_links(int seg) {
-#ifndef __aarch64__
   for (const auto& links : m_symbol_instr_temp_links_by_seg.at(seg)) {
     const auto& sym_name = links.first;
     for (const auto& link : links.second) {
       ASSERT(seg == link.rec.seg);
       const auto& function = m_function_data_by_seg.at(seg).at(link.rec.func_id);
-      const auto& instruction = function.instructions.at(link.rec.instr_id);
+      const auto& instruction = (const InstructionX86*)function.instructions.at(link.rec.instr_id);
       int offset_of_instruction = function.instruction_to_byte_in_data.at(link.rec.instr_id);
       int offset_in_instruction =
-          link.is_mem_access ? instruction.offset_of_disp() : instruction.offset_of_imm();
+          link.is_mem_access ? instruction->offset_of_disp() : instruction->offset_of_imm();
       if (link.is_mem_access) {
-        ASSERT(instruction.get_disp_size() == 4);
+        ASSERT(instruction->get_disp_size() == 4);
       } else {
-        ASSERT(instruction.get_imm_size() == 4);
+        ASSERT(instruction->get_imm_size() == 4);
       }
       m_sym_links_by_seg.at(seg)[sym_name].push_back(offset_of_instruction + offset_in_instruction);
     }
   }
-#else
-// TODO - ARM64
-#endif
 }
 
 void ObjectGenerator::handle_temp_rip_func_links(int seg) {
@@ -553,7 +546,6 @@ void ObjectGenerator::emit_link_ptr(int seg) {
 }
 
 void ObjectGenerator::emit_link_rip(int seg) {
-#ifndef __aarch64__
   auto& out = m_link_by_seg.at(seg);
   for (auto& rec : m_rip_links_by_seg.at(seg)) {
     // kind (u8)
@@ -573,15 +565,12 @@ void ObjectGenerator::emit_link_rip(int seg) {
     ASSERT(rec.offset_in_segment >= 0);
     push_data<u32>(rec.offset_in_segment, out);
     // patch location
-    const auto& src_instr = src_func.instructions.at(rec.instr.instr_id);
-    ASSERT(src_instr.get_disp_size() == 4);
+    const auto& src_instr = (const InstructionX86*)src_func.instructions.at(rec.instr.instr_id);
+    ASSERT(src_instr->get_disp_size() == 4);
     push_data<u32>(
-        src_func.instruction_to_byte_in_data.at(rec.instr.instr_id) + src_instr.offset_of_disp(),
+        src_func.instruction_to_byte_in_data.at(rec.instr.instr_id) + src_instr->offset_of_disp(),
         out);
   }
-#else
-// TODO - ARM64
-#endif
 }
 
 void ObjectGenerator::emit_link_table(int seg, const TypeSystem* ts) {
