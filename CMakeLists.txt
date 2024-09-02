@@ -319,6 +319,11 @@ endif()
 
 build_third_party_lib(zydis Zydis)
 
+set(CAPSTONE_ARCHITECTURE_DEFAULT OFF)
+set(CAPSTONE_AARCH64_SUPPORT ON)
+set(CAPSTONE_X86_SUPPORT ON)
+build_third_party_lib(capstone capstone)
+
 # windows memory management lib
 if(WIN32)
     build_third_party_lib(mman mman)
