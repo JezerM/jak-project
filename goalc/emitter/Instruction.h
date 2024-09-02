@@ -23,16 +23,16 @@ struct InstructionARM64 : public InstructionImpl {
   // This instruction stream is encoded as big-endian for simplification purposes. On emit, it will
   // return little-endian.
   //
-  u32 instruction_encoding;
+  u32 instruction;
 
-  InstructionARM64(u32 encoding) : instruction_encoding(encoding) {}
+  InstructionARM64(u32 encoding) : instruction(encoding) {}
 
   uint8_t emit(uint8_t* buffer) const override {
-    u32 little = ((instruction_encoding >> 24) & 0xff) |       // move byte 3 to byte 0
-                 ((instruction_encoding << 8) & 0xff0000) |    // move byte 1 to byte 2
-                 ((instruction_encoding >> 8) & 0xff00) |      // move byte 2 to byte 1
-                 ((instruction_encoding << 24) & 0xff000000);  // byte 0 to byte 3
-    memcpy(buffer, &little, 4);
+    // u32 little = ((instruction_encoding >> 24) & 0xff) |       // move byte 3 to byte 0
+    //              ((instruction_encoding << 8) & 0xff0000) |    // move byte 1 to byte 2
+    //              ((instruction_encoding >> 8) & 0xff00) |      // move byte 2 to byte 1
+    //              ((instruction_encoding << 24) & 0xff000000);  // byte 0 to byte 3
+    memcpy(buffer, &instruction, 4);
     return 4;
   }
 
