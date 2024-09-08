@@ -180,7 +180,7 @@ int main(int argc, char** argv) {
 
   // Figure out if the CPU has AVX2 to enable higher performance AVX2 versions of functions.
   setup_cpu_info();
-#ifdef __x86_64__
+#if defined __x86_64__ || defined _M_X64
   // If the CPU doesn't have AVX, GOAL code won't work and we exit.
   if (!get_cpu_info().has_avx) {
     lg::info("Your CPU does not support AVX, which is required for OpenGOAL.");

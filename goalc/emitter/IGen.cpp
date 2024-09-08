@@ -25,7 +25,7 @@ T igen_cross(T x86, T arm64) {
   }
   return 0;
 #else
-#if defined __x86_64__
+#if defined __x86_64__ || defined _M_X64
   return x86;
 #elif defined __aarch64__
   return arm64;
