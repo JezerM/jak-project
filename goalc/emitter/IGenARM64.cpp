@@ -1,7 +1,5 @@
 #include "IGenArm64.h"
 
-#include "IGen.h"
-
 #include "goalc/emitter/Instruction.h"
 
 // https://armconverter.com/?code=ret
@@ -190,6 +188,14 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
                                                      Register addr1,
                                                      Register addr2,
                                                      s64 offset) {
+  // ldr x1, [x2, x3]
+  // 11111000011 00011 0110 10 00010 00001
+  u32 instruction = 0b11111000011 << 21;
+  instruction |= addr2.id() << 16;
+  instruction |= 0b011010 << 10;
+  instruction |= addr1.id() << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
   return new InstructionARM64(0b0);
 }
 
@@ -208,14 +214,28 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
                                                     Register addr1,
                                                     Register addr2,
                                                     s64 offset) {
-  return new InstructionARM64(0b0);
+  // ldr x1, [x2, x3]
+  // 11111000011 00011 0110 10 00010 00001
+  u32 instruction = 0b11111000011 << 21;
+  instruction |= addr2.id() << 16;
+  instruction |= 0b011010 << 10;
+  instruction |= addr1.id() << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
                                                      Register addr1,
                                                      Register addr2,
                                                      s64 offset) {
-  return new InstructionARM64(0b0);
+  // ldr x1, [x2, x3]
+  // 11111000011 00011 0110 10 00010 00001
+  u32 instruction = 0b11111000011 << 21;
+  instruction |= addr2.id() << 16;
+  instruction |= 0b011010 << 10;
+  instruction |= addr1.id() << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
@@ -272,7 +292,90 @@ Instruction* load_goal_gpr(Register dst,
                            int offset,
                            int size,
                            bool sign_extend) {
-  return new InstructionARM64(0b0);
+  switch (size) {
+    case 1:
+      if (offset == 0) {
+        if (sign_extend) {
+          return load8s_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        } else {
+          return load8u_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        }
+      } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
+        if (sign_extend) {
+          return load8s_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        } else {
+          return load8u_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        }
+      } else if (offset >= INT32_MIN && offset <= INT32_MAX) {
+        if (sign_extend) {
+          return load8s_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        } else {
+          return load8u_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        }
+      } else {
+        ASSERT(false);
+      }
+    case 2:
+      if (offset == 0) {
+        if (sign_extend) {
+          return load16s_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        } else {
+          return load16u_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        }
+      } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
+        if (sign_extend) {
+          return load16s_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        } else {
+          return load16u_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        }
+      } else if (offset >= INT32_MIN && offset <= INT32_MAX) {
+        if (sign_extend) {
+          return load16s_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        } else {
+          return load16u_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        }
+      } else {
+        ASSERT(false);
+      }
+    case 4:
+      if (offset == 0) {
+        if (sign_extend) {
+          return load32s_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        } else {
+          return load32u_gpr64_gpr64_plus_gpr64(dst, addr, off);
+        }
+      } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
+        if (sign_extend) {
+          return load32s_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        } else {
+          return load32u_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+        }
+      } else if (offset >= INT32_MIN && offset <= INT32_MAX) {
+        if (sign_extend) {
+          return load32s_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        } else {
+          return load32u_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+        }
+      } else {
+        ASSERT(false);
+      }
+    case 8:
+      if (offset == 0) {
+        return load64_gpr64_gpr64_plus_gpr64(dst, addr, off);
+
+      } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
+        return load64_gpr64_gpr64_plus_gpr64_plus_s8(dst, addr, off, offset);
+
+      } else if (offset >= INT32_MIN && offset <= INT32_MAX) {
+        return load64_gpr64_gpr64_plus_gpr64_plus_s32(dst, addr, off, offset);
+
+      } else {
+        ASSERT(false);
+      }
+    default:
+      ASSERT(false);
+      return new InstructionARM64(0b0);
+  }
 }
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -486,7 +589,7 @@ Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register valu
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Instruction* ret() {
-  return new InstructionARM64(0xC0035FD6);
+  return new InstructionARM64(0xD65F03C0);
 }
 
 Instruction* push_gpr64(Register reg) {
@@ -499,7 +602,7 @@ Instruction* push_gpr64(Register reg) {
   instruction |= 0b11 << 10;
   instruction |= 31 << 5;
   instruction |= reg.id();
-  return new InstructionARM64(instruction);  // TODO - finish
+  return new InstructionARM64(instruction);
 }
 
 Instruction* pop_gpr64(Register reg) {
@@ -513,11 +616,15 @@ Instruction* pop_gpr64(Register reg) {
   instruction |= 0b11 << 10;
   instruction |= 31 << 5;
   instruction |= reg.id();
-  return new InstructionARM64(instruction);  // TODO - finish
+  return new InstructionARM64(instruction);
 }
 
 Instruction* call_r64(Register reg_) {
-  return new InstructionARM64(0b0);
+  // 11010110001 11111 0000 00 00001 00000
+  ASSERT(reg_.is_gpr());
+  u32 instruction = 0b1101011000111111 << 16;
+  instruction |= reg_.id() << 5;
+  return new InstructionARM64(instruction);
 }
 
 Instruction* jmp_r64(Register reg_) {
@@ -552,11 +659,25 @@ Instruction* sub_gpr64_imm(Register reg, int64_t imm) {
 }
 
 Instruction* add_gpr64_gpr64(Register dst, Register src) {
-  return new InstructionARM64(0b0);
+  // 10001011 000 00010 000000 00001 00001
+  ASSERT(dst.is_gpr());
+  ASSERT(src.is_gpr());
+  u32 instruction = 0b10001011 << 24;
+  instruction |= src.id() << 16;
+  instruction |= dst.id() << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* sub_gpr64_gpr64(Register dst, Register src) {
-  return new InstructionARM64(0b0);
+  // 11001011 000 00010 000000 00001 00001
+  ASSERT(dst.is_gpr());
+  ASSERT(src.is_gpr());
+  u32 instruction = 0b11001011000 << 21;
+  instruction |= src.id() << 16;
+  instruction |= dst.id() << 5;
+  instruction |= dst.id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* imul_gpr32_gpr32(Register dst, Register src) {

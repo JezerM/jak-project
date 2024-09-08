@@ -869,7 +869,7 @@ RegAllocInstr IR_ConditionalBranch::to_rai() {
 void IR_ConditionalBranch::do_codegen(emitter::ObjectGenerator* gen,
                                       const AllocationResult& allocs,
                                       emitter::IR_Record irec) {
-  Instruction* jump_instr = new InstructionX86(0);
+  Instruction* jump_instr;
   ASSERT(m_resolved);
   switch (condition.kind) {
     case ConditionKind::EQUAL:

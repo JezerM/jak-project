@@ -3,7 +3,6 @@
  * Setup and launcher for the runtime.
  */
 
-#include <pthread.h>
 #include "common/common_types.h"
 #ifdef OS_POSIX
 #include <unistd.h>

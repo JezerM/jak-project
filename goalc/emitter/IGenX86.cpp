@@ -1,13 +1,22 @@
+#pragma once
+
 #include "IGenX86.h"
 
-#include "IGen.h"
+#include <stdexcept>
+
+#include "Instruction.h"
+#include "Register.h"
+
+#include "common/util/Assert.h"
 
 namespace emitter {
 namespace IGenX86 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   MOVES
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+/*!
+ * Move data from src to dst. Moves all 64-bits of the GPR.
+ */
 Instruction* mov_gpr64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -16,6 +25,9 @@ Instruction* mov_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Move a 64-bit constant into a register.
+ */
 Instruction* mov_gpr64_u64(Register dst, uint64_t val) {
   ASSERT(dst.is_gpr());
   bool rex_b = false;
@@ -30,6 +42,9 @@ Instruction* mov_gpr64_u64(Register dst, uint64_t val) {
   return instr;
 }
 
+/*!
+ * Move a 32-bit constant into a register. Zeros the upper 32 bits.
+ */
 Instruction* mov_gpr64_u32(Register dst, uint64_t val) {
   ASSERT(val <= UINT32_MAX);
   ASSERT(dst.is_gpr());
@@ -48,6 +63,11 @@ Instruction* mov_gpr64_u32(Register dst, uint64_t val) {
   return instr;
 }
 
+/*!
+ * Move a signed 32-bit constant into a register. Sign extends for the upper 32 bits.
+ * When possible prefer mov_gpr64_u32. (use this only for negative values...)
+ * This is always bigger than mov_gpr64_u32, but smaller than a mov_gpr_u64.
+ */
 Instruction* mov_gpr64_s32(Register dst, int64_t val) {
   ASSERT(val >= INT32_MIN && val <= INT32_MAX);
   ASSERT(dst.is_gpr());
@@ -57,6 +77,9 @@ Instruction* mov_gpr64_s32(Register dst, int64_t val) {
   return instr;
 }
 
+/*!
+ * Move 32-bits of xmm to 32 bits of gpr (no sign extension).
+ */
 Instruction* movd_gpr32_xmm32(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
@@ -68,6 +91,9 @@ Instruction* movd_gpr32_xmm32(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Move 32-bits of gpr to 32-bits of xmm (no sign extension)
+ */
 Instruction* movd_xmm32_gpr32(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
@@ -79,6 +105,9 @@ Instruction* movd_xmm32_gpr32(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Move 64-bits of xmm to 64 bits of gpr (no sign extension).
+ */
 Instruction* movq_gpr64_xmm64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
@@ -90,6 +119,9 @@ Instruction* movq_gpr64_xmm64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Move 64-bits of gpr to 64-bits of xmm (no sign extension)
+ */
 Instruction* movq_xmm64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
@@ -101,6 +133,9 @@ Instruction* movq_xmm64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Move 32-bits between xmm's
+ */
 Instruction* mov_xmm32_xmm32(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -119,6 +154,11 @@ Instruction* mov_xmm32_xmm32(Register dst, Register src) {
 //   GOAL Loads and Stores
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * movsx dst, BYTE PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load8s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -224,6 +264,11 @@ Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   return instr;
 }
 
+/*!
+ * movzx dst, BYTE PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load8u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -274,6 +319,11 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
+/*!
+ * movsx dst, WORD PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load16s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -376,6 +426,11 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
+/*!
+ * movzx dst, WORD PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load16u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -426,6 +481,11 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
+/*!
+ * movsxd dst, DWORD PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load32s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -518,6 +578,11 @@ Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   return instr;
 }
 
+/*!
+ * movzxd dst, DWORD PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load32u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -564,6 +629,11 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
+/*!
+ * mov dst, QWORD PTR [addr1 + addr2]
+ * addr1 and addr2 have to be different registers.
+ * Cannot use rsp.
+ */
 Instruction* load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
@@ -665,7 +735,7 @@ Instruction* store_goal_vf(Register addr, Register value, Register off, s64 offs
     return storevf_gpr64_plus_gpr64_plus_s32(value, addr, off, offset);
   }
   ASSERT(false);
-  return new InstructionX86(0);
+  return new InstructionX86(0b0);
 }
 
 Instruction* store_goal_gpr(Register addr, Register value, Register off, int offset, int size) {
@@ -729,6 +799,10 @@ Instruction* load_goal_xmm128(Register dst, Register addr, Register off, int off
   }
 }
 
+/*!
+ * Load memory at addr + offset, where addr is a GOAL pointer and off is the offset register.
+ * This will pick the appropriate fancy addressing mode instruction.
+ */
 Instruction* load_goal_gpr(Register dst,
                            Register addr,
                            Register off,
@@ -1067,11 +1141,14 @@ Instruction* load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset)
 //   LOADS n' STORES - XMM128
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * Store a 128-bit xmm into an address stored in a register, no offset
+ */
 Instruction* store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_value.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x7f);
   instr->set_modrm_and_rex_for_reg_addr(xmm_value.hw_id(), gpr_addr.hw_id(), false);
@@ -1084,7 +1161,7 @@ Instruction* store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s6
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x7f);
   instr->set_modrm_rex_sib_for_reg_reg_disp(xmm_value.hw_id(), 2, gpr_addr.hw_id(), false);
@@ -1098,7 +1175,7 @@ Instruction* store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x7f);
   instr->set_modrm_rex_sib_for_reg_reg_disp(xmm_value.hw_id(), 1, gpr_addr.hw_id(), false);
@@ -1111,7 +1188,7 @@ Instruction* load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_dest.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x6f);
   instr->set_modrm_and_rex_for_reg_addr(xmm_dest.hw_id(), gpr_addr.hw_id(), false);
@@ -1124,7 +1201,7 @@ Instruction* load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x6f);
   instr->set_modrm_rex_sib_for_reg_reg_disp(xmm_dest.hw_id(), 2, gpr_addr.hw_id(), false);
@@ -1138,7 +1215,7 @@ Instruction* load128_xmm128_gpr64_s8(Register xmm_dest, Register gpr_addr, s64 o
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x66);
-  //    auto instr = new InstructionX86(0xf3);
+  //    InstructionX86 *instr = new InstructionX86(0xf3);
   instr->set_op2(0x0f);
   instr->set_op3(0x6f);
   instr->set_modrm_rex_sib_for_reg_reg_disp(xmm_dest.hw_id(), 1, gpr_addr.hw_id(), false);
@@ -1369,6 +1446,9 @@ Instruction* load64_gpr64_plus_s32(Register dst_reg, int32_t offset, Register sr
   return instr;
 }
 
+/*!
+ * Store 64-bits from gpr into memory located at 64-bit reg + 32-bit signed offset.
+ */
 Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register value) {
   ASSERT(addr.is_gpr());
   ASSERT(value.is_gpr());
@@ -1381,11 +1461,16 @@ Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register valu
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   FUNCTION STUFF
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+/*!
+ * Function return. Pops the 64-bit return address (real) off the stack and jumps to it.
+ */
 Instruction* ret() {
   return new InstructionX86(0xc3);
 }
 
+/*!
+ * Instruction to push gpr (64-bits) onto the stack
+ */
 Instruction* push_gpr64(Register reg) {
   ASSERT(reg.is_gpr());
   if (reg.hw_id() >= 8) {
@@ -1396,6 +1481,9 @@ Instruction* push_gpr64(Register reg) {
   return new InstructionX86(0x50 + reg.hw_id());
 }
 
+/*!
+ * Instruction to pop 64 bit gpr from the stack
+ */
 Instruction* pop_gpr64(Register reg) {
   ASSERT(reg.is_gpr());
   if (reg.hw_id() >= 8) {
@@ -1406,6 +1494,9 @@ Instruction* pop_gpr64(Register reg) {
   return new InstructionX86(0x58 + reg.hw_id());
 }
 
+/*!
+ * Call a function stored in a 64-bit gpr
+ */
 Instruction* call_r64(Register reg_) {
   ASSERT(reg_.is_gpr());
   auto reg = reg_.hw_id();
@@ -1423,6 +1514,9 @@ Instruction* call_r64(Register reg_) {
   return instr;
 }
 
+/*!
+ * Jump to an x86-64 address stored in a 64-bit gpr.
+ */
 Instruction* jmp_r64(Register reg_) {
   ASSERT(reg_.is_gpr());
   auto reg = reg_.hw_id();
@@ -1516,6 +1610,10 @@ Instruction* sub_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Multiply gprs (32-bit, signed).
+ * (Note - probably worth doing imul on gpr64's to implement the EE's unsigned multiply)
+ */
 Instruction* imul_gpr32_gpr32(Register dst, Register src) {
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xaf);
@@ -1525,6 +1623,10 @@ Instruction* imul_gpr32_gpr32(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Multiply gprs (64-bit, signed).
+ * DANGER - this treats all operands as 64-bit. This is not like the EE.
+ */
 Instruction* imul_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xaf);
@@ -1534,6 +1636,9 @@ Instruction* imul_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Divide (idiv, 32 bit)
+ */
 Instruction* idiv_gpr32(Register reg) {
   auto instr = new InstructionX86(0xf7);
   ASSERT(reg.is_gpr());
@@ -1548,11 +1653,18 @@ Instruction* unsigned_div_gpr32(Register reg) {
   return instr;
 }
 
+/*!
+ * Convert doubleword to quadword for division.
+ */
 Instruction* cdq() {
   auto instr = new InstructionX86(0x99);
   return instr;
 }
 
+/*!
+ * Move from gpr32 to gpr64, with sign extension.
+ * Needed for multiplication/divsion madness.
+ */
 Instruction* movsx_r64_r32(Register dst, Register src) {
   auto instr = new InstructionX86(0x63);
   ASSERT(dst.is_gpr());
@@ -1561,6 +1673,10 @@ Instruction* movsx_r64_r32(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Compare gpr64.  This sets the flags for the jumps.
+ * todo UNTESTED
+ */
 Instruction* cmp_gpr64_gpr64(Register a, Register b) {
   auto instr = new InstructionX86(0x3b);
   ASSERT(a.is_gpr());
@@ -1573,6 +1689,9 @@ Instruction* cmp_gpr64_gpr64(Register a, Register b) {
 //   BIT STUFF
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * Or of two gprs
+ */
 Instruction* or_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x0b);
   ASSERT(dst.is_gpr());
@@ -1581,6 +1700,9 @@ Instruction* or_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * And of two gprs
+ */
 Instruction* and_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x23);
   ASSERT(dst.is_gpr());
@@ -1589,6 +1711,9 @@ Instruction* and_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Xor of two gprs
+ */
 Instruction* xor_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x33);
   ASSERT(dst.is_gpr());
@@ -1597,6 +1722,9 @@ Instruction* xor_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Bitwise not a gpr
+ */
 Instruction* not_gpr64(Register reg) {
   auto instr = new InstructionX86(0xf7);
   ASSERT(reg.is_gpr());
@@ -1608,6 +1736,9 @@ Instruction* not_gpr64(Register reg) {
 //   SHIFTS
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * Shift 64-bit gpr left by CL register
+ */
 Instruction* shl_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
@@ -1615,6 +1746,9 @@ Instruction* shl_gpr64_cl(Register reg) {
   return instr;
 }
 
+/*!
+ * Shift 64-bit gpr right (logical) by CL register
+ */
 Instruction* shr_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
@@ -1622,6 +1756,9 @@ Instruction* shr_gpr64_cl(Register reg) {
   return instr;
 }
 
+/*!
+ * Shift 64-bit gpr right (arithmetic) by CL register
+ */
 Instruction* sar_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
@@ -1629,6 +1766,9 @@ Instruction* sar_gpr64_cl(Register reg) {
   return instr;
 }
 
+/*!
+ * Shift 64-ptr left (logical) by the constant shift amount "sa".
+ */
 Instruction* shl_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
@@ -1637,6 +1777,9 @@ Instruction* shl_gpr64_u8(Register reg, uint8_t sa) {
   return instr;
 }
 
+/*!
+ * Shift 64-ptr right (logical) by the constant shift amount "sa".
+ */
 Instruction* shr_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
@@ -1645,6 +1788,9 @@ Instruction* shr_gpr64_u8(Register reg, uint8_t sa) {
   return instr;
 }
 
+/*!
+ * Shift 64-ptr right (arithmetic) by the constant shift amount "sa".
+ */
 Instruction* sar_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
@@ -1657,12 +1803,18 @@ Instruction* sar_gpr64_u8(Register reg, uint8_t sa) {
 //   CONTROL FLOW
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * Jump, 32-bit constant offset.  The offset is by default 0 and must be patched later.
+ */
 Instruction* jmp_32() {
   auto instr = new InstructionX86(0xe9);
   instr->set(Imm(4, 0));
   return instr;
 }
 
+/*!
+ * Jump if equal.
+ */
 Instruction* je_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x84);
@@ -1670,6 +1822,9 @@ Instruction* je_32() {
   return instr;
 }
 
+/*!
+ * Jump not equal.
+ */
 Instruction* jne_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x85);
@@ -1677,6 +1832,9 @@ Instruction* jne_32() {
   return instr;
 }
 
+/*!
+ * Jump less than or equal.
+ */
 Instruction* jle_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8e);
@@ -1684,6 +1842,9 @@ Instruction* jle_32() {
   return instr;
 }
 
+/*!
+ * Jump greater than or equal.
+ */
 Instruction* jge_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8d);
@@ -1691,6 +1852,9 @@ Instruction* jge_32() {
   return instr;
 }
 
+/*!
+ * Jump less than
+ */
 Instruction* jl_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8c);
@@ -1698,6 +1862,9 @@ Instruction* jl_32() {
   return instr;
 }
 
+/*!
+ * Jump greater than
+ */
 Instruction* jg_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8f);
@@ -1705,6 +1872,9 @@ Instruction* jg_32() {
   return instr;
 }
 
+/*!
+ * Jump below or equal
+ */
 Instruction* jbe_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x86);
@@ -1712,6 +1882,9 @@ Instruction* jbe_32() {
   return instr;
 }
 
+/*!
+ * Jump above or equal
+ */
 Instruction* jae_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x83);
@@ -1719,6 +1892,9 @@ Instruction* jae_32() {
   return instr;
 }
 
+/*!
+ * Jump below
+ */
 Instruction* jb_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x82);
@@ -1726,6 +1902,9 @@ Instruction* jb_32() {
   return instr;
 }
 
+/*!
+ * Jump above
+ */
 Instruction* ja_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x87);
@@ -1737,6 +1916,9 @@ Instruction* ja_32() {
 //   FLOAT MATH
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * Compare two floats and set flag register for jump (ucomiss)
+ */
 Instruction* cmp_flt_flt(Register a, Register b) {
   ASSERT(a.is_128bit_simd());
   ASSERT(b.is_128bit_simd());
@@ -1757,6 +1939,9 @@ Instruction* sqrts_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Multiply two floats in xmm's
+ */
 Instruction* mulss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1768,6 +1953,9 @@ Instruction* mulss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Divide two floats in xmm's
+ */
 Instruction* divss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1779,6 +1967,9 @@ Instruction* divss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Subtract two floats in xmm's
+ */
 Instruction* subss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1790,6 +1981,9 @@ Instruction* subss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Add two floats in xmm's
+ */
 Instruction* addss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1801,6 +1995,9 @@ Instruction* addss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Floating point minimum.
+ */
 Instruction* minss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1812,6 +2009,9 @@ Instruction* minss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Floating point maximum.
+ */
 Instruction* maxss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -1823,6 +2023,9 @@ Instruction* maxss_xmm_xmm(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Convert GPR int32 to XMM float (single precision)
+ */
 Instruction* int32_to_float(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
@@ -1834,6 +2037,9 @@ Instruction* int32_to_float(Register dst, Register src) {
   return instr;
 }
 
+/*!
+ * Convert XMM float to GPR int32(single precision) (truncate)
+ */
 Instruction* float_to_int32(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
@@ -1857,8 +2063,13 @@ Instruction* nop() {
 //   UTILITIES
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+/*!
+ * A "null" instruction.  This instruction does not generate any bytes
+ * but can be referred to by a label.  Useful to insert in place of a real instruction
+ * if the real instruction has been optimized out.
+ */
 Instruction* null() {
-  auto i = new InstructionX86(0);
+  InstructionX86* i = new InstructionX86(0);
   i->m_flags |= InstructionX86::kIsNull;
   return i;
 }
@@ -2024,13 +2235,31 @@ Instruction* shuffle_vf(Register dst, Register src, u8 dx, u8 dy, u8 dz, u8 dw) 
   return swizzle_vf(dst, src, imm);
 
   // SSE encoding version:
-  //    auto instr = new InstructionX86(0x0f);
+  //    InstructionX86 *instr = new InstructionX86(0x0f);
   //    instr->set_op2(0xc6);
   //    instr->set_modrm_and_rex(dst.hw_id(), src.hw_id(), 3, false);
   //    instr->set(Imm(1, imm));
   //    return instr;
 }
 
+/*
+  Generic Swizzle (re-arrangment of packed FPs) operation, the control bytes are quite involved.
+  Here's a brief run-down:
+  - 8-bits / 4 groups of 2 bits
+  - Right-to-left, each group is used to determine which element in `src` gets copied into
+  `dst`'s element (W->X).
+  - GROUP OPTIONS
+  - 00b - Copy the least-significant element (X)
+  - 01b - Copy the second element (from the right) (Y)
+  - 10b - Copy the third element (from the right) (Z)
+  - 11b - Copy the most significant element (W)
+  Examples
+  ; xmm1 = (1.5, 2.5, 3.5, 4.5) (W,Z,Y,X in x86 land)
+  SHUFPS xmm1, xmm1, 0xff ; Copy the most significant element to all positions
+  > (1.5, 1.5, 1.5, 1.5)
+  SHUFPS xmm1, xmm1, 0x39 ; Rotate right
+  > (4.5, 1.5, 2.5, 3.5)
+  */
 Instruction* swizzle_vf(Register dst, Register src, u8 controlBytes) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
@@ -2044,6 +2273,14 @@ Instruction* swizzle_vf(Register dst, Register src, u8 controlBytes) {
   return instr;
 }
 
+/*
+  Splats a single element in 'src' to all elements in 'dst'
+  For example (pseudocode):
+  xmm1 = (1.5, 2.5, 3.5, 4.5)
+  xmm2 = (1, 2, 3, 4)
+  splat_vf(xmm1, xmm2, XMM_ELEMENT::X);
+  xmm1 = (4, 4, 4, 4)
+  */
 Instruction* splat_vf(Register dst, Register src, Register::VF_ELEMENT element) {
   switch (element) {
     case Register::VF_ELEMENT::X:  // Least significant element
@@ -2060,7 +2297,7 @@ Instruction* splat_vf(Register dst, Register src, Register::VF_ELEMENT element) 
       break;
     default:
       ASSERT(false);
-      return new InstructionX86(0);
+      return new InstructionX86(0b0);
   }
 }
 
@@ -2255,6 +2492,15 @@ Instruction* parallel_bitwise_and(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Reminder - a word in MIPS = 32bits = a DWORD in x86
+//     MIPS   ||   x86
+// -----------------------
+// byte       || byte
+// halfword   || word
+// word       || dword
+// doubleword || quadword
+
+// -- Unpack High Data Instructions
 Instruction* pextub_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2291,6 +2537,7 @@ Instruction* pextuw_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// -- Unpack Low Data Instructions
 Instruction* pextlb_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2327,6 +2574,7 @@ Instruction* pextlw_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Equal to than comparison as 16 bytes (8 bits)
 Instruction* parallel_compare_e_b(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2339,6 +2587,7 @@ Instruction* parallel_compare_e_b(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Equal to than comparison as 8 halfwords (16 bits)
 Instruction* parallel_compare_e_h(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2351,6 +2600,7 @@ Instruction* parallel_compare_e_h(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Equal to than comparison as 4 words (32 bits)
 Instruction* parallel_compare_e_w(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2363,6 +2613,7 @@ Instruction* parallel_compare_e_w(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Greater than comparison as 16 bytes (8 bits)
 Instruction* parallel_compare_gt_b(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2375,6 +2626,7 @@ Instruction* parallel_compare_gt_b(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Greater than comparison as 8 halfwords (16 bits)
 Instruction* parallel_compare_gt_h(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2387,6 +2639,7 @@ Instruction* parallel_compare_gt_h(Register dst, Register src0, Register src1) {
   return instr;
 }
 
+// Greater than comparison as 4 words (32 bits)
 Instruction* parallel_compare_gt_w(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
@@ -2495,5 +2748,5 @@ Instruction* vpackuswb(Register dst, Register src0, Register src1) {
                                false, VexPrefix::P_66);
   return instr;
 }
-}  // namespace IGenX86
+};  // namespace IGenX86
 }  // namespace emitter
