@@ -4,6 +4,8 @@ add_library(compiler
         emitter/ObjectFileData.cpp
         emitter/ObjectGenerator.cpp
         emitter/Register.cpp
+        emitter/RegisterX86.cpp
+        emitter/RegisterArm64.cpp
         debugger/disassemble.cpp
         debugger/disassemble_arm64.cpp
         build_level/common/build_level.cpp
@@ -66,7 +68,7 @@ add_library(compiler
         debugger/DebugInfo.cpp
         emitter/IGen.cpp
         emitter/IGenX86.cpp
-        emitter/IGenARM64.cpp
+        emitter/IGenArm64.cpp
         listener/Listener.cpp
         listener/MemoryMap.cpp
         make/MakeSystem.cpp

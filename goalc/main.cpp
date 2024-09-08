@@ -107,6 +107,9 @@ int main(int argc, char** argv) {
   // Load the user's REPL config
   auto repl_config = REPL::load_repl_config(username, game_version, nrepl_port);
 
+  // Init global RegisterInfo
+  emitter::gRegInfo = emitter::RegisterInfo::make_register_info();
+
   // Init Compiler
   std::unique_ptr<Compiler> compiler;
   std::mutex compiler_mutex;

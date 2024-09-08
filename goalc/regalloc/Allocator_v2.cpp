@@ -1182,7 +1182,7 @@ AllocationResult allocate_registers_v2(const AllocationInput& input) {
   result.stack_slots_for_vars = input.stack_slots_for_stack_vars;
 
   // check for use of saved registers
-  for (auto sr : emitter::gRegInfo.get_all_saved()) {
+  for (auto sr : emitter::gRegInfo->get_all_saved()) {
     bool uses_sr = false;
     for (auto& lr : cache.vars) {
       for (int instr_idx = lr.first_live(); instr_idx <= lr.last_live(); instr_idx++) {

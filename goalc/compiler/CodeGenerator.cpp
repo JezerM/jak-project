@@ -152,7 +152,7 @@ void CodeGenerator::do_goal_function(FunctionEnv* env, int f_idx) {
       } else {
         // otherwise to an extra push, and remember so we can do an extra pop later on.
         bonus_push = true;
-        m_gen.add_instr_no_ir(f_rec, IGen::push_gpr64(ri.get_saved_gpr(0)),
+        m_gen.add_instr_no_ir(f_rec, IGen::push_gpr64(ri->get_saved_gpr(0)),
                               InstructionInfo::Kind::PROLOGUE);
       }
       stack_offset += 8;
@@ -237,7 +237,7 @@ void CodeGenerator::do_goal_function(FunctionEnv* env, int f_idx) {
 
     if (bonus_push) {
       ASSERT(!manually_added_stack_offset);
-      m_gen.add_instr_no_ir(f_rec, IGen::pop_gpr64(ri.get_saved_gpr(0)),
+      m_gen.add_instr_no_ir(f_rec, IGen::pop_gpr64(ri->get_saved_gpr(0)),
                             InstructionInfo::Kind::EPILOGUE);
     }
   }

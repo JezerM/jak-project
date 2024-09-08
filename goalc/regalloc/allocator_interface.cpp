@@ -77,7 +77,7 @@ std::string Assignment::to_string() const {
       result += fmt::format("s[{:2d}]", stack_slot);
       break;
     case Kind::REGISTER:
-      result += emitter::gRegInfo.get_info(reg).name;
+      result += emitter::gRegInfo->get_info(reg).name;
       break;
     case Kind::UNASSIGNED:
       result += "unassigned";
@@ -363,11 +363,11 @@ std::string StackOp::print() const {
   bool added = false;
   for (const auto& op : ops) {
     if (op.load) {
-      result += fmt::format("{} <- [{:2d}], ", emitter::gRegInfo.get_info(op.reg).name, op.slot);
+      result += fmt::format("{} <- [{:2d}], ", emitter::gRegInfo->get_info(op.reg).name, op.slot);
       added = true;
     }
     if (op.store) {
-      result += fmt::format("{} -> [{:2d}], ", emitter::gRegInfo.get_info(op.reg).name, op.slot);
+      result += fmt::format("{} -> [{:2d}], ", emitter::gRegInfo->get_info(op.reg).name, op.slot);
       added = true;
     }
   }

@@ -86,10 +86,10 @@ enum ARM64_REG : s8 {
   X17,  // temp, not-saved
   X18,  // temp, not-saved
 
-  x19,  // saved TODO purpose?, R12
-  x20,  // pp, R13
-  x21,  // st, R14
-  x22,  // offset, TODO purpose?, R15
+  X19,  // saved TODO purpose?, R12
+  X20,  // pp, R13
+  X21,  // st, R14
+  X22,  // offset, TODO purpose?, R15
   X23,  // unused, callee saved
   X24,  // unused, callee saved
   X25,  // unused, callee saved
@@ -145,33 +145,11 @@ class Register {
   // intentionally not explicit so we can use X86_REGs in place of Registers
   Register(int id) : m_id(id) {}
 
-  bool is_128bit_simd() const {
-#ifndef __aarch64__
-    return m_id >= XMM0 && m_id <= XMM15;
-#else
-    return m_id >= Q0 && m_id <= Q31;
-#endif
-  }
+  bool is_128bit_simd() const;
 
-  bool is_gpr() const {
-#ifndef __aarch64__
-    return m_id >= RAX && m_id <= R15;
-#else
-    return m_id >= X0 && m_id <= X30;
-#endif
-  }
+  bool is_gpr() const;
 
-  int hw_id() const {
-    // TODO - ARM64, even needed?
-    if (is_128bit_simd()) {
-      return m_id - XMM0;
-    } else if (is_gpr()) {
-      return m_id - RAX;
-    } else {
-      ASSERT(false);
-    }
-    return 0xff;
-  }
+  int hw_id() const;
 
   int id() const { return m_id; }
 
@@ -205,9 +183,12 @@ class RegisterInfo {
   static constexpr int N_TEMP_GPRS = 5;
   static constexpr int N_TEMP_XMMS = 8;
 
+  // static constexpr int N_SAVED_GPRS_ARM64 = 8;
+  // static constexpr int N_SAVED_XMMS_ARM64 = 8;
+
   static_assert(N_REGS - 1 == XMM15, "bad register count");
 
-  static RegisterInfo make_register_info();
+  static RegisterInfo* make_register_info();
 
   struct Info {
     bool saved = false;    // does the callee save it?
@@ -222,11 +203,11 @@ class RegisterInfo {
   Register get_xmm_arg_reg(int id) const { return m_xmm_arg_regs.at(id); }
   Register get_saved_gpr(int id) const { return m_saved_gprs.at(id); }
   Register get_saved_xmm(int id) const { return m_saved_xmms.at(id); }
-  Register get_process_reg() const { return R13; }
-  Register get_st_reg() const { return R14; }
-  Register get_offset_reg() const { return R15; }
-  Register get_gpr_ret_reg() const { return RAX; }
-  Register get_xmm_ret_reg() const { return XMM0; }
+  virtual Register get_process_reg() const { return 90; }
+  virtual Register get_st_reg() const { return 90; }
+  virtual Register get_offset_reg() const { return 90; }
+  virtual Register get_gpr_ret_reg() const { return 90; }
+  virtual Register get_xmm_ret_reg() const { return 90; }
   const std::vector<Register>& get_gpr_alloc_order() { return m_gpr_alloc_order; }
   const std::vector<Register>& get_xmm_alloc_order() { return m_xmm_alloc_order; }
   const std::vector<Register>& get_gpr_temp_alloc_order() { return m_gpr_temp_only_alloc_order; }
@@ -235,7 +216,7 @@ class RegisterInfo {
   const std::vector<Register>& get_xmm_spill_alloc_order() { return m_xmm_spill_temp_alloc_order; }
   const std::array<Register, N_SAVED_XMMS + N_SAVED_GPRS>& get_all_saved() { return m_saved_all; }
 
- private:
+ protected:
   RegisterInfo() = default;
   std::array<Info, N_REGS> m_info;
   std::array<Register, N_ARGS> m_gpr_arg_regs;
@@ -251,6 +232,28 @@ class RegisterInfo {
   std::vector<Register> m_xmm_spill_temp_alloc_order;
 };
 
-extern RegisterInfo gRegInfo;
+class RegisterInfoX86 : RegisterInfo {
+ public:
+  static RegisterInfo* make_register_info();
 
+  Register get_process_reg() const override { return R13; }
+  Register get_st_reg() const override { return R14; }
+  Register get_offset_reg() const override { return R15; }
+  Register get_gpr_ret_reg() const override { return RAX; }
+  Register get_xmm_ret_reg() const override { return XMM0; }
+};
+
+class RegisterInfoArm64 : RegisterInfo {
+ public:
+  static RegisterInfo* make_register_info();
+
+  // TODO: Change these
+  Register get_process_reg() const override { return R13; }
+  Register get_st_reg() const override { return R14; }
+  Register get_offset_reg() const override { return R15; }
+  Register get_gpr_ret_reg() const override { return X8; }
+  Register get_xmm_ret_reg() const override { return Q0; }
+};
+
+extern RegisterInfo* gRegInfo;
 }  // namespace emitter

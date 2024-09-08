@@ -94,7 +94,7 @@ class CodeTester {
   /*!
    * Get the name of the given register, for debugging.
    */
-  std::string reg_name(Register x) { return m_info.get_info(x).name; }
+  std::string reg_name(Register x) { return m_info->get_info(x).name; }
 
   /*!
    * Get number of bytes currently in use (offset of the next thing to be added)
@@ -131,7 +131,7 @@ class CodeTester {
   int code_buffer_size = 0;
   int code_buffer_capacity = 0;
   u8* code_buffer = nullptr;
-  RegisterInfo m_info;
+  RegisterInfo* m_info;
 };
 }  // namespace emitter
 #endif  // JAK_CODETESTER_H
