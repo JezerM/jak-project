@@ -9,6 +9,7 @@
 
 // https://armconverter.com/?code=ret
 // https://developer.arm.com/documentation/ddi0487/latest
+// https://github.com/darlinghq/darling/discussions/1376
 
 namespace emitter {
 template <typename T>

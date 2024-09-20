@@ -554,6 +554,7 @@ Instruction* static_store(Register value, s64 offset, int size) {
 }
 
 Instruction* static_addr(Register dst, s64 offset) {
+  // ldr x1, #0x100
   // 01011 000 0000000000001000000 00001
   // 01011 000 0000000000000000000 00111
   ASSERT(dst.is_gpr());
@@ -594,6 +595,7 @@ Instruction* ret() {
 
 Instruction* push_gpr64(Register reg) {
   // pg. 1998
+  // str x1, [sp, #-0x10]!
   // 11111 000000 111110000 11 11111 00001
   // 11111 000000 111110000 11 11111 00011
   ASSERT(reg.is_gpr());
@@ -607,6 +609,7 @@ Instruction* push_gpr64(Register reg) {
 
 Instruction* pop_gpr64(Register reg) {
   // pg. 1998
+  // ldr x1, [sp, #-0x10]!
   // 11111 000010 111110000 11 11111 00001
   // 11111 000010 111110000 11 11111 00011
   ASSERT(reg.is_gpr());
@@ -620,6 +623,7 @@ Instruction* pop_gpr64(Register reg) {
 }
 
 Instruction* call_r64(Register reg_) {
+  // blr x1
   // 11010110001 11111 0000 00 00001 00000
   ASSERT(reg_.is_gpr());
   u32 instruction = 0b1101011000111111 << 16;
@@ -659,6 +663,7 @@ Instruction* sub_gpr64_imm(Register reg, int64_t imm) {
 }
 
 Instruction* add_gpr64_gpr64(Register dst, Register src) {
+  // add x1, x1, x2
   // 10001011 000 00010 000000 00001 00001
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -670,6 +675,7 @@ Instruction* add_gpr64_gpr64(Register dst, Register src) {
 }
 
 Instruction* sub_gpr64_gpr64(Register dst, Register src) {
+  // sub x1, x1, x2
   // 11001011 000 00010 000000 00001 00001
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
