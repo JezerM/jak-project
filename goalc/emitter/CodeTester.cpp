@@ -63,51 +63,37 @@ void CodeTester::emit_return() {
 }
 
 /*!
- * Pop all GPRs off of the stack. Optionally exclude rax.
- * Pops RSP always, which is weird, but doesn't cause issues.
+ * Pop all GPRs off of the stack. Optionally exclude r0.
+ * Pops SP always, which is weird, but doesn't cause issues.
  */
-void CodeTester::emit_pop_all_gprs(bool exclude_rax) {
-#ifndef __aarch64__
-  for (int i = 16; i-- > 0;) {
-    if (i != RAX || !exclude_rax) {
+void CodeTester::emit_pop_all_gprs(bool exclude_r0) {
+  for (int i = SP + 1; i-- > 0;) {
+    if (i != R0 || !exclude_r0) {
       emit(IGen::pop_gpr64(i));
     }
   }
-#else
-  // TODO find uses for excluding RAX
-  for (int i = 0; i < 32; i++) {
-    emit(IGen::pop_gpr64(i));
-  }
-#endif
 }
 
 /*!
- * Push all GPRs onto the stack. Optionally exclude RAX.
- * Pushes RSP always, which is weird, but doesn't cause issues.
+ * Push all GPRs onto the stack. Optionally exclude r0.
+ * Pushes SP always, which is weird, but doesn't cause issues.
  */
-void CodeTester::emit_push_all_gprs(bool exclude_rax) {
-#ifndef __aarch64__
-  for (int i = 0; i < 16; i++) {
-    if (i != RAX || !exclude_rax) {
+void CodeTester::emit_push_all_gprs(bool exclude_r0) {
+  for (int i = 0; i < SP + 1; i++) {
+    if (i != R0 || !exclude_r0) {
       emit(IGen::push_gpr64(i));
     }
   }
-#else
-  // TODO find uses for excluding RAX
-  for (int i = 0; i < 32; i++) {
-    emit(IGen::push_gpr64(i));
-  }
-#endif
 }
 
 /*!
  * Push all xmm registers (all 128-bits) to the stack.
  */
 void CodeTester::emit_push_all_xmms() {
-  emit(IGen::sub_gpr64_imm8s(RSP, 8));
+  emit(IGen::sub_gpr64_imm8s(SP, 8));
   for (int i = 0; i < 16; i++) {
-    emit(IGen::sub_gpr64_imm8s(RSP, 16));
-    emit(IGen::store128_gpr64_xmm128(RSP, XMM0 + i));
+    emit(IGen::sub_gpr64_imm8s(SP, 16));
+    emit(IGen::store128_gpr64_xmm128(SP, XMM0 + i));
   }
 }
 
@@ -116,10 +102,10 @@ void CodeTester::emit_push_all_xmms() {
  */
 void CodeTester::emit_pop_all_xmms() {
   for (int i = 0; i < 16; i++) {
-    emit(IGen::load128_xmm128_gpr64(XMM0 + i, RSP));
-    emit(IGen::add_gpr64_imm8s(RSP, 16));
+    emit(IGen::load128_xmm128_gpr64(XMM0 + i, SP));
+    emit(IGen::add_gpr64_imm8s(SP, 16));
   }
-  emit(IGen::add_gpr64_imm8s(RSP, 8));
+  emit(IGen::add_gpr64_imm8s(SP, 8));
 }
 
 /*!

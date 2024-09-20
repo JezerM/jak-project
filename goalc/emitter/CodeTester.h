@@ -26,8 +26,8 @@ class CodeTester {
   CodeTester();
   std::string dump_to_hex_string(bool nospace = false);
   void init_code_buffer(int capacity);
-  void emit_push_all_gprs(bool exclude_rax = false);
-  void emit_pop_all_gprs(bool exclude_rax = false);
+  void emit_push_all_gprs(bool exclude_r0 = false);
+  void emit_pop_all_gprs(bool exclude_r0 = false);
   void emit_push_all_xmms();
   void emit_pop_all_xmms();
   void emit_return();
@@ -65,28 +65,28 @@ class CodeTester {
 #ifdef _WIN32
     switch (i) {
       case 0:
-        return RCX;
+        return R4;
       case 1:
-        return RDX;
+        return R3;
       case 2:
-        return R8;
+        return R5;
       case 3:
-        return R9;
+        return R6;
       default:
         throw std::runtime_error("Invalid arg register index");
     }
 #else
     switch (i) {
       case 0:
-        return RDI;
+        return R0;
       case 1:
-        return RSI;
+        return R1;
       case 2:
-        return RDX;
+        return R2;
       case 3:
-        return RCX;
+        return R3;
       default:
-        throw std::runtime_error("Invaid arg register index");
+        throw std::runtime_error("Invalid arg register index");
     }
 #endif
   }

@@ -58,10 +58,10 @@ TEST(EmitterAVX, MOV_VF) {
 TEST(EmitterAVX, LoadVF_Reg) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 3, RSI, R15));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 3, R12, R15));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 13, RSI, R15));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 13, R12, R15));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 3, R2, OF));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 3, R11, OF));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 13, R2, OF));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64(XMM0 + 13, R11, OF));
 
   EXPECT_EQ(tester.dump_to_hex_string(true), "C4C178281C37C48178281C3CC44178282C37C40178282C3C");
 }
@@ -69,10 +69,10 @@ TEST(EmitterAVX, LoadVF_Reg) {
 TEST(EmitterAVX, LoadVF_RegS8) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, RSI, R15, -3));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R12, R15, -3));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, RSI, R15, -3));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R12, R15, -3));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R2, OF, -3));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R11, OF, -3));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R2, OF, -3));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R11, OF, -3));
 
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "C4C178285C37FDC48178285C3CFDC44178286C37FDC40178286C3CFD");
@@ -81,10 +81,10 @@ TEST(EmitterAVX, LoadVF_RegS8) {
 TEST(EmitterAVX, LoadVF_RegS32) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, RSI, R15, -0x100));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R12, R15, -0x100));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, RSI, R15, -0x100));
-  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R12, R15, -0x100));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R2, OF, -0x100));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R11, OF, -0x100));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R2, OF, -0x100));
+  tester.emit(IGen::loadvf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R11, OF, -0x100));
 
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "C4C178289C3700FFFFFFC48178289C3C00FFFFFFC4417828AC3700FFFFFFC4017828AC3C00FFFFFF");
@@ -93,10 +93,10 @@ TEST(EmitterAVX, LoadVF_RegS32) {
 TEST(EmitterAVX, StoreVF_Reg) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 3, RSI, R15));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 3, R12, R15));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 13, RSI, R15));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 13, R12, R15));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 3, R2, OF));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 3, R11, OF));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 13, R2, OF));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64(XMM0 + 13, R11, OF));
 
   EXPECT_EQ(tester.dump_to_hex_string(true), "C4C178291C37C48178291C3CC44178292C37C40178292C3C");
 }
@@ -104,10 +104,10 @@ TEST(EmitterAVX, StoreVF_Reg) {
 TEST(EmitterAVX, StoreVF_RegS8) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, RSI, R15, -3));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R12, R15, -3));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, RSI, R15, -3));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R12, R15, -3));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R2, OF, -3));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 3, R11, OF, -3));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R2, OF, -3));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s8(XMM0 + 13, R11, OF, -3));
 
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "C4C178295C37FDC48178295C3CFDC44178296C37FDC40178296C3CFD");
@@ -116,10 +116,10 @@ TEST(EmitterAVX, StoreVF_RegS8) {
 TEST(EmitterAVX, StoreVF_RegS32) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, RSI, R15, -0x100));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R12, R15, -0x100));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, RSI, R15, -0x100));
-  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R12, R15, -0x100));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R2, OF, -0x100));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 3, R11, OF, -0x100));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R2, OF, -0x100));
+  tester.emit(IGen::storevf_gpr64_plus_gpr64_plus_s32(XMM0 + 13, R11, OF, -0x100));
 
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "C4C178299C3700FFFFFFC48178299C3C00FFFFFFC4417829AC3700FFFFFFC4017829AC3C00FFFFFF");
@@ -626,20 +626,20 @@ TEST(EmitterAVX, VPSHUFHW) {
 TEST(EmitterAVX, movq_to_gpr_from_xmm) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::movq_gpr64_xmm64(RSP, XMM0 + 3));
-  tester.emit(IGen::movq_gpr64_xmm64(RSP, XMM0 + 13));
-  tester.emit(IGen::movq_gpr64_xmm64(R12, XMM0 + 3));
-  tester.emit(IGen::movq_gpr64_xmm64(R12, XMM0 + 13));
+  tester.emit(IGen::movq_gpr64_xmm64(SP, XMM0 + 3));
+  tester.emit(IGen::movq_gpr64_xmm64(SP, XMM0 + 13));
+  tester.emit(IGen::movq_gpr64_xmm64(R11, XMM0 + 3));
+  tester.emit(IGen::movq_gpr64_xmm64(R11, XMM0 + 13));
   EXPECT_EQ(tester.dump_to_hex_string(true), "66480F7EDC664C0F7EEC66490F7EDC664D0F7EEC");
 }
 
 TEST(EmitterAVX, movq_to_xmm_from_gpr) {
   CodeTester tester;
   tester.init_code_buffer(1024);
-  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 3, RSP));
-  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 13, RSP));
-  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 3, R12));
-  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 13, R12));
+  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 3, SP));
+  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 13, SP));
+  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 3, R11));
+  tester.emit(IGen::movq_xmm64_gpr64(XMM0 + 13, R11));
   EXPECT_EQ(tester.dump_to_hex_string(true), "66480F6EDC664C0F6EEC66490F6EDC664D0F6EEC");
 }
 

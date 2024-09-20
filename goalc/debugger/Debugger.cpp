@@ -461,7 +461,7 @@ void Debugger::update_break_info(std::optional<std::string> dump_path) {
     m_break_info = get_rip_info(m_regs_at_break.rip);
     update_continue_info();
 
-    get_backtrace(m_regs_at_break.rip, m_regs_at_break.gprs[emitter::RSP], dump_path);
+    get_backtrace(m_regs_at_break.rip, m_regs_at_break.gprs[emitter::SP], dump_path);
     auto dis = disassemble_at_rip(m_break_info);
     lg::print("{}\n", dis.text);
   }

@@ -462,7 +462,7 @@ Val* Compiler::compile_div(const goos::Object& form, const goos::Object& rest, E
         IRegConstraint result_rax_constraint;
         result_rax_constraint.instr_idx = fe->code().size();
         result_rax_constraint.ireg = result->ireg();
-        result_rax_constraint.desired_register = emitter::RAX;
+        result_rax_constraint.desired_register = emitter::R0;
         fe->constrain(result_rax_constraint);
 
         if (is_singed_integer_or_binteger(first_type)) {
@@ -525,7 +525,7 @@ Val* Compiler::compile_variable_shift(const goos::Object& form,
   IRegConstraint sa_con;
   sa_con.ireg = sa_in->ireg();
   sa_con.instr_idx = fenv->code().size();
-  sa_con.desired_register = emitter::RCX;
+  sa_con.desired_register = emitter::R4;
 
   if (get_math_mode(in->type()) != MathMode::MATH_INT ||
       get_math_mode(sa->type()) != MathMode::MATH_INT) {
@@ -629,7 +629,7 @@ Val* Compiler::compile_mod(const goos::Object& form, const goos::Object& rest, E
   IRegConstraint con;
   con.ireg = result->ireg();
   con.instr_idx = fenv->code().size();
-  con.desired_register = emitter::RAX;
+  con.desired_register = emitter::R0;
 
   fenv->constrain(con);
   env->emit_ir<IR_IntegerMath>(form,

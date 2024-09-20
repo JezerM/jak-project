@@ -22,26 +22,27 @@ std::string to_string(HWRegKind kind);
 constexpr int GPR_SIZE = 8;
 constexpr int XMM_SIZE = 16;
 
-// registers by name
-enum X86_REG : s8 {
-  RAX,  // return, temp
-  RCX,  // arg 3, temp
-  RDX,  // arg 2, temp
-  RBX,  // saved
+enum REG : s8 {
+  R0,  // Return
+  R1,  // arg 0
+  R2,  // arg 1
+  R3,  // arg 2
+  R4,  // arg 3
+  R5,  // arg 4
+  R6,  // arg 5
+  R7,  // arg 6
+  R8,  // arg 7
 
-  RSP,  // stack pointer (special)
-  RBP,  // saved
-  RSI,  // arg 1, temp
-  RDI,  // arg 0, temp
+  R9,   // RBX, saved
+  R10,  // RBP, saved
+  R11,  // R12, saved
 
-  R8,   // arg 4, temp
-  R9,   // arg 5, temp
-  R10,  // arg 6, saved (arg in GOAL only)
-  R11,  // arg 7, saved (arg in GOAL only)
-  R12,  // saved
-  R13,  // pp (special!)
-  R14,  // st (special!)
-  R15,  // offset (special!)
+  PP,  // special
+  ST,  // special
+  OF,  // special
+
+  SP,  // stack pointer (special)
+
   XMM0,
   XMM1,
   XMM2,
@@ -50,92 +51,134 @@ enum X86_REG : s8 {
   XMM5,
   XMM6,
   XMM7,
-  XMM8,   // saved
-  XMM9,   // saved
-  XMM10,  // saved
-  XMM11,  // saved
-  XMM12,  // saved
-  XMM13,  // saved
-  XMM14,  // saved
-  XMM15,  // saved
+
+  XMM8,
+  XMM9,
+  XMM10,
+  XMM11,
+  XMM12,
+  XMM13,
+  XMM14,
+  XMM15
+};
+
+// registers by name
+enum X86_REG : s8 {
+  X86_RAX,  // return, temp                     (R0)
+  X86_RCX,  // arg 3, temp                      (R4)
+  X86_RDX,  // arg 2, temp                      (R3)
+  X86_RBX,  // saved                            (R9)
+
+  X86_RSP,  // stack pointer (special)          (SP)
+  X86_RBP,  // saved                            (R10)
+  X86_RSI,  // arg 1, temp                      (R2)
+  X86_RDI,  // arg 0, temp                      (R1)
+
+  X86_R8,   // arg 4, temp                      (R5)
+  X86_R9,   // arg 5, temp                      (R6)
+  X86_R10,  // arg 6, saved (arg in GOAL only)  (R7)
+  X86_R11,  // arg 7, saved (arg in GOAL only)  (R8)
+  X86_R12,  // saved                            (R11)
+  X86_R13,  // pp (special!)                    (PP)
+  X86_R14,  // st (special!)                    (ST)
+  X86_R15,  // offset (special!)                (OF)
+
+  X86_XMM0,
+  X86_XMM1,
+  X86_XMM2,
+  X86_XMM3,
+  X86_XMM4,
+  X86_XMM5,
+  X86_XMM6,
+  X86_XMM7,
+  X86_XMM8,   // saved
+  X86_XMM9,   // saved
+  X86_XMM10,  // saved
+  X86_XMM11,  // saved
+  X86_XMM12,  // saved
+  X86_XMM13,  // saved
+  X86_XMM14,  // saved
+  X86_XMM15,  // saved
 };
 
 // TODO - i think it'll be better to make some sort of abstraction
 // mapping between x86 and arm, but just using this enum as a place to prototype
 // the registers to use.
 enum ARM64_REG : s8 {
-  X0,  // arg 0, caller-saved RDI
-  X1,  // arg 1, caller-saved RSI
-  X2,  // arg 2, caller-saved RDX
-  X3,  // arg 3, caller-saved RCX
-  X4,  // arg 4, caller-saved R8
-  X5,  // arg 5, caller-saved R9
-  X6,  // arg 6, caller-saved R10
-  X7,  // arg 7, caller-saved R11
+  ARM_X0,  // arg 0, caller-saved RDI
+  ARM_X1,  // arg 1, caller-saved RSI
+  ARM_X2,  // arg 2, caller-saved RDX
+  ARM_X3,  // arg 3, caller-saved RCX
+  ARM_X4,  // arg 4, caller-saved R8
+  ARM_X5,  // arg 5, caller-saved R9
+  ARM_X6,  // arg 6, caller-saved R10
+  ARM_X7,  // arg 7, caller-saved R11
 
-  X8,  // return, temp, not saved (RAX)
+  ARM_X8,  // return, temp, not saved (RAX)
 
-  X9,   // temp, not-saved
-  X10,  // temp, not-saved
-  X11,  // temp, not-saved
-  X12,  // temp, not-saved
-  X13,  // temp, not-saved
-  X14,  // temp, not-saved
-  X15,  // temp, not-saved
-  X16,  // temp, not-saved
-  X17,  // temp, not-saved
-  X18,  // temp, not-saved
+  ARM_X9,   // temp, not-saved
+  ARM_X10,  // temp, not-saved
+  ARM_X11,  // temp, not-saved
+  ARM_X12,  // temp, not-saved
+  ARM_X13,  // temp, not-saved
+  ARM_X14,  // temp, not-saved
+  ARM_X15,  // temp, not-saved
 
-  X19,  // saved TODO purpose?, R12
-  X20,  // pp, R13
-  X21,  // st, R14
-  X22,  // offset, TODO purpose?, R15
-  X23,  // unused, callee saved
-  X24,  // unused, callee saved
-  X25,  // unused, callee saved
-  X26,  // unused, callee saved
-  X27,  // unused, callee saved
-  X28,  // unused, callee saved
-  X29,  // callee saved, FP - don't use it
-  X30,  // LR - don't use it
+  ARM_X16,  // temp, not-saved, don't use it
+  ARM_X17,  // temp, not-saved, don't use it
+  ARM_X18,  // temp, not-saved, don't use it
 
-  SP,  // stack pointer
+  ARM_X19,  // saved TODO purpose?, R12
+  ARM_X20,  // pp, R13
+  ARM_X21,  // st, R14
+  ARM_X22,  // offset, TODO purpose?, R15
+  ARM_X23,  // unused, callee saved
+  ARM_X24,  // unused, callee saved
+  ARM_X25,  // unused, callee saved
+  ARM_X26,  // unused, callee saved
+  ARM_X27,  // unused, callee saved
+  ARM_X28,  // unused, callee saved
+
+  ARM_X29,  // callee saved, FP - don't use it
+  ARM_X30,  // LR - don't use it
+
+  ARM_SP,  // stack pointer
 
   // quadword registers, equivalent to XMMs
   // the convention in arm64 is the callee preserves all Q values
   // at the same time though, the caller should not depend on this convention!
-  Q0,
-  Q1,
-  Q2,
-  Q3,
-  Q4,
-  Q5,
-  Q6,
-  Q7,
-  Q8,
-  Q9,
-  Q10,
-  Q11,
-  Q12,
-  Q13,
-  Q14,
-  Q15,
-  Q16,
-  Q17,
-  Q18,
-  Q19,
-  Q20,
-  Q21,
-  Q22,
-  Q23,
-  Q24,
-  Q25,
-  Q26,
-  Q27,
-  Q28,
-  Q29,
-  Q30,
-  Q31
+  ARM_Q0,
+  ARM_Q1,
+  ARM_Q2,
+  ARM_Q3,
+  ARM_Q4,
+  ARM_Q5,
+  ARM_Q6,
+  ARM_Q7,
+  ARM_Q8,
+  ARM_Q9,
+  ARM_Q10,
+  ARM_Q11,
+  ARM_Q12,
+  ARM_Q13,
+  ARM_Q14,
+  ARM_Q15,
+  ARM_Q16,
+  ARM_Q17,
+  ARM_Q18,
+  ARM_Q19,
+  ARM_Q20,
+  ARM_Q21,
+  ARM_Q22,
+  ARM_Q23,
+  ARM_Q24,
+  ARM_Q25,
+  ARM_Q26,
+  ARM_Q27,
+  ARM_Q28,
+  ARM_Q29,
+  ARM_Q30,
+  ARM_Q31
 };
 
 class Register {
@@ -150,6 +193,8 @@ class Register {
   bool is_gpr() const;
 
   int hw_id() const;
+
+  int real_id() const;
 
   int id() const { return m_id; }
 
@@ -171,6 +216,7 @@ class Register {
   enum class VF_ELEMENT { X, Y, Z, W, NONE };
 
  private:
+  // this should be always a generic REG
   s8 m_id = -1;
 };
 
@@ -183,11 +229,6 @@ class RegisterInfo {
   static constexpr int N_TEMP_GPRS = 5;
   static constexpr int N_TEMP_XMMS = 8;
 
-  // static constexpr int N_SAVED_GPRS_ARM64 = 8;
-  // static constexpr int N_SAVED_XMMS_ARM64 = 8;
-
-  static_assert(N_REGS - 1 == XMM15, "bad register count");
-
   static RegisterInfo* make_register_info();
 
   struct Info {
@@ -198,7 +239,7 @@ class RegisterInfo {
     bool temp() const { return !saved && !special; }
   };
 
-  const Info& get_info(Register r) const { return m_info.at(r.id()); }
+  virtual const Info& get_info(Register r) const { return m_info.at(r.id()); }
   Register get_gpr_arg_reg(int id) const { return m_gpr_arg_regs.at(id); }
   Register get_xmm_arg_reg(int id) const { return m_xmm_arg_regs.at(id); }
   Register get_saved_gpr(int id) const { return m_saved_gprs.at(id); }
@@ -217,7 +258,6 @@ class RegisterInfo {
   const std::array<Register, N_SAVED_XMMS + N_SAVED_GPRS>& get_all_saved() { return m_saved_all; }
 
  protected:
-  RegisterInfo() = default;
   std::array<Info, N_REGS> m_info;
   std::array<Register, N_ARGS> m_gpr_arg_regs;
   std::array<Register, N_ARGS> m_xmm_arg_regs;
@@ -232,27 +272,45 @@ class RegisterInfo {
   std::vector<Register> m_xmm_spill_temp_alloc_order;
 };
 
-class RegisterInfoX86 : RegisterInfo {
+class RegisterInfoX86 : public RegisterInfo {
  public:
-  static RegisterInfo* make_register_info();
+  static RegisterInfoX86* make_register_info();
 
-  Register get_process_reg() const override { return R13; }
-  Register get_st_reg() const override { return R14; }
-  Register get_offset_reg() const override { return R15; }
-  Register get_gpr_ret_reg() const override { return RAX; }
+  static_assert(N_REGS - 1 == X86_XMM15, "bad register count");
+
+  const Info& get_info(Register r) const override { return m_info.at(r.real_id()); }
+
+  Register get_process_reg() const override { return PP; }
+  Register get_st_reg() const override { return ST; }
+  Register get_offset_reg() const override { return OF; }
+  Register get_gpr_ret_reg() const override { return R0; }
   Register get_xmm_ret_reg() const override { return XMM0; }
+
+ protected:
+  RegisterInfoX86() = default;
+  std::array<Info, N_REGS> m_info;
 };
 
-class RegisterInfoArm64 : RegisterInfo {
+class RegisterInfoArm64 : public RegisterInfo {
  public:
-  static RegisterInfo* make_register_info();
+  static constexpr int N_REGS = 64;
+
+  static_assert(N_REGS - 1 == ARM_Q31, "bad register count");
+
+  static RegisterInfoArm64* make_register_info();
+
+  const Info& get_info(Register r) const override { return m_info.at(r.real_id()); }
 
   // TODO: Change these
-  Register get_process_reg() const override { return R13; }
-  Register get_st_reg() const override { return R14; }
-  Register get_offset_reg() const override { return R15; }
-  Register get_gpr_ret_reg() const override { return X8; }
-  Register get_xmm_ret_reg() const override { return Q0; }
+  Register get_process_reg() const override { return PP; }
+  Register get_st_reg() const override { return ST; }
+  Register get_offset_reg() const override { return OF; }
+  Register get_gpr_ret_reg() const override { return R0; }
+  Register get_xmm_ret_reg() const override { return XMM0; }
+
+ protected:
+  RegisterInfoArm64() = default;
+  std::array<Info, N_REGS> m_info;
 };
 
 extern RegisterInfo* gRegInfo;

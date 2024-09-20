@@ -164,8 +164,8 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbe);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true,
@@ -178,11 +178,11 @@ Instruction* store8_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regis
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x88);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(value.hw_id(), addr1.hw_id(), addr2.hw_id());
-  if (value.id() > RBX) {
+  if (value.real_id() > R3) {
     instr->add_rex();
   }
   return instr;
@@ -196,8 +196,8 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbe);
@@ -214,13 +214,13 @@ Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x88);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
                                                     offset, false);
-  if (value.id() > RBX) {
+  if (value.real_id() > R3) {
     instr->add_rex();
   }
   return instr;
@@ -234,8 +234,8 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbe);
@@ -252,13 +252,13 @@ Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x88);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
                                                      offset, false);
-  if (value.id() > RBX) {
+  if (value.real_id() > R3) {
     instr->add_rex();
   }
   return instr;
@@ -274,8 +274,8 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb6);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true,
@@ -291,8 +291,8 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb6);
@@ -309,8 +309,8 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb6);
@@ -329,8 +329,8 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbf);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true,
@@ -343,8 +343,8 @@ Instruction* store16_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x66);
   instr->set_op2(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(value.hw_id(), addr1.hw_id(), addr2.hw_id());
@@ -360,8 +360,8 @@ Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x66);
   instr->set_op2(0x89);
@@ -379,8 +379,8 @@ Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x66);
   instr->set_op2(0x89);
@@ -398,8 +398,8 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbf);
@@ -416,8 +416,8 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xbf);
@@ -436,8 +436,8 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb7);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true,
@@ -453,8 +453,8 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb7);
@@ -471,8 +471,8 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xb7);
@@ -491,8 +491,8 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x63);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true);
   return instr;
@@ -503,8 +503,8 @@ Instruction* store32_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(value.hw_id(), addr1.hw_id(), addr2.hw_id());
   return instr;
@@ -518,8 +518,8 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x63);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -535,8 +535,8 @@ Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -552,8 +552,8 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x63);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -569,8 +569,8 @@ Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -588,8 +588,8 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id());
   return instr;
@@ -603,8 +603,8 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -620,8 +620,8 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -639,8 +639,8 @@ Instruction* load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(), true);
   return instr;
@@ -651,8 +651,8 @@ Instruction* store64_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_addr(value.hw_id(), addr1.hw_id(), addr2.hw_id(), true);
   return instr;
@@ -666,8 +666,8 @@ Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -683,8 +683,8 @@ Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s8(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -700,8 +700,8 @@ Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x8b);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -717,8 +717,8 @@ Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x89);
   instr->set_modrm_and_rex_for_reg_plus_reg_plus_s32(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -1379,7 +1379,7 @@ Instruction* store8_rip_s32(Register src, s64 offset) {
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x88);
   instr->set_modrm_and_rex_for_rip_plus_s32(src.hw_id(), offset, false);
-  if (src.id() > RBX) {
+  if (src.real_id() > R3) {
     instr->add_rex();
   }
   return instr;
@@ -2112,8 +2112,8 @@ Instruction* loadvf_gpr64_plus_gpr64(Register dst, Register addr1, Register addr
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x28);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_addr(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
                                                      VEX3::LeadingBytes::P_0F, false);
@@ -2128,8 +2128,8 @@ Instruction* loadvf_gpr64_plus_gpr64_plus_s8(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x28);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_plus_s8(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -2145,8 +2145,8 @@ Instruction* loadvf_gpr64_plus_gpr64_plus_s32(Register dst,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x28);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_plus_s32(dst.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -2159,8 +2159,8 @@ Instruction* storevf_gpr64_plus_gpr64(Register value, Register addr1, Register a
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   auto instr = new InstructionX86(0x29);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_addr(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
                                                      VEX3::LeadingBytes::P_0F, false);
@@ -2175,8 +2175,8 @@ Instruction* storevf_gpr64_plus_gpr64_plus_s8(Register value,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
   auto instr = new InstructionX86(0x29);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_plus_s8(value.hw_id(), addr1.hw_id(), addr2.hw_id(),
@@ -2192,8 +2192,8 @@ Instruction* storevf_gpr64_plus_gpr64_plus_s32(Register value,
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
   ASSERT(addr1 != addr2);
-  ASSERT(addr1 != RSP);
-  ASSERT(addr2 != RSP);
+  ASSERT(addr1 != SP);
+  ASSERT(addr2 != SP);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x29);
   instr->set_vex_modrm_and_rex_for_reg_plus_reg_plus_s32(

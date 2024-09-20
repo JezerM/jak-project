@@ -191,10 +191,10 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   // ldr x1, [x2, x3]
   // 11111000011 00011 0110 10 00010 00001
   u32 instruction = 0b11111000011 << 21;
-  instruction |= addr2.id() << 16;
+  instruction |= addr2.hw_id() << 16;
   instruction |= 0b011010 << 10;
-  instruction |= addr1.id() << 5;
-  instruction |= dst.id();
+  instruction |= addr1.hw_id() << 5;
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
   return new InstructionARM64(0b0);
 }
@@ -217,10 +217,10 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   // ldr x1, [x2, x3]
   // 11111000011 00011 0110 10 00010 00001
   u32 instruction = 0b11111000011 << 21;
-  instruction |= addr2.id() << 16;
+  instruction |= addr2.hw_id() << 16;
   instruction |= 0b011010 << 10;
-  instruction |= addr1.id() << 5;
-  instruction |= dst.id();
+  instruction |= addr1.hw_id() << 5;
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -231,10 +231,10 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   // ldr x1, [x2, x3]
   // 11111000011 00011 0110 10 00010 00001
   u32 instruction = 0b11111000011 << 21;
-  instruction |= addr2.id() << 16;
+  instruction |= addr2.hw_id() << 16;
   instruction |= 0b011010 << 10;
-  instruction |= addr1.id() << 5;
-  instruction |= dst.id();
+  instruction |= addr1.hw_id() << 5;
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -561,7 +561,7 @@ Instruction* static_addr(Register dst, s64 offset) {
 
   u32 instruction = 0b01011 << 27;
   instruction |= offset << 5;
-  instruction |= dst.id();
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -601,7 +601,7 @@ Instruction* push_gpr64(Register reg) {
   instruction |= 0b11111 << 16;
   instruction |= 0b11 << 10;
   instruction |= 31 << 5;
-  instruction |= reg.id();
+  instruction |= reg.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -615,7 +615,7 @@ Instruction* pop_gpr64(Register reg) {
   instruction |= 0b11111 << 16;
   instruction |= 0b11 << 10;
   instruction |= 31 << 5;
-  instruction |= reg.id();
+  instruction |= reg.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -623,7 +623,7 @@ Instruction* call_r64(Register reg_) {
   // 11010110001 11111 0000 00 00001 00000
   ASSERT(reg_.is_gpr());
   u32 instruction = 0b1101011000111111 << 16;
-  instruction |= reg_.id() << 5;
+  instruction |= reg_.hw_id() << 5;
   return new InstructionARM64(instruction);
 }
 
@@ -663,9 +663,9 @@ Instruction* add_gpr64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
   u32 instruction = 0b10001011 << 24;
-  instruction |= src.id() << 16;
-  instruction |= dst.id() << 5;
-  instruction |= dst.id();
+  instruction |= src.hw_id() << 16;
+  instruction |= dst.hw_id() << 5;
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
 }
 
@@ -674,9 +674,9 @@ Instruction* sub_gpr64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
   u32 instruction = 0b11001011000 << 21;
-  instruction |= src.id() << 16;
-  instruction |= dst.id() << 5;
-  instruction |= dst.id();
+  instruction |= src.hw_id() << 16;
+  instruction |= dst.hw_id() << 5;
+  instruction |= dst.hw_id();
   return new InstructionARM64(instruction);
 }
 

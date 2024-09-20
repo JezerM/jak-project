@@ -276,28 +276,28 @@ AssignmentOrder REG_saved_first_order = {
     {emitter::XMM8, emitter::XMM9, emitter::XMM10, emitter::XMM11, emitter::XMM12, emitter::XMM13,
      emitter::XMM14, emitter::XMM15, emitter::XMM7, emitter::XMM6, emitter::XMM5, emitter::XMM4,
      emitter::XMM3, emitter::XMM2, emitter::XMM1, emitter::XMM0},
-    {emitter::RBX, emitter::RBP, emitter::R12, emitter::R11, emitter::R10, emitter::R9, emitter::R8,
-     emitter::RCX, emitter::RDX, emitter::RSI, emitter::RDI, emitter::RAX}};
+    {emitter::R9, emitter::R10, emitter::R11, emitter::R8, emitter::R7, emitter::R6, emitter::R5,
+     emitter::R4, emitter::R3, emitter::R2, emitter::R1, emitter::R0}};
 
 AssignmentOrder REG_temp_first_order = {
     {emitter::XMM7, emitter::XMM6, emitter::XMM5, emitter::XMM4, emitter::XMM3, emitter::XMM2,
      emitter::XMM1, emitter::XMM0, emitter::XMM8, emitter::XMM9, emitter::XMM10, emitter::XMM11,
      emitter::XMM12, emitter::XMM13, emitter::XMM14, emitter::XMM15},
-    {emitter::R9, emitter::R8, emitter::RCX, emitter::RDX, emitter::RSI, emitter::RDI, emitter::RAX,
-     emitter::RBX, emitter::RBP, emitter::R12, emitter::R11, emitter::R10}};
+    {emitter::R6, emitter::R5, emitter::R4, emitter::R3, emitter::R2, emitter::R1, emitter::R0,
+     emitter::R9, emitter::R10, emitter::R11, emitter::R8, emitter::R7}};
 
 AssignmentOrder REG_extra_hard_order = {
     {emitter::XMM7, emitter::XMM6, emitter::XMM5, emitter::XMM4, emitter::XMM3, emitter::XMM2,
      emitter::XMM1, emitter::XMM0, emitter::XMM8, emitter::XMM9},
-    {emitter::R9, emitter::RSI, emitter::RDI, emitter::RAX, emitter::RBP, emitter::R12}};
+    {emitter::R6, emitter::R2, emitter::R1, emitter::R0, emitter::R10, emitter::R11}};
 
-AssignmentOrder REG_temp_only_order = {{emitter::XMM7, emitter::XMM6, emitter::XMM5, emitter::XMM4,
-                                        emitter::XMM3, emitter::XMM2, emitter::XMM1, emitter::XMM0},
-                                       {emitter::R9, emitter::R8, emitter::RCX, emitter::RDX,
-                                        emitter::RSI, emitter::RDI, emitter::RAX}};
+AssignmentOrder REG_temp_only_order = {
+    {emitter::XMM7, emitter::XMM6, emitter::XMM5, emitter::XMM4, emitter::XMM3, emitter::XMM2,
+     emitter::XMM1, emitter::XMM0},
+    {emitter::R6, emitter::R5, emitter::R4, emitter::R3, emitter::R2, emitter::R1, emitter::R0}};
 std::vector<emitter::Register> allowable_local_var_move_elim = {
-    emitter::R9,    emitter::R8,    emitter::RCX,   emitter::RDX,  emitter::RSI,   emitter::RDI,
-    emitter::RAX,   emitter::RBX,   emitter::RBP,   emitter::R12,  emitter::R11,   emitter::R10,
+    emitter::R6,    emitter::R5,    emitter::R4,    emitter::R3,   emitter::R2,    emitter::R1,
+    emitter::R0,    emitter::R9,    emitter::R10,   emitter::R11,  emitter::R8,    emitter::R7,
     emitter::XMM7,  emitter::XMM6,  emitter::XMM5,  emitter::XMM4, emitter::XMM3,  emitter::XMM2,
     emitter::XMM1,  emitter::XMM0,  emitter::XMM8,  emitter::XMM9, emitter::XMM10, emitter::XMM11,
     emitter::XMM12, emitter::XMM13, emitter::XMM14, emitter::XMM15};

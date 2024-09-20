@@ -489,7 +489,7 @@ void IR_RegValAddr::do_codegen(emitter::ObjectGenerator* gen,
   int stack_offset = get_stack_offset(m_src, allocs);
   auto dst = get_reg(m_dest, allocs, irec);
   // x86 pointer to var
-  gen->add_instr(IGen::lea_reg_plus_off(dst, RSP, stack_offset), irec);
+  gen->add_instr(IGen::lea_reg_plus_off(dst, SP, stack_offset), irec);
   // x86 -> GOAL pointer
   gen->add_instr(IGen::sub_gpr64_gpr64(dst, emitter::gRegInfo->get_offset_reg()), irec);
 }
@@ -610,7 +610,7 @@ RegAllocInstr IR_IntegerMath::to_rai() {
 
   if (m_kind == IntegerMathKind::IDIV_32 || m_kind == IntegerMathKind::IMOD_32 ||
       m_kind == IntegerMathKind::UDIV_32 || m_kind == IntegerMathKind::UMOD_32) {
-    rai.exclude.emplace_back(emitter::RDX);
+    rai.exclude.emplace_back(emitter::R3);
   }
   return rai;
 }
@@ -645,15 +645,15 @@ void IR_IntegerMath::do_codegen(emitter::ObjectGenerator* gen,
       break;
     case IntegerMathKind::SHLV_64:
       gen->add_instr(IGen::shl_gpr64_cl(get_reg(m_dest, allocs, irec)), irec);
-      ASSERT(get_reg(m_arg, allocs, irec) == emitter::RCX);
+      ASSERT(get_reg(m_arg, allocs, irec) == emitter::R4);
       break;
     case IntegerMathKind::SHRV_64:
       gen->add_instr(IGen::shr_gpr64_cl(get_reg(m_dest, allocs, irec)), irec);
-      ASSERT(get_reg(m_arg, allocs, irec) == emitter::RCX);
+      ASSERT(get_reg(m_arg, allocs, irec) == emitter::R4);
       break;
     case IntegerMathKind::SARV_64:
       gen->add_instr(IGen::sar_gpr64_cl(get_reg(m_dest, allocs, irec)), irec);
-      ASSERT(get_reg(m_arg, allocs, irec) == emitter::RCX);
+      ASSERT(get_reg(m_arg, allocs, irec) == emitter::R4);
       break;
     case IntegerMathKind::SHL_64:
       gen->add_instr(IGen::shl_gpr64_u8(get_reg(m_dest, allocs, irec), m_shift_amount), irec);
@@ -678,28 +678,28 @@ void IR_IntegerMath::do_codegen(emitter::ObjectGenerator* gen,
     case IntegerMathKind::IDIV_32: {
       gen->add_instr(IGen::cdq(), irec);
       gen->add_instr(IGen::idiv_gpr32(get_reg(m_arg, allocs, irec)), irec);
-      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::RAX), irec);
+      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::R0), irec);
     } break;
     case IntegerMathKind::UDIV_32: {
       // zero extend, not sign extend to avoid overflow
-      gen->add_instr(IGen::xor_gpr64_gpr64(Register(RDX), Register(RDX)), irec);
+      gen->add_instr(IGen::xor_gpr64_gpr64(Register(R3), Register(R3)), irec);
       gen->add_instr(IGen::unsigned_div_gpr32(get_reg(m_arg, allocs, irec)), irec);
       // note: this probably needs hardware testing to know for sure if the PS2 actually sign
       // extends here or not. Nothing seems to break either way, and PCSX2/Dobie interpreters both
       // sign extend, so that seems like the safest option.
-      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::RAX), irec);
+      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::R0), irec);
     } break;
     case IntegerMathKind::IMOD_32: {
       gen->add_instr(IGen::cdq(), irec);
       gen->add_instr(IGen::idiv_gpr32(get_reg(m_arg, allocs, irec)), irec);
-      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::RDX), irec);
+      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::R3), irec);
     } break;
     case IntegerMathKind::UMOD_32: {
       // zero extend, not sign extend to avoid overflow
-      gen->add_instr(IGen::xor_gpr64_gpr64(Register(RDX), Register(RDX)), irec);
+      gen->add_instr(IGen::xor_gpr64_gpr64(Register(R3), Register(R3)), irec);
       gen->add_instr(IGen::unsigned_div_gpr32(get_reg(m_arg, allocs, irec)), irec);
       // see note on udiv, same applies here.
-      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::RDX), irec);
+      gen->add_instr(IGen::movsx_r64_r32(get_reg(m_dest, allocs, irec), emitter::R3), irec);
     } break;
     default:
       ASSERT(false);
@@ -1139,12 +1139,12 @@ void IR_GetStackAddr::do_codegen(emitter::ObjectGenerator* gen,
   int offset = GPR_SIZE * allocs.get_slot_for_var(m_slot);
 
   if (offset == 0) {
-    gen->add_instr(IGen::mov_gpr64_gpr64(dest_reg, RSP), irec);
+    gen->add_instr(IGen::mov_gpr64_gpr64(dest_reg, SP), irec);
     gen->add_instr(IGen::sub_gpr64_gpr64(dest_reg, gRegInfo->get_offset_reg()), irec);
   } else {
-    // dest = offset + RSP
-    gen->add_instr(IGen::lea_reg_plus_off(dest_reg, RSP, offset), irec);
-    // dest = offset + RSP - offset
+    // dest = offset + SP
+    gen->add_instr(IGen::lea_reg_plus_off(dest_reg, SP, offset), irec);
+    // dest = offset + SP - offset
     gen->add_instr(IGen::sub_gpr64_gpr64(dest_reg, gRegInfo->get_offset_reg()), irec);
   }
 }
