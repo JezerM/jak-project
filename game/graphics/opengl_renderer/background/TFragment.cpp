@@ -421,15 +421,7 @@ void TFragment::render_tree(int geom,
   if (m_color_result.size() < tree.colors->color_count) {
     m_color_result.resize(tree.colors->color_count);
   }
-#ifndef __aarch64__
-  if (m_use_fast_time_of_day) {
-    interp_time_of_day_fast(settings.camera.itimes, tree.tod_cache, m_color_result.data());
-  } else {
-    interp_time_of_day_slow(settings.camera.itimes, *tree.colors, m_color_result.data());
-  }
-#else
   interp_time_of_day(settings.camera.itimes, *tree.colors, m_color_result.data());
-#endif
   glActiveTexture(GL_TEXTURE10);
   glBindTexture(GL_TEXTURE_1D, tree.time_of_day_texture);
   glTexSubImage1D(GL_TEXTURE_1D, 0, 0, tree.colors->color_count, GL_RGBA,

@@ -45,9 +45,9 @@ int main(int argc, char** argv) {
   app.add_option("-c,--cmd", cmd, "Specify a command to run, no REPL is launched in this mode");
   app.add_option("-u,--user", username,
                  "Specify the username to use for your user profile in 'goal_src/user/'");
-  app.add_option("-p,--port", nrepl_port, "Specify the nREPL port.  Defaults to 8181");
   app.add_option("--target-arch", target_arch,
                  "Target architecture to compile for ('x86_64' or 'arm64')");
+  app.add_option("-p,--port", nrepl_port, "Specify the nREPL port.  Defaults to 8181");
   app.add_flag("--user-auto", auto_find_user,
                "Attempt to automatically deduce the user, overrides '--user'");
   app.add_option("-g,--game", game, "The game name: 'jak1' or 'jak2'");

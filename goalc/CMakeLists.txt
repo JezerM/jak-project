@@ -95,4 +95,4 @@ add_executable(build_actor build_actor/main.cpp)
 target_link_libraries(goalc common Zydis capstone compiler)
 target_link_libraries(goalc-simple common Zydis capstone compiler)
 target_link_libraries(build_level common Zydis capstone compiler)
-
+target_link_libraries(build_actor common Zydis capstone compiler)

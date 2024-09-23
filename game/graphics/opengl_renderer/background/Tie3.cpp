@@ -426,15 +426,7 @@ void Tie3::setup_tree(int idx,
     m_color_result.resize(tree.colors->color_count);
   }
 
-#ifndef __aarch64__
-  if (m_use_fast_time_of_day) {
-    interp_time_of_day_fast(settings.camera.itimes, tree.tod_cache, m_color_result.data());
-  } else {
-    interp_time_of_day_slow(settings.camera.itimes, *tree.colors, m_color_result.data());
-  }
-#else
   interp_time_of_day(settings.camera.itimes, *tree.colors, m_color_result.data());
-#endif
 
   glActiveTexture(GL_TEXTURE10);
   glBindTexture(GL_TEXTURE_1D, tree.time_of_day_texture);

@@ -21,7 +21,7 @@ struct CpuInfo {
   std::string model;
   enum CpuArch arch
 #if defined __x86_64__
-      = cpu_arch_x86;
+      = cpu_arch_x86_64;
 #elif defined __aarch64__
       = cpu_arch_arm64;
 #else

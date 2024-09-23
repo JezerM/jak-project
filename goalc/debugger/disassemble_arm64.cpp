@@ -5,8 +5,8 @@
 #include "goalc/debugger/disassemble.h"
 #include <capstone/capstone.h>
 
-#include "third-party/fmt/color.h"
-#include "third-party/fmt/core.h"
+#include "fmt/color.h"
+#include "fmt/core.h"
 
 std::string disassemble_arm64(u8* data, int len, u64 base_addr) {
   std::string result;

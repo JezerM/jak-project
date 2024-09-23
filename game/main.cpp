@@ -113,9 +113,9 @@ int main(int argc, char** argv) {
   app.add_flag(
       "--port", port_number,
       "Specify port number for listener connection (default is 8112 for Jak 1 and 8113 for Jak 2)");
-  app.add_flag("--no-avx2", disable_avx2, "Disable AVX2 for testing");
   app.add_option("--target-arch", target_arch,
                  "Target architecture to compile for ('x86_64' or 'arm64')");
+  app.add_flag("--no-avx2", disable_avx2, "Disable AVX2 for testing");
   app.add_flag("--no-display", disable_display, "Disable video display");
   app.add_flag("--profile", enable_profiling, "Enables profiling immediately from startup");
   app.add_flag("--portable", enable_portable,
