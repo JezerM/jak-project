@@ -2,8 +2,8 @@
 
 #include "common/goos/Reader.h"
 
+#include "capstone/capstone.h"
 #include "goalc/debugger/disassemble.h"
-#include <capstone/capstone.h>
 
 #include "fmt/color.h"
 #include "fmt/core.h"
