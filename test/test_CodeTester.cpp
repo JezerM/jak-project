@@ -18,8 +18,15 @@ TEST(CodeTester, prologue) {
   tester.init_code_buffer(256);
   tester.emit_push_all_gprs();
   // check we generate the right code for pushing all gpr's
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(),
             "50 51 52 53 54 55 56 57 41 50 41 51 41 52 41 53 41 54 41 55 41 56 41 57");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(),
+            "e8 0f 1f f8 e0 0f 1f f8 e1 0f 1f f8 e2 0f 1f f8 e3 0f 1f f8 e4 0f 1f f8 e5 0f 1f f8 "
+            "e6 0f 1f f8 e7 0f 1f f8 f7 0f 1f f8 f8 0f 1f f8 f3 0f 1f f8 f4 0f 1f f8 f5 0f 1f f8 "
+            "f6 0f 1f f8 ff 0f 1f f8");
+#endif
 }
 
 TEST(CodeTester, epilogue) {
@@ -27,8 +34,15 @@ TEST(CodeTester, epilogue) {
   tester.init_code_buffer(256);
   tester.emit_pop_all_gprs();
   // check we generate the right code for popping all gpr's
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(),
             "41 5f 41 5e 41 5d 41 5c 41 5b 41 5a 41 59 41 58 5f 5e 5d 5c 5b 5a 59 58");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(),
+            "ff 07 41 f8 f6 07 41 f8 f5 07 41 f8 f4 07 41 f8 f3 07 41 f8 f8 07 41 f8 f7 07 41 f8 "
+            "e7 07 41 f8 e6 07 41 f8 e5 07 41 f8 e4 07 41 f8 e3 07 41 f8 e2 07 41 f8 e1 07 41 f8 "
+            "e0 07 41 f8 e8 07 41 f8");
+#endif
 }
 
 TEST(CodeTester, execute_return) {
@@ -61,32 +75,60 @@ TEST(CodeTester, simd_store_128) {
   tester.emit(IGen::store128_gpr64_xmm128(ST, XMM3));
   tester.emit(IGen::store128_gpr64_xmm128(R9, XMM14));
   tester.emit(IGen::store128_gpr64_xmm128(ST, XMM13));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(),
             "66 0f 7f 1b 66 41 0f 7f 1e 66 44 0f 7f 33 66 45 0f 7f 2e");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "e3 0e 9f 3c a3 0e 9f 3c ee 0e 9f 3c ad 0e 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(SP, XMM1));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 7f 0c 24");  // requires SIB byte.
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "e1 0f 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(R11, XMM13));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 7f 2c 24");  // requires SIB byte and REX byte
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "6d 0e 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(R10, XMM1));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 7f 4d 00");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "01 0f 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(R10, XMM11));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 0f 7f 5d 00");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "0b 0f 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(PP, XMM2));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 41 0f 7f 55 00");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "82 0e 9f 3c");
+#endif
 
   tester.clear();
   tester.emit(IGen::store128_gpr64_xmm128(PP, XMM12));
+#if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 7f 65 00");
+#elif defined __aarch64__
+  EXPECT_EQ(tester.dump_to_hex_string(), "8c 0e 9f 3c");
+#endif
 
   //  tester.emit(IGen::store128_gpr64_xmm128(R9, XMM3));
   //  tester.emit(IGen::store128_gpr64_xmm128(ST, XMM3));

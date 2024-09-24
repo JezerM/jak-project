@@ -466,7 +466,18 @@ Instruction* load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Instruction* store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
-  return new InstructionARM64(0b0);
+  // str q0, [x0, #-0x10]!
+  // 00 1111 00 100 111110000 01 00001 00001
+  ASSERT(gpr_addr.is_gpr());
+  ASSERT(xmm_value.is_128bit_simd());
+  u32 instruction = 0b001111 << 26;
+  instruction |= 0b1 << 23;
+  instruction |= 0b11111 << 16;
+  instruction |= 0b11 << 10;
+  instruction |= gpr_addr.hw_id() << 5;
+  instruction |= xmm_value.hw_id();
+
+  return new InstructionARM64(instruction);
 }
 
 Instruction* store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s64 offset) {
@@ -478,7 +489,18 @@ Instruction* store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64
 }
 
 Instruction* load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
-  return new InstructionARM64(0b0);
+  // ldr q0, [x0], #0x10
+  // 00 1111 00 110 000010000 01 00001 00001
+  ASSERT(xmm_dest.is_128bit_simd());
+  ASSERT(gpr_addr.is_gpr());
+  u32 instruction = 0b001111 << 26;
+  instruction |= 0b11 << 22;
+  instruction |= 0b00001 << 16;
+  instruction |= 0b01 << 10;
+  instruction |= gpr_addr.hw_id() << 5;
+  instruction |= xmm_dest.hw_id();
+
+  return new InstructionARM64(instruction);
 }
 
 Instruction* load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 offset) {
@@ -609,14 +631,13 @@ Instruction* push_gpr64(Register reg) {
 
 Instruction* pop_gpr64(Register reg) {
   // pg. 1998
-  // ldr x1, [sp, #-0x10]!
-  // 11111 000010 111110000 11 11111 00001
-  // 11111 000010 111110000 11 11111 00011
+  // ldr x0, [sp], #0x10
+  // 11111 000010 000010000 01 11111 00000
   ASSERT(reg.is_gpr());
   u32 instruction = 0b11111 << 27;
   instruction |= 0b1 << 22;
-  instruction |= 0b11111 << 16;
-  instruction |= 0b11 << 10;
+  instruction |= 0b1 << 16;
+  instruction |= 0b1 << 10;
   instruction |= 31 << 5;
   instruction |= reg.hw_id();
   return new InstructionARM64(instruction);

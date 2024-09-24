@@ -130,9 +130,9 @@ void CodeTester::clear() {
  */
 u64 CodeTester::execute() {
 #if defined(__APPLE__) && defined(__aarch64__)
-  mprotect(code_buffer, code_buffer_capacity, PROT_EXEC | PROT_READ);
+  pthread_jit_write_protect_np(true);
   auto ret = ((u64(*)())code_buffer)();
-  mprotect(code_buffer, code_buffer_capacity, PROT_WRITE | PROT_READ);
+  pthread_jit_write_protect_np(false);
   return ret;
 #else
   return ((u64(*)())code_buffer)();
@@ -145,9 +145,9 @@ u64 CodeTester::execute() {
  */
 u64 CodeTester::execute(u64 in0, u64 in1, u64 in2, u64 in3) {
 #if defined(__APPLE__) && defined(__aarch64__)
-  mprotect(code_buffer, code_buffer_capacity, PROT_EXEC | PROT_READ);
+  pthread_jit_write_protect_np(true);
   auto ret = ((u64(*)(u64, u64, u64, u64))code_buffer)(in0, in1, in2, in3);
-  mprotect(code_buffer, code_buffer_capacity, PROT_WRITE | PROT_READ);
+  pthread_jit_write_protect_np(false);
   return ret;
 #else
   return ((u64(*)(u64, u64, u64, u64))code_buffer)(in0, in1, in2, in3);
@@ -166,8 +166,8 @@ void CodeTester::init_code_buffer(int capacity) {
 // The solution to this is to flip-flop between permissions, or perhaps have two threads
 // one that has writing permission, and another with executable permission
 #if defined(__APPLE__) && defined(__aarch64__)
-  code_buffer =
-      (u8*)mmap(nullptr, capacity, PROT_WRITE | PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+  code_buffer = (u8*)mmap(nullptr, capacity, PROT_EXEC | PROT_WRITE | PROT_READ,
+                          MAP_ANONYMOUS | MAP_PRIVATE | MAP_JIT, 0, 0);
 #else
   code_buffer = (u8*)mmap(nullptr, capacity, PROT_EXEC | PROT_READ | PROT_WRITE,
                           MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
@@ -175,6 +175,10 @@ void CodeTester::init_code_buffer(int capacity) {
   if (code_buffer == (u8*)(-1)) {
     ASSERT_MSG(false, "[CodeTester] Failed to map memory!");
   }
+
+#ifdef __APPLE__
+  pthread_jit_write_protect_np(false);  // Switch to write mode in this thread
+#endif
 
   code_buffer_capacity = capacity;
   code_buffer_size = 0;
