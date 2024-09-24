@@ -5,6 +5,7 @@
 #include "common/util/os.h"
 #include "common/util/unicode_util.h"
 
+#include "goalc/emitter/Register.h"
 #include "gtest/gtest.h"
 
 // Running subsets of tests, see:
@@ -25,6 +26,9 @@ int main(int argc, char** argv) {
   setup_cpu_info();
   file_util::setup_project_path(std::nullopt);
   lg::initialize();
+
+  // Init global RegisterInfo
+  emitter::gRegInfo = emitter::RegisterInfo::make_register_info();
 
   ::testing::InitGoogleTest(&argc, argv);
 
