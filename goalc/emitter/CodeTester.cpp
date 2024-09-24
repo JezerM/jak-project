@@ -62,14 +62,23 @@ void CodeTester::emit_return() {
   emit(IGen::ret());
 }
 
+#if defined __x86_64__ || defined _M_X64
+const std::vector<Register> alloc_order = {R0, R4, R3, R9, SP,  R10, R2, R1,
+                                           R5, R6, R7, R8, R11, PP,  ST, OF};
+#else
+const std::vector<Register> alloc_order = {R0, R1, R2,  R3,  R4, R5, R6, R7,
+                                           R8, R9, R10, R11, PP, ST, OF, SP};
+#endif
+
 /*!
  * Pop all GPRs off of the stack. Optionally exclude r0.
  * Pops SP always, which is weird, but doesn't cause issues.
  */
 void CodeTester::emit_pop_all_gprs(bool exclude_r0) {
-  for (int i = SP + 1; i-- > 0;) {
-    if (i != R0 || !exclude_r0) {
-      emit(IGen::pop_gpr64(i));
+  for (u32 i = alloc_order.size(); i-- > 0;) {
+    auto reg = alloc_order[i];
+    if (reg != R0 || !exclude_r0) {
+      emit(IGen::pop_gpr64(reg));
     }
   }
 }
@@ -79,9 +88,10 @@ void CodeTester::emit_pop_all_gprs(bool exclude_r0) {
  * Pushes SP always, which is weird, but doesn't cause issues.
  */
 void CodeTester::emit_push_all_gprs(bool exclude_r0) {
-  for (int i = 0; i < SP + 1; i++) {
-    if (i != R0 || !exclude_r0) {
-      emit(IGen::push_gpr64(i));
+  for (u32 i = 0; i < alloc_order.size(); i++) {
+    auto reg = alloc_order[i];
+    if (reg != R0 || !exclude_r0) {
+      emit(IGen::push_gpr64(reg));
     }
   }
 }

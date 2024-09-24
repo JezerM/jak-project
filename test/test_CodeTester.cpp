@@ -124,8 +124,9 @@ TEST(CodeTester, simd_store_128) {
 TEST(CodeTester, sub_gpr64_imm8) {
   CodeTester tester;
   tester.init_code_buffer(256);
-  for (int i = 0; i < 16; i++) {
-    tester.emit(IGen::sub_gpr64_imm8s(i, -1));
+  for (u32 i = 0; i < alloc_order.size(); i++) {
+    auto reg = alloc_order[i];
+    tester.emit(IGen::sub_gpr64_imm8s(reg, -1));
   }
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "4883E8FF4883E9FF4883EAFF4883EBFF4883ECFF4883EDFF4883EEFF4883EFFF4983E8FF4983E9FF4983EA"
@@ -135,8 +136,9 @@ TEST(CodeTester, sub_gpr64_imm8) {
 TEST(CodeTester, add_gpr64_imm8) {
   CodeTester tester;
   tester.init_code_buffer(256);
-  for (int i = 0; i < 16; i++) {
-    tester.emit(IGen::add_gpr64_imm8s(i, -1));
+  for (u32 i = 0; i < alloc_order.size(); i++) {
+    auto reg = alloc_order[i];
+    tester.emit(IGen::add_gpr64_imm8s(reg, -1));
   }
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "4883C0FF4883C1FF4883C2FF4883C3FF4883C4FF4883C5FF4883C6FF4883C7FF4983C0FF4983C1FF4983C2"

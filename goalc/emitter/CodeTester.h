@@ -8,6 +8,7 @@
  * The CodeTester can't be used for tests requiring the full GOAL language/linking.
  */
 
+#include <vector>
 #ifndef JAK_CODETESTER_H
 #define JAK_CODETESTER_H
 
@@ -133,5 +134,7 @@ class CodeTester {
   u8* code_buffer = nullptr;
   RegisterInfo* m_info;
 };
+
+extern const std::vector<Register> alloc_order;
 }  // namespace emitter
 #endif  // JAK_CODETESTER_H
