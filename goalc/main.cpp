@@ -13,6 +13,7 @@
 #include "common/versions/versions.h"
 
 #include "goalc/compiler/Compiler.h"
+#include "goalc/emitter/Register.h"
 
 #include "fmt/color.h"
 #include "fmt/core.h"

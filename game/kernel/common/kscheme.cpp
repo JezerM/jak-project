@@ -135,7 +135,6 @@ u64 call_goal(Ptr<Function> f, u64 a, u64 b, u64 c, u64 st, void* offset) {
   pthread_jit_write_protect_np(false);
   return ret;
 #elif _WIN32
-#elif _WIN32
   return _call_goal_asm_win32(a, b, c, fptr, st_ptr, offset);
 #endif
 }
