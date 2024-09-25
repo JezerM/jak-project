@@ -132,15 +132,17 @@ int Register::hw_id() const {
   return 0xff;
 }
 
-RegisterInfo* RegisterInfo::make_register_info() {
-  RegisterInfo* info = NULL;
+std::unique_ptr<RegisterInfo> RegisterInfo::make_register_info() {
+  std::unique_ptr<RegisterInfo> info = NULL;
   switch (get_cpu_info().target_arch) {
     case cpu_arch_arm64:
       info = RegisterInfoArm64::make_register_info();
+      break;
     case cpu_arch_x86_64:
       info = RegisterInfoX86::make_register_info();
-    default:
       break;
+    default:
+      return NULL;
   }
 
   // skip R0 and XMM0 so they can be used for return.
@@ -175,7 +177,7 @@ RegisterInfo* RegisterInfo::make_register_info() {
   return info;
 }
 
-RegisterInfo* gRegInfo;
+std::unique_ptr<RegisterInfo> gRegInfo;
 
 std::string to_string(HWRegKind kind) {
   switch (kind) {

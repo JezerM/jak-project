@@ -1,8 +1,8 @@
 #include "Register.h"
 
 namespace emitter {
-RegisterInfoX86* RegisterInfoX86::make_register_info() {
-  auto info = new RegisterInfoX86();
+std::unique_ptr<RegisterInfoX86> RegisterInfoX86::make_register_info() {
+  auto info = std::unique_ptr<RegisterInfoX86>(new RegisterInfoX86());
 
   info->m_info[X86_RAX] = {false, false, "rax"};  // return, temp
   info->m_info[X86_RCX] = {false, false, "rcx"};  // gpr arg 3, temp

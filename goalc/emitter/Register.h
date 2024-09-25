@@ -6,12 +6,14 @@
  */
 
 #include <array>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "common/common_types.h"
 #include "common/goal_constants.h"
 #include "common/util/Assert.h"
+#include "common/util/os.h"
 
 namespace emitter {
 
@@ -229,8 +231,6 @@ class RegisterInfo {
   static constexpr int N_TEMP_GPRS = 5;
   static constexpr int N_TEMP_XMMS = 8;
 
-  static RegisterInfo* make_register_info();
-
   struct Info {
     bool saved = false;    // does the callee save it?
     bool special = false;  // is it a special GOAL register?
@@ -239,7 +239,9 @@ class RegisterInfo {
     bool temp() const { return !saved && !special; }
   };
 
-  virtual const Info& get_info(Register r) const { return m_info.at(r.id()); }
+  static std::unique_ptr<RegisterInfo> make_register_info();
+
+  virtual const Info& get_info(Register r) const = 0;
   Register get_gpr_arg_reg(int id) const { return m_gpr_arg_regs.at(id); }
   Register get_xmm_arg_reg(int id) const { return m_xmm_arg_regs.at(id); }
   Register get_saved_gpr(int id) const { return m_saved_gprs.at(id); }
@@ -258,7 +260,6 @@ class RegisterInfo {
   const std::array<Register, N_SAVED_XMMS + N_SAVED_GPRS>& get_all_saved() { return m_saved_all; }
 
  protected:
-  std::array<Info, N_REGS> m_info;
   std::array<Register, N_ARGS> m_gpr_arg_regs;
   std::array<Register, N_ARGS> m_xmm_arg_regs;
   std::array<Register, N_SAVED_GPRS> m_saved_gprs;
@@ -274,7 +275,7 @@ class RegisterInfo {
 
 class RegisterInfoX86 : public RegisterInfo {
  public:
-  static RegisterInfoX86* make_register_info();
+  static std::unique_ptr<RegisterInfoX86> make_register_info();
 
   static_assert(N_REGS - 1 == X86_XMM15, "bad register count");
 
@@ -287,19 +288,17 @@ class RegisterInfoX86 : public RegisterInfo {
   Register get_xmm_ret_reg() const override { return XMM0; }
 
  protected:
-  RegisterInfoX86() = default;
   std::array<Info, N_REGS> m_info;
 };
 
 class RegisterInfoArm64 : public RegisterInfo {
  public:
   static constexpr int N_REGS = 64;
-
-  static_assert(N_REGS - 1 == ARM_Q31, "bad register count");
-
-  static RegisterInfoArm64* make_register_info();
+  static std::unique_ptr<RegisterInfoArm64> make_register_info();
 
   const Info& get_info(Register r) const override { return m_info.at(r.real_id()); }
+
+  static_assert(N_REGS - 1 == ARM_Q31, "bad register count");
 
   // TODO: Change these
   Register get_process_reg() const override { return PP; }
@@ -309,9 +308,8 @@ class RegisterInfoArm64 : public RegisterInfo {
   Register get_xmm_ret_reg() const override { return XMM0; }
 
  protected:
-  RegisterInfoArm64() = default;
   std::array<Info, N_REGS> m_info;
 };
 
-extern RegisterInfo* gRegInfo;
+extern std::unique_ptr<RegisterInfo> gRegInfo;
 }  // namespace emitter

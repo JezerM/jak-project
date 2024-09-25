@@ -1,10 +1,12 @@
+#include <memory>
+
 #include "Register.h"
 
 namespace emitter {
-RegisterInfoArm64* RegisterInfoArm64::make_register_info() {
-  auto info = new RegisterInfoArm64();
+std::unique_ptr<RegisterInfoArm64> RegisterInfoArm64::make_register_info() {
+  auto info = std::unique_ptr<RegisterInfoArm64>(new RegisterInfoArm64());
 
-  /*                  saved, special, name */
+  /*                     saved, special, name */
   info->m_info[ARM_X0] = {false, false, "x0"};
   info->m_info[ARM_X1] = {false, false, "x1"};
   info->m_info[ARM_X2] = {false, false, "x2"};

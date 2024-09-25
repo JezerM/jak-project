@@ -132,7 +132,7 @@ class CodeTester {
   int code_buffer_size = 0;
   int code_buffer_capacity = 0;
   u8* code_buffer = nullptr;
-  RegisterInfo* m_info;
+  std::unique_ptr<RegisterInfo> m_info;
 };
 
 extern const std::vector<Register> alloc_order;
