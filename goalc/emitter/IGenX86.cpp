@@ -10,14 +10,13 @@
 #include "common/util/Assert.h"
 
 namespace emitter {
-namespace IGenX86 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   MOVES
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 /*!
  * Move data from src to dst. Moves all 64-bits of the GPR.
  */
-Instruction* mov_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::mov_gpr64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
   auto instr = new InstructionX86(0x89);
@@ -28,7 +27,7 @@ Instruction* mov_gpr64_gpr64(Register dst, Register src) {
 /*!
  * Move a 64-bit constant into a register.
  */
-Instruction* mov_gpr64_u64(Register dst, uint64_t val) {
+Instruction* IGenX86::mov_gpr64_u64(Register dst, uint64_t val) {
   ASSERT(dst.is_gpr());
   bool rex_b = false;
   auto dst_hw_id = dst.hw_id();
@@ -45,7 +44,7 @@ Instruction* mov_gpr64_u64(Register dst, uint64_t val) {
 /*!
  * Move a 32-bit constant into a register. Zeros the upper 32 bits.
  */
-Instruction* mov_gpr64_u32(Register dst, uint64_t val) {
+Instruction* IGenX86::mov_gpr64_u32(Register dst, uint64_t val) {
   ASSERT(val <= UINT32_MAX);
   ASSERT(dst.is_gpr());
   auto dst_hw_id = dst.hw_id();
@@ -68,7 +67,7 @@ Instruction* mov_gpr64_u32(Register dst, uint64_t val) {
  * When possible prefer mov_gpr64_u32. (use this only for negative values...)
  * This is always bigger than mov_gpr64_u32, but smaller than a mov_gpr_u64.
  */
-Instruction* mov_gpr64_s32(Register dst, int64_t val) {
+Instruction* IGenX86::mov_gpr64_s32(Register dst, int64_t val) {
   ASSERT(val >= INT32_MIN && val <= INT32_MAX);
   ASSERT(dst.is_gpr());
   auto instr = new InstructionX86(0xc7);
@@ -80,7 +79,7 @@ Instruction* mov_gpr64_s32(Register dst, int64_t val) {
 /*!
  * Move 32-bits of xmm to 32 bits of gpr (no sign extension).
  */
-Instruction* movd_gpr32_xmm32(Register dst, Register src) {
+Instruction* IGenX86::movd_gpr32_xmm32(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
@@ -94,7 +93,7 @@ Instruction* movd_gpr32_xmm32(Register dst, Register src) {
 /*!
  * Move 32-bits of gpr to 32-bits of xmm (no sign extension)
  */
-Instruction* movd_xmm32_gpr32(Register dst, Register src) {
+Instruction* IGenX86::movd_xmm32_gpr32(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
   auto instr = new InstructionX86(0x66);
@@ -108,7 +107,7 @@ Instruction* movd_xmm32_gpr32(Register dst, Register src) {
 /*!
  * Move 64-bits of xmm to 64 bits of gpr (no sign extension).
  */
-Instruction* movq_gpr64_xmm64(Register dst, Register src) {
+Instruction* IGenX86::movq_gpr64_xmm64(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
@@ -122,7 +121,7 @@ Instruction* movq_gpr64_xmm64(Register dst, Register src) {
 /*!
  * Move 64-bits of gpr to 64-bits of xmm (no sign extension)
  */
-Instruction* movq_xmm64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::movq_xmm64_gpr64(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
   auto instr = new InstructionX86(0x66);
@@ -136,7 +135,7 @@ Instruction* movq_xmm64_gpr64(Register dst, Register src) {
 /*!
  * Move 32-bits between xmm's
  */
-Instruction* mov_xmm32_xmm32(Register dst, Register src) {
+Instruction* IGenX86::mov_xmm32_xmm32(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -159,7 +158,7 @@ Instruction* mov_xmm32_xmm32(Register dst, Register src) {
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load8s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load8s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -173,7 +172,9 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   return instr;
 }
 
-Instruction* store8_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Register value) {
+Instruction* IGenX86::store8_gpr64_gpr64_plus_gpr64(Register addr1,
+                                                    Register addr2,
+                                                    Register value) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -188,10 +189,10 @@ Instruction* store8_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regis
   return instr;
 }
 
-Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                   Register addr1,
-                                                   Register addr2,
-                                                   s64 offset) {
+Instruction* IGenX86::load8s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                            Register addr1,
+                                                            Register addr2,
+                                                            s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -206,10 +207,10 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
-                                                   Register addr2,
-                                                   Register value,
-                                                   s64 offset) {
+Instruction* IGenX86::store8_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
+                                                            Register addr2,
+                                                            Register value,
+                                                            s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -226,10 +227,10 @@ Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   return instr;
 }
 
-Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load8s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -244,10 +245,10 @@ Instruction* load8s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
-Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
-                                                    Register addr2,
-                                                    Register value,
-                                                    s64 offset) {
+Instruction* IGenX86::store8_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
+                                                             Register addr2,
+                                                             Register value,
+                                                             s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -269,7 +270,7 @@ Instruction* store8_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load8u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load8u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -283,10 +284,10 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   return instr;
 }
 
-Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                   Register addr1,
-                                                   Register addr2,
-                                                   s64 offset) {
+Instruction* IGenX86::load8u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                            Register addr1,
+                                                            Register addr2,
+                                                            s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -301,10 +302,10 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load8u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -324,7 +325,7 @@ Instruction* load8u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load16s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load16s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -338,7 +339,9 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   return instr;
 }
 
-Instruction* store16_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Register value) {
+Instruction* IGenX86::store16_gpr64_gpr64_plus_gpr64(Register addr1,
+                                                     Register addr2,
+                                                     Register value) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -352,10 +355,10 @@ Instruction* store16_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   return instr;
 }
 
-Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
-                                                    Register addr2,
-                                                    Register value,
-                                                    s64 offset) {
+Instruction* IGenX86::store16_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
+                                                             Register addr2,
+                                                             Register value,
+                                                             s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -371,10 +374,10 @@ Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   return instr;
 }
 
-Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
-                                                     Register addr2,
-                                                     Register value,
-                                                     s64 offset) {
+Instruction* IGenX86::store16_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
+                                                              Register addr2,
+                                                              Register value,
+                                                              s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -390,10 +393,10 @@ Instruction* store16_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   return instr;
 }
 
-Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load16s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -408,10 +411,10 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                     Register addr1,
-                                                     Register addr2,
-                                                     s64 offset) {
+Instruction* IGenX86::load16s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                              Register addr1,
+                                                              Register addr2,
+                                                              s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -431,7 +434,7 @@ Instruction* load16s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load16u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load16u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -445,10 +448,10 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   return instr;
 }
 
-Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load16u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -463,10 +466,10 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                     Register addr1,
-                                                     Register addr2,
-                                                     s64 offset) {
+Instruction* IGenX86::load16u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                              Register addr1,
+                                                              Register addr2,
+                                                              s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -486,7 +489,7 @@ Instruction* load16u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load32s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load32s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -498,7 +501,9 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   return instr;
 }
 
-Instruction* store32_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Register value) {
+Instruction* IGenX86::store32_gpr64_gpr64_plus_gpr64(Register addr1,
+                                                     Register addr2,
+                                                     Register value) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -510,10 +515,10 @@ Instruction* store32_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   return instr;
 }
 
-Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load32s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -527,10 +532,10 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
-                                                    Register addr2,
-                                                    Register value,
-                                                    s64 offset) {
+Instruction* IGenX86::store32_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
+                                                             Register addr2,
+                                                             Register value,
+                                                             s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -544,10 +549,10 @@ Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   return instr;
 }
 
-Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                     Register addr1,
-                                                     Register addr2,
-                                                     s64 offset) {
+Instruction* IGenX86::load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                              Register addr1,
+                                                              Register addr2,
+                                                              s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -561,10 +566,10 @@ Instruction* load32s_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
-Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
-                                                     Register addr2,
-                                                     Register value,
-                                                     s64 offset) {
+Instruction* IGenX86::store32_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
+                                                              Register addr2,
+                                                              Register value,
+                                                              s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -583,7 +588,7 @@ Instruction* store32_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load32u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load32u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -595,10 +600,10 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Regist
   return instr;
 }
 
-Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -612,10 +617,10 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                     Register addr1,
-                                                     Register addr2,
-                                                     s64 offset) {
+Instruction* IGenX86::load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                              Register addr1,
+                                                              Register addr2,
+                                                              s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -634,7 +639,7 @@ Instruction* load32u_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
  * addr1 and addr2 have to be different registers.
  * Cannot use rsp.
  */
-Instruction* load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -646,7 +651,9 @@ Instruction* load64_gpr64_gpr64_plus_gpr64(Register dst, Register addr1, Registe
   return instr;
 }
 
-Instruction* store64_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Register value) {
+Instruction* IGenX86::store64_gpr64_gpr64_plus_gpr64(Register addr1,
+                                                     Register addr2,
+                                                     Register value) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -658,10 +665,10 @@ Instruction* store64_gpr64_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   return instr;
 }
 
-Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
-                                                   Register addr1,
-                                                   Register addr2,
-                                                   s64 offset) {
+Instruction* IGenX86::load64_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                            Register addr1,
+                                                            Register addr2,
+                                                            s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -675,10 +682,10 @@ Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
-                                                    Register addr2,
-                                                    Register value,
-                                                    s64 offset) {
+Instruction* IGenX86::store64_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
+                                                             Register addr2,
+                                                             Register value,
+                                                             s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -692,10 +699,10 @@ Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s8(Register addr1,
   return instr;
 }
 
-Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load64_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -709,10 +716,10 @@ Instruction* load64_gpr64_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
-Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
-                                                     Register addr2,
-                                                     Register value,
-                                                     s64 offset) {
+Instruction* IGenX86::store64_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
+                                                              Register addr2,
+                                                              Register value,
+                                                              s64 offset) {
   ASSERT(value.is_gpr());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -726,7 +733,7 @@ Instruction* store64_gpr64_gpr64_plus_gpr64_plus_s32(Register addr1,
   return instr;
 }
 
-Instruction* store_goal_vf(Register addr, Register value, Register off, s64 offset) {
+Instruction* IGenX86::store_goal_vf(Register addr, Register value, Register off, s64 offset) {
   if (offset == 0) {
     return storevf_gpr64_plus_gpr64(value, addr, off);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -738,7 +745,11 @@ Instruction* store_goal_vf(Register addr, Register value, Register off, s64 offs
   return new InstructionX86(0b0);
 }
 
-Instruction* store_goal_gpr(Register addr, Register value, Register off, int offset, int size) {
+Instruction* IGenX86::store_goal_gpr(Register addr,
+                                     Register value,
+                                     Register off,
+                                     int offset,
+                                     int size) {
   switch (size) {
     case 1:
       if (offset == 0) {
@@ -786,7 +797,7 @@ Instruction* store_goal_gpr(Register addr, Register value, Register off, int off
   }
 }
 
-Instruction* load_goal_xmm128(Register dst, Register addr, Register off, int offset) {
+Instruction* IGenX86::load_goal_xmm128(Register dst, Register addr, Register off, int offset) {
   if (offset == 0) {
     return loadvf_gpr64_plus_gpr64(dst, addr, off);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -803,12 +814,12 @@ Instruction* load_goal_xmm128(Register dst, Register addr, Register off, int off
  * Load memory at addr + offset, where addr is a GOAL pointer and off is the offset register.
  * This will pick the appropriate fancy addressing mode instruction.
  */
-Instruction* load_goal_gpr(Register dst,
-                           Register addr,
-                           Register off,
-                           int offset,
-                           int size,
-                           bool sign_extend) {
+Instruction* IGenX86::load_goal_gpr(Register dst,
+                                    Register addr,
+                                    Register off,
+                                    int offset,
+                                    int size,
+                                    bool sign_extend) {
   switch (size) {
     case 1:
       if (offset == 0) {
@@ -898,7 +909,9 @@ Instruction* load_goal_gpr(Register dst,
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   LOADS n' STORES - XMM32
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Instruction* store32_xmm32_gpr64_plus_gpr64(Register addr1, Register addr2, Register xmm_value) {
+Instruction* IGenX86::store32_xmm32_gpr64_plus_gpr64(Register addr1,
+                                                     Register addr2,
+                                                     Register xmm_value) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -912,7 +925,9 @@ Instruction* store32_xmm32_gpr64_plus_gpr64(Register addr1, Register addr2, Regi
   return instr;
 }
 
-Instruction* load32_xmm32_gpr64_plus_gpr64(Register xmm_dest, Register addr1, Register addr2) {
+Instruction* IGenX86::load32_xmm32_gpr64_plus_gpr64(Register xmm_dest,
+                                                    Register addr1,
+                                                    Register addr2) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -926,10 +941,10 @@ Instruction* load32_xmm32_gpr64_plus_gpr64(Register xmm_dest, Register addr1, Re
   return instr;
 }
 
-Instruction* store32_xmm32_gpr64_plus_gpr64_plus_s8(Register addr1,
-                                                    Register addr2,
-                                                    Register xmm_value,
-                                                    s64 offset) {
+Instruction* IGenX86::store32_xmm32_gpr64_plus_gpr64_plus_s8(Register addr1,
+                                                             Register addr2,
+                                                             Register xmm_value,
+                                                             s64 offset) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -945,10 +960,10 @@ Instruction* store32_xmm32_gpr64_plus_gpr64_plus_s8(Register addr1,
   return instr;
 }
 
-Instruction* load32_xmm32_gpr64_plus_gpr64_plus_s8(Register xmm_dest,
-                                                   Register addr1,
-                                                   Register addr2,
-                                                   s64 offset) {
+Instruction* IGenX86::load32_xmm32_gpr64_plus_gpr64_plus_s8(Register xmm_dest,
+                                                            Register addr1,
+                                                            Register addr2,
+                                                            s64 offset) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -964,10 +979,10 @@ Instruction* load32_xmm32_gpr64_plus_gpr64_plus_s8(Register xmm_dest,
   return instr;
 }
 
-Instruction* store32_xmm32_gpr64_plus_gpr64_plus_s32(Register addr1,
-                                                     Register addr2,
-                                                     Register xmm_value,
-                                                     s64 offset) {
+Instruction* IGenX86::store32_xmm32_gpr64_plus_gpr64_plus_s32(Register addr1,
+                                                              Register addr2,
+                                                              Register xmm_value,
+                                                              s64 offset) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -983,7 +998,7 @@ Instruction* store32_xmm32_gpr64_plus_gpr64_plus_s32(Register addr1,
   return instr;
 }
 
-Instruction* lea_reg_plus_off32(Register dest, Register base, s64 offset) {
+Instruction* IGenX86::lea_reg_plus_off32(Register dest, Register base, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -993,7 +1008,7 @@ Instruction* lea_reg_plus_off32(Register dest, Register base, s64 offset) {
   return instr;
 }
 
-Instruction* lea_reg_plus_off8(Register dest, Register base, s64 offset) {
+Instruction* IGenX86::lea_reg_plus_off8(Register dest, Register base, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
@@ -1003,7 +1018,7 @@ Instruction* lea_reg_plus_off8(Register dest, Register base, s64 offset) {
   return instr;
 }
 
-Instruction* lea_reg_plus_off(Register dest, Register base, s64 offset) {
+Instruction* IGenX86::lea_reg_plus_off(Register dest, Register base, s64 offset) {
   if (offset >= INT8_MIN && offset <= INT8_MAX) {
     return lea_reg_plus_off8(dest, base, offset);
   } else if (offset >= INT32_MIN && offset <= INT32_MAX) {
@@ -1014,7 +1029,7 @@ Instruction* lea_reg_plus_off(Register dest, Register base, s64 offset) {
   }
 }
 
-Instruction* store32_xmm32_gpr64_plus_s32(Register base, Register xmm_value, s64 offset) {
+Instruction* IGenX86::store32_xmm32_gpr64_plus_s32(Register base, Register xmm_value, s64 offset) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1027,7 +1042,7 @@ Instruction* store32_xmm32_gpr64_plus_s32(Register base, Register xmm_value, s64
   return instr;
 }
 
-Instruction* store32_xmm32_gpr64_plus_s8(Register base, Register xmm_value, s64 offset) {
+Instruction* IGenX86::store32_xmm32_gpr64_plus_s8(Register base, Register xmm_value, s64 offset) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
@@ -1040,10 +1055,10 @@ Instruction* store32_xmm32_gpr64_plus_s8(Register base, Register xmm_value, s64 
   return instr;
 }
 
-Instruction* load32_xmm32_gpr64_plus_gpr64_plus_s32(Register xmm_dest,
-                                                    Register addr1,
-                                                    Register addr2,
-                                                    s64 offset) {
+Instruction* IGenX86::load32_xmm32_gpr64_plus_gpr64_plus_s32(Register xmm_dest,
+                                                             Register addr1,
+                                                             Register addr2,
+                                                             s64 offset) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -1059,7 +1074,7 @@ Instruction* load32_xmm32_gpr64_plus_gpr64_plus_s32(Register xmm_dest,
   return instr;
 }
 
-Instruction* load32_xmm32_gpr64_plus_s32(Register xmm_dest, Register base, s64 offset) {
+Instruction* IGenX86::load32_xmm32_gpr64_plus_s32(Register xmm_dest, Register base, s64 offset) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1072,7 +1087,7 @@ Instruction* load32_xmm32_gpr64_plus_s32(Register xmm_dest, Register base, s64 o
   return instr;
 }
 
-Instruction* load32_xmm32_gpr64_plus_s8(Register xmm_dest, Register base, s64 offset) {
+Instruction* IGenX86::load32_xmm32_gpr64_plus_s8(Register xmm_dest, Register base, s64 offset) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(base.is_gpr());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
@@ -1085,7 +1100,7 @@ Instruction* load32_xmm32_gpr64_plus_s8(Register xmm_dest, Register base, s64 of
   return instr;
 }
 
-Instruction* load_goal_xmm32(Register xmm_dest, Register addr, Register off, s64 offset) {
+Instruction* IGenX86::load_goal_xmm32(Register xmm_dest, Register addr, Register off, s64 offset) {
   if (offset == 0) {
     return load32_xmm32_gpr64_plus_gpr64(xmm_dest, addr, off);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1098,7 +1113,10 @@ Instruction* load_goal_xmm32(Register xmm_dest, Register addr, Register off, s64
   }
 }
 
-Instruction* store_goal_xmm32(Register addr, Register xmm_value, Register off, s64 offset) {
+Instruction* IGenX86::store_goal_xmm32(Register addr,
+                                       Register xmm_value,
+                                       Register off,
+                                       s64 offset) {
   if (offset == 0) {
     return store32_xmm32_gpr64_plus_gpr64(addr, off, xmm_value);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1111,7 +1129,7 @@ Instruction* store_goal_xmm32(Register addr, Register xmm_value, Register off, s
   }
 }
 
-Instruction* store_reg_offset_xmm32(Register base, Register xmm_value, s64 offset) {
+Instruction* IGenX86::store_reg_offset_xmm32(Register base, Register xmm_value, s64 offset) {
   ASSERT(base.is_gpr());
   ASSERT(xmm_value.is_128bit_simd());
   if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1124,7 +1142,7 @@ Instruction* store_reg_offset_xmm32(Register base, Register xmm_value, s64 offse
   }
 }
 
-Instruction* load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset) {
+Instruction* IGenX86::load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset) {
   ASSERT(base.is_gpr());
   ASSERT(xmm_dest.is_128bit_simd());
   if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1144,7 +1162,7 @@ Instruction* load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset)
 /*!
  * Store a 128-bit xmm into an address stored in a register, no offset
  */
-Instruction* store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
+Instruction* IGenX86::store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_value.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
@@ -1156,7 +1174,7 @@ Instruction* store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
   return instr;
 }
 
-Instruction* store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s64 offset) {
+Instruction* IGenX86::store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s64 offset) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1170,7 +1188,7 @@ Instruction* store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s6
   return instr;
 }
 
-Instruction* store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64 offset) {
+Instruction* IGenX86::store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64 offset) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
@@ -1184,7 +1202,7 @@ Instruction* store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64
   return instr;
 }
 
-Instruction* load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
+Instruction* IGenX86::load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_dest.is_128bit_simd());
   auto instr = new InstructionX86(0x66);
@@ -1196,7 +1214,7 @@ Instruction* load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
   return instr;
 }
 
-Instruction* load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 offset) {
+Instruction* IGenX86::load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 offset) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1210,7 +1228,7 @@ Instruction* load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 
   return instr;
 }
 
-Instruction* load128_xmm128_gpr64_s8(Register xmm_dest, Register gpr_addr, s64 offset) {
+Instruction* IGenX86::load128_xmm128_gpr64_s8(Register xmm_dest, Register gpr_addr, s64 offset) {
   ASSERT(gpr_addr.is_gpr());
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(offset >= INT8_MIN && offset <= INT8_MAX);
@@ -1224,7 +1242,7 @@ Instruction* load128_xmm128_gpr64_s8(Register xmm_dest, Register gpr_addr, s64 o
   return instr;
 }
 
-Instruction* load128_xmm128_reg_offset(Register xmm_dest, Register base, s64 offset) {
+Instruction* IGenX86::load128_xmm128_reg_offset(Register xmm_dest, Register base, s64 offset) {
   if (offset == 0) {
     return load128_xmm128_gpr64(xmm_dest, base);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1237,7 +1255,7 @@ Instruction* load128_xmm128_reg_offset(Register xmm_dest, Register base, s64 off
   }
 }
 
-Instruction* store128_xmm128_reg_offset(Register base, Register xmm_val, s64 offset) {
+Instruction* IGenX86::store128_xmm128_reg_offset(Register base, Register xmm_val, s64 offset) {
   if (offset == 0) {
     return store128_gpr64_xmm128(base, xmm_val);
   } else if (offset >= INT8_MIN && offset <= INT8_MAX) {
@@ -1254,7 +1272,7 @@ Instruction* store128_xmm128_reg_offset(Register base, Register xmm_val, s64 off
 //   RIP loads and stores
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-Instruction* load64_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load64_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x8b);
@@ -1262,7 +1280,7 @@ Instruction* load64_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load32s_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load32s_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x63);
@@ -1270,7 +1288,7 @@ Instruction* load32s_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load32u_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load32u_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x8b);
@@ -1278,7 +1296,7 @@ Instruction* load32u_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load16u_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load16u_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
@@ -1287,7 +1305,7 @@ Instruction* load16u_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load16s_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load16s_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
@@ -1296,7 +1314,7 @@ Instruction* load16s_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load8u_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load8u_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
@@ -1305,7 +1323,7 @@ Instruction* load8u_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* load8s_rip_s32(Register dest, s64 offset) {
+Instruction* IGenX86::load8s_rip_s32(Register dest, s64 offset) {
   ASSERT(dest.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0xf);
@@ -1314,7 +1332,7 @@ Instruction* load8s_rip_s32(Register dest, s64 offset) {
   return instr;
 }
 
-Instruction* static_load(Register dest, s64 offset, int size, bool sign_extend) {
+Instruction* IGenX86::static_load(Register dest, s64 offset, int size, bool sign_extend) {
   switch (size) {
     case 1:
       if (sign_extend) {
@@ -1344,7 +1362,7 @@ Instruction* static_load(Register dest, s64 offset, int size, bool sign_extend) 
   }
 }
 
-Instruction* store64_rip_s32(Register src, s64 offset) {
+Instruction* IGenX86::store64_rip_s32(Register src, s64 offset) {
   ASSERT(src.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1353,7 +1371,7 @@ Instruction* store64_rip_s32(Register src, s64 offset) {
   return instr;
 }
 
-Instruction* store32_rip_s32(Register src, s64 offset) {
+Instruction* IGenX86::store32_rip_s32(Register src, s64 offset) {
   ASSERT(src.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1362,7 +1380,7 @@ Instruction* store32_rip_s32(Register src, s64 offset) {
   return instr;
 }
 
-Instruction* store16_rip_s32(Register src, s64 offset) {
+Instruction* IGenX86::store16_rip_s32(Register src, s64 offset) {
   ASSERT(src.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1373,7 +1391,7 @@ Instruction* store16_rip_s32(Register src, s64 offset) {
   return instr;
 }
 
-Instruction* store8_rip_s32(Register src, s64 offset) {
+Instruction* IGenX86::store8_rip_s32(Register src, s64 offset) {
   ASSERT(src.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
@@ -1385,7 +1403,7 @@ Instruction* store8_rip_s32(Register src, s64 offset) {
   return instr;
 }
 
-Instruction* static_store(Register value, s64 offset, int size) {
+Instruction* IGenX86::static_store(Register value, s64 offset, int size) {
   switch (size) {
     case 1:
       return store8_rip_s32(value, offset);
@@ -1400,7 +1418,7 @@ Instruction* static_store(Register value, s64 offset, int size) {
   }
 }
 
-Instruction* static_addr(Register dst, s64 offset) {
+Instruction* IGenX86::static_addr(Register dst, s64 offset) {
   ASSERT(dst.is_gpr());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
   auto instr = new InstructionX86(0x8d);
@@ -1408,7 +1426,7 @@ Instruction* static_addr(Register dst, s64 offset) {
   return instr;
 }
 
-Instruction* static_load_xmm32(Register xmm_dest, s64 offset) {
+Instruction* IGenX86::static_load_xmm32(Register xmm_dest, s64 offset) {
   ASSERT(xmm_dest.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
 
@@ -1421,7 +1439,7 @@ Instruction* static_load_xmm32(Register xmm_dest, s64 offset) {
   return instr;
 }
 
-Instruction* static_store_xmm32(Register xmm_value, s64 offset) {
+Instruction* IGenX86::static_store_xmm32(Register xmm_value, s64 offset) {
   ASSERT(xmm_value.is_128bit_simd());
   ASSERT(offset >= INT32_MIN && offset <= INT32_MAX);
 
@@ -1437,7 +1455,7 @@ Instruction* static_store_xmm32(Register xmm_value, s64 offset) {
 // TODO, special load/stores of 128 bit values.
 
 // TODO, consider specialized stack loads and stores?
-Instruction* load64_gpr64_plus_s32(Register dst_reg, int32_t offset, Register src_reg) {
+Instruction* IGenX86::load64_gpr64_plus_s32(Register dst_reg, int32_t offset, Register src_reg) {
   ASSERT(dst_reg.is_gpr());
   ASSERT(src_reg.is_gpr());
   auto instr = new InstructionX86(0x8b);
@@ -1449,7 +1467,7 @@ Instruction* load64_gpr64_plus_s32(Register dst_reg, int32_t offset, Register sr
 /*!
  * Store 64-bits from gpr into memory located at 64-bit reg + 32-bit signed offset.
  */
-Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register value) {
+Instruction* IGenX86::store64_gpr64_plus_s32(Register addr, int32_t offset, Register value) {
   ASSERT(addr.is_gpr());
   ASSERT(value.is_gpr());
   auto instr = new InstructionX86(0x89);
@@ -1464,14 +1482,14 @@ Instruction* store64_gpr64_plus_s32(Register addr, int32_t offset, Register valu
 /*!
  * Function return. Pops the 64-bit return address (real) off the stack and jumps to it.
  */
-Instruction* ret() {
+Instruction* IGenX86::ret() {
   return new InstructionX86(0xc3);
 }
 
 /*!
  * Instruction to push gpr (64-bits) onto the stack
  */
-Instruction* push_gpr64(Register reg) {
+Instruction* IGenX86::push_gpr64(Register reg) {
   ASSERT(reg.is_gpr());
   if (reg.hw_id() >= 8) {
     auto i = new InstructionX86(0x50 + reg.hw_id() - 8);
@@ -1484,7 +1502,7 @@ Instruction* push_gpr64(Register reg) {
 /*!
  * Instruction to pop 64 bit gpr from the stack
  */
-Instruction* pop_gpr64(Register reg) {
+Instruction* IGenX86::pop_gpr64(Register reg) {
   ASSERT(reg.is_gpr());
   if (reg.hw_id() >= 8) {
     auto i = new InstructionX86(0x58 + reg.hw_id() - 8);
@@ -1497,7 +1515,7 @@ Instruction* pop_gpr64(Register reg) {
 /*!
  * Call a function stored in a 64-bit gpr
  */
-Instruction* call_r64(Register reg_) {
+Instruction* IGenX86::call_r64(Register reg_) {
   ASSERT(reg_.is_gpr());
   auto reg = reg_.hw_id();
   auto instr = new InstructionX86(0xff);
@@ -1517,7 +1535,7 @@ Instruction* call_r64(Register reg_) {
 /*!
  * Jump to an x86-64 address stored in a 64-bit gpr.
  */
-Instruction* jmp_r64(Register reg_) {
+Instruction* IGenX86::jmp_r64(Register reg_) {
   ASSERT(reg_.is_gpr());
   auto reg = reg_.hw_id();
   auto instr = new InstructionX86(0xff);
@@ -1537,7 +1555,7 @@ Instruction* jmp_r64(Register reg_) {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //   INTEGER MATH
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Instruction* sub_gpr64_imm8s(Register reg, int64_t imm) {
+Instruction* IGenX86::sub_gpr64_imm8s(Register reg, int64_t imm) {
   ASSERT(reg.is_gpr());
   ASSERT(imm >= INT8_MIN && imm <= INT8_MAX);
   // SUB r/m64, imm8 : REX.W + 83 /5 ib
@@ -1547,7 +1565,7 @@ Instruction* sub_gpr64_imm8s(Register reg, int64_t imm) {
   return instr;
 }
 
-Instruction* sub_gpr64_imm32s(Register reg, int64_t imm) {
+Instruction* IGenX86::sub_gpr64_imm32s(Register reg, int64_t imm) {
   ASSERT(reg.is_gpr());
   ASSERT(imm >= INT32_MIN && imm <= INT32_MAX);
   auto instr = new InstructionX86(0x81);
@@ -1556,7 +1574,7 @@ Instruction* sub_gpr64_imm32s(Register reg, int64_t imm) {
   return instr;
 }
 
-Instruction* add_gpr64_imm8s(Register reg, int64_t v) {
+Instruction* IGenX86::add_gpr64_imm8s(Register reg, int64_t v) {
   ASSERT(v >= INT8_MIN && v <= INT8_MAX);
   auto instr = new InstructionX86(0x83);
   instr->set_modrm_and_rex(0, reg.hw_id(), 3, true);
@@ -1564,7 +1582,7 @@ Instruction* add_gpr64_imm8s(Register reg, int64_t v) {
   return instr;
 }
 
-Instruction* add_gpr64_imm32s(Register reg, int64_t v) {
+Instruction* IGenX86::add_gpr64_imm32s(Register reg, int64_t v) {
   ASSERT(v >= INT32_MIN && v <= INT32_MAX);
   auto instr = new InstructionX86(0x81);
   instr->set_modrm_and_rex(0, reg.hw_id(), 3, true);
@@ -1572,7 +1590,7 @@ Instruction* add_gpr64_imm32s(Register reg, int64_t v) {
   return instr;
 }
 
-Instruction* add_gpr64_imm(Register reg, int64_t imm) {
+Instruction* IGenX86::add_gpr64_imm(Register reg, int64_t imm) {
   if (imm >= INT8_MIN && imm <= INT8_MAX) {
     return add_gpr64_imm8s(reg, imm);
   } else if (imm >= INT32_MIN && imm <= INT32_MAX) {
@@ -1583,7 +1601,7 @@ Instruction* add_gpr64_imm(Register reg, int64_t imm) {
   }
 }
 
-Instruction* sub_gpr64_imm(Register reg, int64_t imm) {
+Instruction* IGenX86::sub_gpr64_imm(Register reg, int64_t imm) {
   if (imm >= INT8_MIN && imm <= INT8_MAX) {
     return sub_gpr64_imm8s(reg, imm);
   } else if (imm >= INT32_MIN && imm <= INT32_MAX) {
@@ -1594,7 +1612,7 @@ Instruction* sub_gpr64_imm(Register reg, int64_t imm) {
   }
 }
 
-Instruction* add_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::add_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x01);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1602,7 +1620,7 @@ Instruction* add_gpr64_gpr64(Register dst, Register src) {
   return instr;
 }
 
-Instruction* sub_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::sub_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x29);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1614,7 +1632,7 @@ Instruction* sub_gpr64_gpr64(Register dst, Register src) {
  * Multiply gprs (32-bit, signed).
  * (Note - probably worth doing imul on gpr64's to implement the EE's unsigned multiply)
  */
-Instruction* imul_gpr32_gpr32(Register dst, Register src) {
+Instruction* IGenX86::imul_gpr32_gpr32(Register dst, Register src) {
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xaf);
   ASSERT(dst.is_gpr());
@@ -1627,7 +1645,7 @@ Instruction* imul_gpr32_gpr32(Register dst, Register src) {
  * Multiply gprs (64-bit, signed).
  * DANGER - this treats all operands as 64-bit. This is not like the EE.
  */
-Instruction* imul_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::imul_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0xf);
   instr->set_op2(0xaf);
   ASSERT(dst.is_gpr());
@@ -1639,14 +1657,14 @@ Instruction* imul_gpr64_gpr64(Register dst, Register src) {
 /*!
  * Divide (idiv, 32 bit)
  */
-Instruction* idiv_gpr32(Register reg) {
+Instruction* IGenX86::idiv_gpr32(Register reg) {
   auto instr = new InstructionX86(0xf7);
   ASSERT(reg.is_gpr());
   instr->set_modrm_and_rex(7, reg.hw_id(), 3, false);
   return instr;
 }
 
-Instruction* unsigned_div_gpr32(Register reg) {
+Instruction* IGenX86::unsigned_div_gpr32(Register reg) {
   auto instr = new InstructionX86(0xf7);
   ASSERT(reg.is_gpr());
   instr->set_modrm_and_rex(6, reg.hw_id(), 3, false);
@@ -1656,7 +1674,7 @@ Instruction* unsigned_div_gpr32(Register reg) {
 /*!
  * Convert doubleword to quadword for division.
  */
-Instruction* cdq() {
+Instruction* IGenX86::cdq() {
   auto instr = new InstructionX86(0x99);
   return instr;
 }
@@ -1665,7 +1683,7 @@ Instruction* cdq() {
  * Move from gpr32 to gpr64, with sign extension.
  * Needed for multiplication/divsion madness.
  */
-Instruction* movsx_r64_r32(Register dst, Register src) {
+Instruction* IGenX86::movsx_r64_r32(Register dst, Register src) {
   auto instr = new InstructionX86(0x63);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1677,7 +1695,7 @@ Instruction* movsx_r64_r32(Register dst, Register src) {
  * Compare gpr64.  This sets the flags for the jumps.
  * todo UNTESTED
  */
-Instruction* cmp_gpr64_gpr64(Register a, Register b) {
+Instruction* IGenX86::cmp_gpr64_gpr64(Register a, Register b) {
   auto instr = new InstructionX86(0x3b);
   ASSERT(a.is_gpr());
   ASSERT(b.is_gpr());
@@ -1692,7 +1710,7 @@ Instruction* cmp_gpr64_gpr64(Register a, Register b) {
 /*!
  * Or of two gprs
  */
-Instruction* or_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::or_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x0b);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1703,7 +1721,7 @@ Instruction* or_gpr64_gpr64(Register dst, Register src) {
 /*!
  * And of two gprs
  */
-Instruction* and_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::and_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x23);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1714,7 +1732,7 @@ Instruction* and_gpr64_gpr64(Register dst, Register src) {
 /*!
  * Xor of two gprs
  */
-Instruction* xor_gpr64_gpr64(Register dst, Register src) {
+Instruction* IGenX86::xor_gpr64_gpr64(Register dst, Register src) {
   auto instr = new InstructionX86(0x33);
   ASSERT(dst.is_gpr());
   ASSERT(src.is_gpr());
@@ -1725,7 +1743,7 @@ Instruction* xor_gpr64_gpr64(Register dst, Register src) {
 /*!
  * Bitwise not a gpr
  */
-Instruction* not_gpr64(Register reg) {
+Instruction* IGenX86::not_gpr64(Register reg) {
   auto instr = new InstructionX86(0xf7);
   ASSERT(reg.is_gpr());
   instr->set_modrm_and_rex(2, reg.hw_id(), 3, true);
@@ -1739,7 +1757,7 @@ Instruction* not_gpr64(Register reg) {
 /*!
  * Shift 64-bit gpr left by CL register
  */
-Instruction* shl_gpr64_cl(Register reg) {
+Instruction* IGenX86::shl_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
   instr->set_modrm_and_rex(4, reg.hw_id(), 3, true);
@@ -1749,7 +1767,7 @@ Instruction* shl_gpr64_cl(Register reg) {
 /*!
  * Shift 64-bit gpr right (logical) by CL register
  */
-Instruction* shr_gpr64_cl(Register reg) {
+Instruction* IGenX86::shr_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
   instr->set_modrm_and_rex(5, reg.hw_id(), 3, true);
@@ -1759,7 +1777,7 @@ Instruction* shr_gpr64_cl(Register reg) {
 /*!
  * Shift 64-bit gpr right (arithmetic) by CL register
  */
-Instruction* sar_gpr64_cl(Register reg) {
+Instruction* IGenX86::sar_gpr64_cl(Register reg) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xd3);
   instr->set_modrm_and_rex(7, reg.hw_id(), 3, true);
@@ -1769,7 +1787,7 @@ Instruction* sar_gpr64_cl(Register reg) {
 /*!
  * Shift 64-ptr left (logical) by the constant shift amount "sa".
  */
-Instruction* shl_gpr64_u8(Register reg, uint8_t sa) {
+Instruction* IGenX86::shl_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
   instr->set_modrm_and_rex(4, reg.hw_id(), 3, true);
@@ -1780,7 +1798,7 @@ Instruction* shl_gpr64_u8(Register reg, uint8_t sa) {
 /*!
  * Shift 64-ptr right (logical) by the constant shift amount "sa".
  */
-Instruction* shr_gpr64_u8(Register reg, uint8_t sa) {
+Instruction* IGenX86::shr_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
   instr->set_modrm_and_rex(5, reg.hw_id(), 3, true);
@@ -1791,7 +1809,7 @@ Instruction* shr_gpr64_u8(Register reg, uint8_t sa) {
 /*!
  * Shift 64-ptr right (arithmetic) by the constant shift amount "sa".
  */
-Instruction* sar_gpr64_u8(Register reg, uint8_t sa) {
+Instruction* IGenX86::sar_gpr64_u8(Register reg, uint8_t sa) {
   ASSERT(reg.is_gpr());
   auto instr = new InstructionX86(0xc1);
   instr->set_modrm_and_rex(7, reg.hw_id(), 3, true);
@@ -1806,7 +1824,7 @@ Instruction* sar_gpr64_u8(Register reg, uint8_t sa) {
 /*!
  * Jump, 32-bit constant offset.  The offset is by default 0 and must be patched later.
  */
-Instruction* jmp_32() {
+Instruction* IGenX86::jmp_32() {
   auto instr = new InstructionX86(0xe9);
   instr->set(Imm(4, 0));
   return instr;
@@ -1815,7 +1833,7 @@ Instruction* jmp_32() {
 /*!
  * Jump if equal.
  */
-Instruction* je_32() {
+Instruction* IGenX86::je_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x84);
   instr->set(Imm(4, 0));
@@ -1825,7 +1843,7 @@ Instruction* je_32() {
 /*!
  * Jump not equal.
  */
-Instruction* jne_32() {
+Instruction* IGenX86::jne_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x85);
   instr->set(Imm(4, 0));
@@ -1835,7 +1853,7 @@ Instruction* jne_32() {
 /*!
  * Jump less than or equal.
  */
-Instruction* jle_32() {
+Instruction* IGenX86::jle_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8e);
   instr->set(Imm(4, 0));
@@ -1845,7 +1863,7 @@ Instruction* jle_32() {
 /*!
  * Jump greater than or equal.
  */
-Instruction* jge_32() {
+Instruction* IGenX86::jge_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8d);
   instr->set(Imm(4, 0));
@@ -1855,7 +1873,7 @@ Instruction* jge_32() {
 /*!
  * Jump less than
  */
-Instruction* jl_32() {
+Instruction* IGenX86::jl_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8c);
   instr->set(Imm(4, 0));
@@ -1865,7 +1883,7 @@ Instruction* jl_32() {
 /*!
  * Jump greater than
  */
-Instruction* jg_32() {
+Instruction* IGenX86::jg_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x8f);
   instr->set(Imm(4, 0));
@@ -1875,7 +1893,7 @@ Instruction* jg_32() {
 /*!
  * Jump below or equal
  */
-Instruction* jbe_32() {
+Instruction* IGenX86::jbe_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x86);
   instr->set(Imm(4, 0));
@@ -1885,7 +1903,7 @@ Instruction* jbe_32() {
 /*!
  * Jump above or equal
  */
-Instruction* jae_32() {
+Instruction* IGenX86::jae_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x83);
   instr->set(Imm(4, 0));
@@ -1895,7 +1913,7 @@ Instruction* jae_32() {
 /*!
  * Jump below
  */
-Instruction* jb_32() {
+Instruction* IGenX86::jb_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x82);
   instr->set(Imm(4, 0));
@@ -1905,7 +1923,7 @@ Instruction* jb_32() {
 /*!
  * Jump above
  */
-Instruction* ja_32() {
+Instruction* IGenX86::ja_32() {
   auto instr = new InstructionX86(0x0f);
   instr->set_op2(0x87);
   instr->set(Imm(4, 0));
@@ -1919,7 +1937,7 @@ Instruction* ja_32() {
 /*!
  * Compare two floats and set flag register for jump (ucomiss)
  */
-Instruction* cmp_flt_flt(Register a, Register b) {
+Instruction* IGenX86::cmp_flt_flt(Register a, Register b) {
   ASSERT(a.is_128bit_simd());
   ASSERT(b.is_128bit_simd());
   auto instr = new InstructionX86(0x0f);
@@ -1928,7 +1946,7 @@ Instruction* cmp_flt_flt(Register a, Register b) {
   return instr;
 }
 
-Instruction* sqrts_xmm(Register dst, Register src) {
+Instruction* IGenX86::sqrts_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -1942,7 +1960,7 @@ Instruction* sqrts_xmm(Register dst, Register src) {
 /*!
  * Multiply two floats in xmm's
  */
-Instruction* mulss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::mulss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -1956,7 +1974,7 @@ Instruction* mulss_xmm_xmm(Register dst, Register src) {
 /*!
  * Divide two floats in xmm's
  */
-Instruction* divss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::divss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -1970,7 +1988,7 @@ Instruction* divss_xmm_xmm(Register dst, Register src) {
 /*!
  * Subtract two floats in xmm's
  */
-Instruction* subss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::subss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -1984,7 +2002,7 @@ Instruction* subss_xmm_xmm(Register dst, Register src) {
 /*!
  * Add two floats in xmm's
  */
-Instruction* addss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::addss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -1998,7 +2016,7 @@ Instruction* addss_xmm_xmm(Register dst, Register src) {
 /*!
  * Floating point minimum.
  */
-Instruction* minss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::minss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -2012,7 +2030,7 @@ Instruction* minss_xmm_xmm(Register dst, Register src) {
 /*!
  * Floating point maximum.
  */
-Instruction* maxss_xmm_xmm(Register dst, Register src) {
+Instruction* IGenX86::maxss_xmm_xmm(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -2026,7 +2044,7 @@ Instruction* maxss_xmm_xmm(Register dst, Register src) {
 /*!
  * Convert GPR int32 to XMM float (single precision)
  */
-Instruction* int32_to_float(Register dst, Register src) {
+Instruction* IGenX86::int32_to_float(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_gpr());
   auto instr = new InstructionX86(0xf3);
@@ -2040,7 +2058,7 @@ Instruction* int32_to_float(Register dst, Register src) {
 /*!
  * Convert XMM float to GPR int32(single precision) (truncate)
  */
-Instruction* float_to_int32(Register dst, Register src) {
+Instruction* IGenX86::float_to_int32(Register dst, Register src) {
   ASSERT(dst.is_gpr());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xf3);
@@ -2051,7 +2069,7 @@ Instruction* float_to_int32(Register dst, Register src) {
   return instr;
 }
 
-Instruction* nop() {
+Instruction* IGenX86::nop() {
   // NOP
   auto instr = new InstructionX86(0x90);
   return instr;
@@ -2068,7 +2086,7 @@ Instruction* nop() {
  * but can be referred to by a label.  Useful to insert in place of a real instruction
  * if the real instruction has been optimized out.
  */
-Instruction* null() {
+Instruction* IGenX86::null() {
   InstructionX86* i = new InstructionX86(0);
   i->m_flags |= InstructionX86::kIsNull;
   return i;
@@ -2078,18 +2096,18 @@ Instruction* null() {
 // AVX (VF - Vector Float) //
 /////////////////////////////
 
-Instruction* nop_vf() {
+Instruction* IGenX86::nop_vf() {
   auto instr = new InstructionX86(0xd9);  // FNOP
   instr->set_op2(0xd0);
   return instr;
 }
 
-Instruction* wait_vf() {
+Instruction* IGenX86::wait_vf() {
   auto instr = new InstructionX86(0x9B);  // FWAIT / WAIT
   return instr;
 }
 
-Instruction* mov_vf_vf(Register dst, Register src) {
+Instruction* IGenX86::mov_vf_vf(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
 
@@ -2107,7 +2125,7 @@ Instruction* mov_vf_vf(Register dst, Register src) {
   }
 }
 
-Instruction* loadvf_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
+Instruction* IGenX86::loadvf_gpr64_plus_gpr64(Register dst, Register addr1, Register addr2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2120,10 +2138,10 @@ Instruction* loadvf_gpr64_plus_gpr64(Register dst, Register addr1, Register addr
   return instr;
 }
 
-Instruction* loadvf_gpr64_plus_gpr64_plus_s8(Register dst,
-                                             Register addr1,
-                                             Register addr2,
-                                             s64 offset) {
+Instruction* IGenX86::loadvf_gpr64_plus_gpr64_plus_s8(Register dst,
+                                                      Register addr1,
+                                                      Register addr2,
+                                                      s64 offset) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2137,10 +2155,10 @@ Instruction* loadvf_gpr64_plus_gpr64_plus_s8(Register dst,
   return instr;
 }
 
-Instruction* loadvf_gpr64_plus_gpr64_plus_s32(Register dst,
-                                              Register addr1,
-                                              Register addr2,
-                                              s64 offset) {
+Instruction* IGenX86::loadvf_gpr64_plus_gpr64_plus_s32(Register dst,
+                                                       Register addr1,
+                                                       Register addr2,
+                                                       s64 offset) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2154,7 +2172,7 @@ Instruction* loadvf_gpr64_plus_gpr64_plus_s32(Register dst,
   return instr;
 }
 
-Instruction* storevf_gpr64_plus_gpr64(Register value, Register addr1, Register addr2) {
+Instruction* IGenX86::storevf_gpr64_plus_gpr64(Register value, Register addr1, Register addr2) {
   ASSERT(value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2167,10 +2185,10 @@ Instruction* storevf_gpr64_plus_gpr64(Register value, Register addr1, Register a
   return instr;
 }
 
-Instruction* storevf_gpr64_plus_gpr64_plus_s8(Register value,
-                                              Register addr1,
-                                              Register addr2,
-                                              s64 offset) {
+Instruction* IGenX86::storevf_gpr64_plus_gpr64_plus_s8(Register value,
+                                                       Register addr1,
+                                                       Register addr2,
+                                                       s64 offset) {
   ASSERT(value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2184,10 +2202,10 @@ Instruction* storevf_gpr64_plus_gpr64_plus_s8(Register value,
   return instr;
 }
 
-Instruction* storevf_gpr64_plus_gpr64_plus_s32(Register value,
-                                               Register addr1,
-                                               Register addr2,
-                                               s64 offset) {
+Instruction* IGenX86::storevf_gpr64_plus_gpr64_plus_s32(Register value,
+                                                        Register addr1,
+                                                        Register addr2,
+                                                        s64 offset) {
   ASSERT(value.is_128bit_simd());
   ASSERT(addr1.is_gpr());
   ASSERT(addr2.is_gpr());
@@ -2201,7 +2219,7 @@ Instruction* storevf_gpr64_plus_gpr64_plus_s32(Register value,
   return instr;
 }
 
-Instruction* loadvf_rip_plus_s32(Register dest, s64 offset) {
+Instruction* IGenX86::loadvf_rip_plus_s32(Register dest, s64 offset) {
   ASSERT(dest.is_128bit_simd());
   ASSERT(offset >= INT32_MIN);
   ASSERT(offset <= INT32_MAX);
@@ -2212,7 +2230,7 @@ Instruction* loadvf_rip_plus_s32(Register dest, s64 offset) {
 
 // TODO - rip relative loads and stores.
 
-Instruction* blend_vf(Register dst, Register src1, Register src2, u8 mask) {
+Instruction* IGenX86::blend_vf(Register dst, Register src1, Register src2, u8 mask) {
   ASSERT(!(mask & 0b11110000));
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2224,7 +2242,7 @@ Instruction* blend_vf(Register dst, Register src1, Register src2, u8 mask) {
   return instr;
 }
 
-Instruction* shuffle_vf(Register dst, Register src, u8 dx, u8 dy, u8 dz, u8 dw) {
+Instruction* IGenX86::shuffle_vf(Register dst, Register src, u8 dx, u8 dy, u8 dz, u8 dw) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   ASSERT(dx < 4);
@@ -2260,7 +2278,7 @@ Instruction* shuffle_vf(Register dst, Register src, u8 dx, u8 dy, u8 dz, u8 dw) 
   SHUFPS xmm1, xmm1, 0x39 ; Rotate right
   > (4.5, 1.5, 2.5, 3.5)
   */
-Instruction* swizzle_vf(Register dst, Register src, u8 controlBytes) {
+Instruction* IGenX86::swizzle_vf(Register dst, Register src, u8 controlBytes) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0xC6);  // VSHUFPS
@@ -2281,7 +2299,7 @@ Instruction* swizzle_vf(Register dst, Register src, u8 controlBytes) {
   splat_vf(xmm1, xmm2, XMM_ELEMENT::X);
   xmm1 = (4, 4, 4, 4)
   */
-Instruction* splat_vf(Register dst, Register src, Register::VF_ELEMENT element) {
+Instruction* IGenX86::splat_vf(Register dst, Register src, Register::VF_ELEMENT element) {
   switch (element) {
     case Register::VF_ELEMENT::X:  // Least significant element
       return swizzle_vf(dst, src, 0b00000000);
@@ -2301,7 +2319,7 @@ Instruction* splat_vf(Register dst, Register src, Register::VF_ELEMENT element) 
   }
 }
 
-Instruction* xor_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::xor_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2310,7 +2328,7 @@ Instruction* xor_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* sub_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::sub_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2319,7 +2337,7 @@ Instruction* sub_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* add_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::add_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2328,7 +2346,7 @@ Instruction* add_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* mul_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::mul_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2337,7 +2355,7 @@ Instruction* mul_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* max_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::max_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2346,7 +2364,7 @@ Instruction* max_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* min_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::min_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2355,7 +2373,7 @@ Instruction* min_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* div_vf(Register dst, Register src1, Register src2) {
+Instruction* IGenX86::div_vf(Register dst, Register src1, Register src2) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
   ASSERT(src2.is_128bit_simd());
@@ -2364,7 +2382,7 @@ Instruction* div_vf(Register dst, Register src1, Register src2) {
   return instr;
 }
 
-Instruction* sqrt_vf(Register dst, Register src) {
+Instruction* IGenX86::sqrt_vf(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0x51);  // VSQRTPS
@@ -2372,7 +2390,7 @@ Instruction* sqrt_vf(Register dst, Register src) {
   return instr;
 }
 
-Instruction* itof_vf(Register dst, Register src) {
+Instruction* IGenX86::itof_vf(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   auto instr = new InstructionX86(0x5b);  // VCVTDQ2PS
@@ -2380,7 +2398,7 @@ Instruction* itof_vf(Register dst, Register src) {
   return instr;
 }
 
-Instruction* ftoi_vf(Register dst, Register src) {
+Instruction* IGenX86::ftoi_vf(Register dst, Register src) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.F3.0F.WIG 5B /r VCVTTPS2DQ xmm1, xmm2/m128
@@ -2390,7 +2408,7 @@ Instruction* ftoi_vf(Register dst, Register src) {
   return instr;
 }
 
-Instruction* pw_sra(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::pw_sra(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 72 /4 ib VPSRAD xmm1, xmm2, imm8
@@ -2401,7 +2419,7 @@ Instruction* pw_sra(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* pw_srl(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::pw_srl(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 72 /2 ib VPSRLD xmm1, xmm2, imm8
@@ -2412,7 +2430,7 @@ Instruction* pw_srl(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* ph_srl(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::ph_srl(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 71 /2 ib VPSRLW
@@ -2423,7 +2441,7 @@ Instruction* ph_srl(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* pw_sll(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::pw_sll(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 72 /6 ib VPSLLD xmm1, xmm2, imm8
@@ -2433,7 +2451,7 @@ Instruction* pw_sll(Register dst, Register src, u8 imm) {
   instr->set(Imm(1, imm));
   return instr;
 }
-Instruction* ph_sll(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::ph_sll(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 71 /6 ib VPSLLW xmm1, xmm2, imm8
@@ -2444,7 +2462,7 @@ Instruction* ph_sll(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* parallel_add_byte(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_add_byte(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2456,7 +2474,7 @@ Instruction* parallel_add_byte(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* parallel_bitwise_or(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_bitwise_or(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2468,7 +2486,7 @@ Instruction* parallel_bitwise_or(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* parallel_bitwise_xor(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_bitwise_xor(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2480,7 +2498,7 @@ Instruction* parallel_bitwise_xor(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* parallel_bitwise_and(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_bitwise_and(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2501,7 +2519,7 @@ Instruction* parallel_bitwise_and(Register dst, Register src0, Register src1) {
 // doubleword || quadword
 
 // -- Unpack High Data Instructions
-Instruction* pextub_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextub_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2513,7 +2531,7 @@ Instruction* pextub_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* pextuh_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextuh_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2525,7 +2543,7 @@ Instruction* pextuh_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* pextuw_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextuw_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2538,7 +2556,7 @@ Instruction* pextuw_swapped(Register dst, Register src0, Register src1) {
 }
 
 // -- Unpack Low Data Instructions
-Instruction* pextlb_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextlb_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2550,7 +2568,7 @@ Instruction* pextlb_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* pextlh_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextlh_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2562,7 +2580,7 @@ Instruction* pextlh_swapped(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* pextlw_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pextlw_swapped(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2575,7 +2593,7 @@ Instruction* pextlw_swapped(Register dst, Register src0, Register src1) {
 }
 
 // Equal to than comparison as 16 bytes (8 bits)
-Instruction* parallel_compare_e_b(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_e_b(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2588,7 +2606,7 @@ Instruction* parallel_compare_e_b(Register dst, Register src0, Register src1) {
 }
 
 // Equal to than comparison as 8 halfwords (16 bits)
-Instruction* parallel_compare_e_h(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_e_h(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2601,7 +2619,7 @@ Instruction* parallel_compare_e_h(Register dst, Register src0, Register src1) {
 }
 
 // Equal to than comparison as 4 words (32 bits)
-Instruction* parallel_compare_e_w(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_e_w(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2614,7 +2632,7 @@ Instruction* parallel_compare_e_w(Register dst, Register src0, Register src1) {
 }
 
 // Greater than comparison as 16 bytes (8 bits)
-Instruction* parallel_compare_gt_b(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_gt_b(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2627,7 +2645,7 @@ Instruction* parallel_compare_gt_b(Register dst, Register src0, Register src1) {
 }
 
 // Greater than comparison as 8 halfwords (16 bits)
-Instruction* parallel_compare_gt_h(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_gt_h(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2640,7 +2658,7 @@ Instruction* parallel_compare_gt_h(Register dst, Register src0, Register src1) {
 }
 
 // Greater than comparison as 4 words (32 bits)
-Instruction* parallel_compare_gt_w(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::parallel_compare_gt_w(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2652,7 +2670,7 @@ Instruction* parallel_compare_gt_w(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* vpunpcklqdq(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::vpunpcklqdq(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2664,11 +2682,11 @@ Instruction* vpunpcklqdq(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* pcpyld_swapped(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pcpyld_swapped(Register dst, Register src0, Register src1) {
   return vpunpcklqdq(dst, src0, src1);
 }
 
-Instruction* pcpyud(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::pcpyud(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2680,7 +2698,7 @@ Instruction* pcpyud(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* vpsubd(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::vpsubd(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2692,7 +2710,7 @@ Instruction* vpsubd(Register dst, Register src0, Register src1) {
   return instr;
 }
 
-Instruction* vpsrldq(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::vpsrldq(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 73 /3 ib VPSRLDQ xmm1, xmm2, imm8
@@ -2703,7 +2721,7 @@ Instruction* vpsrldq(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* vpslldq(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::vpslldq(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.66.0F.WIG 73 /7 ib VPSLLDQ xmm1, xmm2, imm8
@@ -2714,7 +2732,7 @@ Instruction* vpslldq(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* vpshuflw(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::vpshuflw(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.F2.0F.WIG 70 /r ib VPSHUFLW xmm1, xmm2/m128, imm8
@@ -2725,7 +2743,7 @@ Instruction* vpshuflw(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* vpshufhw(Register dst, Register src, u8 imm) {
+Instruction* IGenX86::vpshufhw(Register dst, Register src, u8 imm) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src.is_128bit_simd());
   // VEX.128.F3.0F.WIG 70 /r ib VPSHUFHW xmm1, xmm2/m128, imm8
@@ -2736,7 +2754,7 @@ Instruction* vpshufhw(Register dst, Register src, u8 imm) {
   return instr;
 }
 
-Instruction* vpackuswb(Register dst, Register src0, Register src1) {
+Instruction* IGenX86::vpackuswb(Register dst, Register src0, Register src1) {
   ASSERT(dst.is_128bit_simd());
   ASSERT(src0.is_128bit_simd());
   ASSERT(src1.is_128bit_simd());
@@ -2748,5 +2766,4 @@ Instruction* vpackuswb(Register dst, Register src0, Register src1) {
                                false, VexPrefix::P_66);
   return instr;
 }
-};  // namespace IGenX86
 }  // namespace emitter

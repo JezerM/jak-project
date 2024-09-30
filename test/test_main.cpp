@@ -5,6 +5,7 @@
 #include "common/util/os.h"
 #include "common/util/unicode_util.h"
 
+#include "goalc/emitter/IGen.h"
 #include "goalc/emitter/Register.h"
 #include "gtest/gtest.h"
 
@@ -29,6 +30,9 @@ int main(int argc, char** argv) {
 
   // Init global RegisterInfo
   emitter::gRegInfo = emitter::RegisterInfo::make_register_info();
+
+  // Init global IGen
+  emitter::gIGen = emitter::IGen::make_igen();
 
   ::testing::InitGoogleTest(&argc, argv);
 

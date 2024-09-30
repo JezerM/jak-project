@@ -59,7 +59,7 @@ void CodeTester::emit(const Instruction* instr) {
  * Add a return instruction to the buffer.
  */
 void CodeTester::emit_return() {
-  emit(IGen::ret());
+  emit(gIGen->ret());
 }
 
 #if defined __x86_64__ || defined _M_X64
@@ -78,7 +78,7 @@ void CodeTester::emit_pop_all_gprs(bool exclude_r0) {
   for (u32 i = alloc_order.size(); i-- > 0;) {
     auto reg = alloc_order[i];
     if (reg != R0 || !exclude_r0) {
-      emit(IGen::pop_gpr64(reg));
+      emit(gIGen->pop_gpr64(reg));
     }
   }
 }
@@ -91,7 +91,7 @@ void CodeTester::emit_push_all_gprs(bool exclude_r0) {
   for (u32 i = 0; i < alloc_order.size(); i++) {
     auto reg = alloc_order[i];
     if (reg != R0 || !exclude_r0) {
-      emit(IGen::push_gpr64(reg));
+      emit(gIGen->push_gpr64(reg));
     }
   }
 }
@@ -100,10 +100,10 @@ void CodeTester::emit_push_all_gprs(bool exclude_r0) {
  * Push all xmm registers (all 128-bits) to the stack.
  */
 void CodeTester::emit_push_all_xmms() {
-  emit(IGen::sub_gpr64_imm8s(SP, 8));
+  emit(gIGen->sub_gpr64_imm8s(SP, 8));
   for (int i = 0; i < 16; i++) {
-    emit(IGen::sub_gpr64_imm8s(SP, 16));
-    emit(IGen::store128_gpr64_xmm128(SP, XMM0 + i));
+    emit(gIGen->sub_gpr64_imm8s(SP, 16));
+    emit(gIGen->store128_gpr64_xmm128(SP, XMM0 + i));
   }
 }
 
@@ -112,10 +112,10 @@ void CodeTester::emit_push_all_xmms() {
  */
 void CodeTester::emit_pop_all_xmms() {
   for (int i = 0; i < 16; i++) {
-    emit(IGen::load128_xmm128_gpr64(XMM0 + i, SP));
-    emit(IGen::add_gpr64_imm8s(SP, 16));
+    emit(gIGen->load128_xmm128_gpr64(XMM0 + i, SP));
+    emit(gIGen->add_gpr64_imm8s(SP, 16));
   }
-  emit(IGen::add_gpr64_imm8s(SP, 8));
+  emit(gIGen->add_gpr64_imm8s(SP, 8));
 }
 
 /*!

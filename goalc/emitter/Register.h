@@ -241,6 +241,8 @@ class RegisterInfo {
 
   static std::unique_ptr<RegisterInfo> make_register_info();
 
+  virtual ~RegisterInfo() = default;
+
   virtual const Info& get_info(Register r) const = 0;
   Register get_gpr_arg_reg(int id) const { return m_gpr_arg_regs.at(id); }
   Register get_xmm_arg_reg(int id) const { return m_xmm_arg_regs.at(id); }

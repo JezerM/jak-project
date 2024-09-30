@@ -71,10 +71,10 @@ TEST(CodeTester, simd_store_128) {
   //  movdqa [r14], xmm3
   //  movdqa [rbx], xmm14
   //  movdqa [r14], xmm13
-  tester.emit(IGen::store128_gpr64_xmm128(R9, XMM3));
-  tester.emit(IGen::store128_gpr64_xmm128(ST, XMM3));
-  tester.emit(IGen::store128_gpr64_xmm128(R9, XMM14));
-  tester.emit(IGen::store128_gpr64_xmm128(ST, XMM13));
+  tester.emit(gIGen->store128_gpr64_xmm128(R9, XMM3));
+  tester.emit(gIGen->store128_gpr64_xmm128(ST, XMM3));
+  tester.emit(gIGen->store128_gpr64_xmm128(R9, XMM14));
+  tester.emit(gIGen->store128_gpr64_xmm128(ST, XMM13));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(),
             "66 0f 7f 1b 66 41 0f 7f 1e 66 44 0f 7f 33 66 45 0f 7f 2e");
@@ -83,7 +83,7 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(SP, XMM1));
+  tester.emit(gIGen->store128_gpr64_xmm128(SP, XMM1));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 7f 0c 24");  // requires SIB byte.
 #elif defined __aarch64__
@@ -91,7 +91,7 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(R11, XMM13));
+  tester.emit(gIGen->store128_gpr64_xmm128(R11, XMM13));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 7f 2c 24");  // requires SIB byte and REX byte
 #elif defined __aarch64__
@@ -99,7 +99,7 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(R10, XMM1));
+  tester.emit(gIGen->store128_gpr64_xmm128(R10, XMM1));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 7f 4d 00");
 #elif defined __aarch64__
@@ -107,7 +107,7 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(R10, XMM11));
+  tester.emit(gIGen->store128_gpr64_xmm128(R10, XMM11));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 0f 7f 5d 00");
 #elif defined __aarch64__
@@ -115,7 +115,7 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(PP, XMM2));
+  tester.emit(gIGen->store128_gpr64_xmm128(PP, XMM2));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 41 0f 7f 55 00");
 #elif defined __aarch64__
@@ -123,43 +123,43 @@ TEST(CodeTester, simd_store_128) {
 #endif
 
   tester.clear();
-  tester.emit(IGen::store128_gpr64_xmm128(PP, XMM12));
+  tester.emit(gIGen->store128_gpr64_xmm128(PP, XMM12));
 #if defined __x86_64__ || defined _M_X64
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 7f 65 00");
 #elif defined __aarch64__
   EXPECT_EQ(tester.dump_to_hex_string(), "8c 0e 9f 3c");
 #endif
 
-  //  tester.emit(IGen::store128_gpr64_xmm128(R9, XMM3));
-  //  tester.emit(IGen::store128_gpr64_xmm128(ST, XMM3));
-  //  tester.emit(IGen::store128_gpr64_xmm128(R9, XMM14));
-  //  tester.emit(IGen::store128_gpr64_xmm128(ST, XMM13));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(R9, XMM3));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(ST, XMM3));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(R9, XMM14));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(ST, XMM13));
   //  EXPECT_EQ(tester.dump_to_hex_string(),
   //            "f3 0f 7f 1b f3 41 0f 7f 1e f3 44 0f 7f 33 f3 45 0f 7f 2e");
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(SP, XMM1));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(SP, XMM1));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 7f 0c 24");  // requires SIB byte.
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(R11, XMM13));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(R11, XMM13));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 45 0f 7f 2c 24");  // requires SIB byte and REX
   //  byte
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(R10, XMM1));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(R10, XMM1));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 7f 4d 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(R10, XMM11));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(R10, XMM11));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 44 0f 7f 5d 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(PP, XMM2));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(PP, XMM2));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 41 0f 7f 55 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::store128_gpr64_xmm128(PP, XMM12));
+  //  tester.emit(gIGen->store128_gpr64_xmm128(PP, XMM12));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 45 0f 7f 65 00");
 }
 
@@ -168,7 +168,7 @@ TEST(CodeTester, sub_gpr64_imm8) {
   tester.init_code_buffer(256);
   for (u32 i = 0; i < alloc_order.size(); i++) {
     auto reg = alloc_order[i];
-    tester.emit(IGen::sub_gpr64_imm8s(reg, -1));
+    tester.emit(gIGen->sub_gpr64_imm8s(reg, -1));
   }
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "4883E8FF4883E9FF4883EAFF4883EBFF4883ECFF4883EDFF4883EEFF4883EFFF4983E8FF4983E9FF4983EA"
@@ -180,7 +180,7 @@ TEST(CodeTester, add_gpr64_imm8) {
   tester.init_code_buffer(256);
   for (u32 i = 0; i < alloc_order.size(); i++) {
     auto reg = alloc_order[i];
-    tester.emit(IGen::add_gpr64_imm8s(reg, -1));
+    tester.emit(gIGen->add_gpr64_imm8s(reg, -1));
   }
   EXPECT_EQ(tester.dump_to_hex_string(true),
             "4883C0FF4883C1FF4883C2FF4883C3FF4883C4FF4883C5FF4883C6FF4883C7FF4983C0FF4983C1FF4983C2"
@@ -191,66 +191,66 @@ TEST(CodeTester, xmm_load_128) {
   CodeTester tester;
   tester.init_code_buffer(256);
 
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM3, R9));
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM3, ST));
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM14, R9));
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM13, ST));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM3, R9));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM3, ST));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM14, R9));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM13, ST));
   //  EXPECT_EQ(tester.dump_to_hex_string(),
   //            "f3 0f 6f 1b f3 41 0f 6f 1e f3 44 0f 6f 33 f3 45 0f 6f 2e");
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM1, SP));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM1, SP));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 6f 0c 24");  // requires SIB byte.
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM13, R11));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM13, R11));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 45 0f 6f 2c 24");  // requires SIB byte and REX
   //  byte
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM1, R10));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM1, R10));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 6f 4d 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM11, R10));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM11, R10));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 44 0f 6f 5d 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM2, PP));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM2, PP));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 41 0f 6f 55 00");
   //
   //  tester.clear();
-  //  tester.emit(IGen::load128_xmm128_gpr64(XMM12, PP));
+  //  tester.emit(gIGen->load128_xmm128_gpr64(XMM12, PP));
   //  EXPECT_EQ(tester.dump_to_hex_string(), "f3 45 0f 6f 65 00");
-  tester.emit(IGen::load128_xmm128_gpr64(XMM3, R9));
-  tester.emit(IGen::load128_xmm128_gpr64(XMM3, ST));
-  tester.emit(IGen::load128_xmm128_gpr64(XMM14, R9));
-  tester.emit(IGen::load128_xmm128_gpr64(XMM13, ST));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM3, R9));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM3, ST));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM14, R9));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM13, ST));
   EXPECT_EQ(tester.dump_to_hex_string(),
             "66 0f 6f 1b 66 41 0f 6f 1e 66 44 0f 6f 33 66 45 0f 6f 2e");
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM1, SP));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM1, SP));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 6f 0c 24");  // requires SIB byte.
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM13, R11));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM13, R11));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 6f 2c 24");  // requires SIB byte and REX byte
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM1, R10));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM1, R10));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 0f 6f 4d 00");
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM11, R10));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM11, R10));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 0f 6f 5d 00");
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM2, PP));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM2, PP));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 41 0f 6f 55 00");
 
   tester.clear();
-  tester.emit(IGen::load128_xmm128_gpr64(XMM12, PP));
+  tester.emit(gIGen->load128_xmm128_gpr64(XMM12, PP));
   EXPECT_EQ(tester.dump_to_hex_string(), "66 45 0f 6f 65 00");
 }
 

@@ -25,11 +25,11 @@
 //         tester.emit_push_all_gprs(true);
 
 //         // move initial value to register
-//         tester.emit(IGen::mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
 //         // do the add
-//         tester.emit(IGen::add_gpr64_imm8s(i, imm));
+//         tester.emit(gIGen->add_gpr64_imm8s(i, imm));
 //         // move for return
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
@@ -41,7 +41,7 @@
 //   }
 
 //   tester.clear();
-//   tester.emit(IGen::add_gpr64_imm8s(RSP, 12));
+//   tester.emit(gIGen->add_gpr64_imm8s(RSP, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 83 c4 0c");
 // }
 
@@ -66,11 +66,11 @@
 //         tester.emit_push_all_gprs(true);
 
 //         // move initial value to register
-//         tester.emit(IGen::mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
 //         // do the add
-//         tester.emit(IGen::add_gpr64_imm32s(i, imm));
+//         tester.emit(gIGen->add_gpr64_imm32s(i, imm));
 //         // move for return
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
@@ -82,7 +82,7 @@
 //   }
 
 //   tester.clear();
-//   tester.emit(IGen::add_gpr64_imm32s(RSP, 12));
+//   tester.emit(gIGen->add_gpr64_imm32s(RSP, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 81 c4 0c 00 00 00");
 // }
 
@@ -107,11 +107,11 @@
 //         tester.emit_push_all_gprs(true);
 
 //         // move initial value to register
-//         tester.emit(IGen::mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
 //         // do the add
-//         tester.emit(IGen::sub_gpr64_imm8s(i, imm));
+//         tester.emit(gIGen->sub_gpr64_imm8s(i, imm));
 //         // move for return
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
@@ -123,7 +123,7 @@
 //   }
 
 //   tester.clear();
-//   tester.emit(IGen::sub_gpr64_imm8s(RSP, 12));
+//   tester.emit(gIGen->sub_gpr64_imm8s(RSP, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 83 ec 0c");
 // }
 
@@ -148,11 +148,11 @@
 //         tester.emit_push_all_gprs(true);
 
 //         // move initial value to register
-//         tester.emit(IGen::mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->mov_gpr64_gpr64(i, tester.get_c_abi_arg_reg(0)));
 //         // do the add
-//         tester.emit(IGen::sub_gpr64_imm32s(i, imm));
+//         tester.emit(gIGen->sub_gpr64_imm32s(i, imm));
 //         // move for return
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
@@ -164,7 +164,7 @@
 //   }
 
 //   tester.clear();
-//   tester.emit(IGen::sub_gpr64_imm32s(RSP, 12));
+//   tester.emit(gIGen->sub_gpr64_imm32s(RSP, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 81 ec 0c 00 00 00");
 // }
 
@@ -186,10 +186,10 @@
 //           auto expected = v1 + v2;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, v2));
-//           tester.emit(IGen::add_gpr64_gpr64(i, j));
-//           tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//           tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, v2));
+//           tester.emit(gIGen->add_gpr64_gpr64(i, j));
+//           tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -218,10 +218,10 @@
 //           auto expected = v1 - v2;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, v2));
-//           tester.emit(IGen::sub_gpr64_gpr64(i, j));
-//           tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//           tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, v2));
+//           tester.emit(gIGen->sub_gpr64_gpr64(i, j));
+//           tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -254,10 +254,10 @@
 //           auto expected = ((s64(v1) * s64(v2)) << 32) >> 32;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, (s64)v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, (s64)v2));
-//           tester.emit(IGen::imul_gpr32_gpr32(i, j));
-//           tester.emit(IGen::movsx_r64_r32(RAX, i));  // weird PS2 sign extend.
+//           tester.emit(gIGen->mov_gpr64_u64(i, (s64)v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, (s64)v2));
+//           tester.emit(gIGen->imul_gpr32_gpr32(i, j));
+//           tester.emit(gIGen->movsx_r64_r32(RAX, i));  // weird PS2 sign extend.
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -286,10 +286,10 @@
 //           auto expected = v1 | v2;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, v2));
-//           tester.emit(IGen::or_gpr64_gpr64(i, j));
-//           tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//           tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, v2));
+//           tester.emit(gIGen->or_gpr64_gpr64(i, j));
+//           tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -318,10 +318,10 @@
 //           auto expected = v1 & v2;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, v2));
-//           tester.emit(IGen::and_gpr64_gpr64(i, j));
-//           tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//           tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, v2));
+//           tester.emit(gIGen->and_gpr64_gpr64(i, j));
+//           tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -350,10 +350,10 @@
 //           auto expected = v1 ^ v2;
 //           tester.clear();
 //           tester.emit_push_all_gprs(true);
-//           tester.emit(IGen::mov_gpr64_u64(i, v1));
-//           tester.emit(IGen::mov_gpr64_u64(j, v2));
-//           tester.emit(IGen::xor_gpr64_gpr64(i, j));
-//           tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//           tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//           tester.emit(gIGen->mov_gpr64_u64(j, v2));
+//           tester.emit(gIGen->xor_gpr64_gpr64(i, j));
+//           tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_return();
 //           auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -377,9 +377,9 @@
 //       auto expected = ~v1;
 //       tester.clear();
 //       tester.emit_push_all_gprs(true);
-//       tester.emit(IGen::mov_gpr64_u64(i, v1));
-//       tester.emit(IGen::not_gpr64(i));
-//       tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//       tester.emit(gIGen->mov_gpr64_u64(i, v1));
+//       tester.emit(gIGen->not_gpr64(i));
+//       tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //       tester.emit_pop_all_gprs(true);
 //       tester.emit_return();
 //       auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -404,10 +404,10 @@
 //         auto expected = v << sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::mov_gpr64_u64(RCX, sa));
-//         tester.emit(IGen::shl_gpr64_cl(i));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->mov_gpr64_u64(RCX, sa));
+//         tester.emit(gIGen->shl_gpr64_cl(i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -433,10 +433,10 @@
 //         auto expected = v >> sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::mov_gpr64_u64(RCX, sa));
-//         tester.emit(IGen::shr_gpr64_cl(i));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->mov_gpr64_u64(RCX, sa));
+//         tester.emit(gIGen->shr_gpr64_cl(i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -462,10 +462,10 @@
 //         auto expected = v >> sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::mov_gpr64_u64(RCX, sa));
-//         tester.emit(IGen::sar_gpr64_cl(i));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->mov_gpr64_u64(RCX, sa));
+//         tester.emit(gIGen->sar_gpr64_cl(i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -491,9 +491,9 @@
 //         auto expected = v << sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::shl_gpr64_u8(i, sa));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->shl_gpr64_u8(i, sa));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -519,9 +519,9 @@
 //         auto expected = v >> sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::shr_gpr64_u8(i, sa));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->shr_gpr64_u8(i, sa));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -547,9 +547,9 @@
 //         auto expected = v >> sa;
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(i, v));
-//         tester.emit(IGen::sar_gpr64_u8(i, sa));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, v));
+//         tester.emit(gIGen->sar_gpr64_u8(i, sa));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         auto result = tester.execute_ret<s64>(0, 0, 0, 0);
@@ -565,47 +565,47 @@
 
 //   std::vector<int> reads;
 
-//   auto x = IGen::jmp_32();
+//   auto x = gIGen->jmp_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::je_32();
+//   x = gIGen->je_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jne_32();
+//   x = gIGen->jne_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jle_32();
+//   x = gIGen->jle_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jge_32();
+//   x = gIGen->jge_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jl_32();
+//   x = gIGen->jl_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jg_32();
+//   x = gIGen->jg_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jbe_32();
+//   x = gIGen->jbe_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jae_32();
+//   x = gIGen->jae_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::jb_32();
+//   x = gIGen->jb_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
-//   x = IGen::ja_32();
+//   x = gIGen->ja_32();
 //   reads.push_back(tester.size() + x.offset_of_imm());
 //   tester.emit(x);
 
@@ -619,7 +619,7 @@
 // }
 
 // TEST(EmitterIntegerMath, null) {
-//   auto instr = IGen::null();
+//   auto instr = gIGen->null();
 //   EXPECT_EQ(0, instr.emit(nullptr));
 // }
 
@@ -645,9 +645,9 @@
 //         }
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(r1, constant));
-//         tester.emit(IGen::mov_gpr64_gpr64(r2, r1));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, r2));
+//         tester.emit(gIGen->mov_gpr64_u64(r1, constant));
+//         tester.emit(gIGen->mov_gpr64_gpr64(r2, r1));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, r2));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_return();
 //         EXPECT_EQ(tester.execute(), constant);
@@ -672,9 +672,9 @@
 
 //       tester.clear();
 //       tester.emit_push_all_gprs(true);
-//       tester.emit(IGen::mov_gpr64_u64(r1, UINT64_MAX));
-//       tester.emit(IGen::mov_gpr64_u32(r1, constant));
-//       tester.emit(IGen::mov_gpr64_gpr64(RAX, r1));
+//       tester.emit(gIGen->mov_gpr64_u64(r1, UINT64_MAX));
+//       tester.emit(gIGen->mov_gpr64_u32(r1, constant));
+//       tester.emit(gIGen->mov_gpr64_gpr64(RAX, r1));
 //       tester.emit_pop_all_gprs(true);
 //       tester.emit_return();
 //       EXPECT_EQ(tester.execute(), constant);
@@ -697,8 +697,8 @@
 
 //       tester.clear();
 //       tester.emit_push_all_gprs(true);
-//       tester.emit(IGen::mov_gpr64_s32(r1, constant));
-//       tester.emit(IGen::mov_gpr64_gpr64(RAX, r1));
+//       tester.emit(gIGen->mov_gpr64_s32(r1, constant));
+//       tester.emit(gIGen->mov_gpr64_gpr64(RAX, r1));
 //       tester.emit_pop_all_gprs(true);
 //       tester.emit_return();
 //       EXPECT_EQ(tester.execute(), constant);
@@ -711,19 +711,19 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f be 04 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 0f be 24 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4e 0f be 24 3e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(R12, R15, R14));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(R12, R15, R14));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4f 0f be 24 3e");
 
 //   int iter = 0;
@@ -745,23 +745,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -786,11 +786,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f be 44 1e fd");
 
-//   auto instr = IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -814,23 +814,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -855,11 +855,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f be 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -883,23 +883,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -924,19 +924,19 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b6 04 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 0f b6 24 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4e 0f b6 24 3e");
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64(R12, R15, R14));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64(R12, R15, R14));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4f 0f b6 24 3e");
 
 //   int iter = 0;
@@ -958,23 +958,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8s_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load8s_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -999,11 +999,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b6 44 1e fd");
 
-//   auto instr = IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -1027,23 +1027,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1068,11 +1068,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b6 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -1096,23 +1096,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load8u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load8u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1137,19 +1137,19 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f bf 04 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 0f bf 24 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4e 0f bf 24 3e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64(R12, R15, R14));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64(R12, R15, R14));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4f 0f bf 24 3e");
 
 //   int iter = 0;
@@ -1171,23 +1171,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1212,11 +1212,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f bf 44 1e fd");
 
-//   auto instr = IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -1240,23 +1240,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1281,11 +1281,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f bf 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -1309,23 +1309,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load16s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1350,19 +1350,19 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b7 04 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64(R12, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 0f b7 24 1e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64(R12, R15, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4e 0f b7 24 3e");
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64(R12, R15, R14));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64(R12, R15, R14));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4f 0f b7 24 3e");
 
 //   int iter = 0;
@@ -1384,23 +1384,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1425,11 +1425,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b7 44 1e fd");
 
-//   auto instr = IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -1453,23 +1453,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1494,11 +1494,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b7 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -1522,23 +1522,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load16u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load16u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1563,7 +1563,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 63 04 1e");
 
 //   int iter = 0;
@@ -1585,23 +1585,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1626,11 +1626,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 63 44 1e fd");
 
-//   auto instr = IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -1654,23 +1654,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1695,11 +1695,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 63 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -1723,23 +1723,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load32s_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1764,7 +1764,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "8b 04 1e");
 
 //   int iter = 0;
@@ -1786,23 +1786,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1827,11 +1827,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "8b 44 1e fd");
 
-//   auto instr = IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -1855,23 +1855,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1896,11 +1896,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "8b 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -1924,23 +1924,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load32u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load32u_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -1965,7 +1965,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
+//   tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64(RAX, RBX, RSI));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 8b 04 1e");
 
 //   int iter = 0;
@@ -1987,23 +1987,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64(k, i, j));
+//         tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64(k, i, j));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2028,11 +2028,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 8b 44 1e fd");
 
-//   auto instr = IGen::load64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -2056,23 +2056,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
+//         tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s8(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2097,11 +2097,11 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
+//   tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3));
 
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 8b 84 1e fd ff ff ff");
 
-//   auto instr = IGen::load64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
+//   auto instr = gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -2125,23 +2125,23 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // fill k with junk
 //         if (k != i && k != j) {
-//           tester.emit(IGen::mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
+//           tester.emit(gIGen->mov_gpr64_u64(k, (iter & 1) ? 0 : UINT64_MAX));
 //         }
 
 //         // load into k
-//         tester.emit(IGen::load64_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
+//         tester.emit(gIGen->load64_gpr64_gpr64_plus_gpr64_plus_s32(k, i, j, -3));
 
 //         // move k to return register
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, k));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2166,7 +2166,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64(RAX, RCX, RDX));
+//   tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64(RAX, RCX, RDX));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "88 14 01");
 
 //   [[maybe_unused]] int iter = 0;
@@ -2188,17 +2188,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store!
-//         tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64(i, j, k));
+//         tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64(i, j, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2223,10 +2223,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, 12));
+//   tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "88 54 01 0c");
 
-//   auto instr = IGen::store8_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2250,17 +2250,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
+//         tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2286,10 +2286,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, 12));
+//   tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "88 94 01 0c 00 00 00");
 
-//   auto instr = IGen::store8_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -3);
@@ -2313,17 +2313,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store8_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
+//         tester.emit(gIGen->store8_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2349,7 +2349,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
+//   tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 89 04 08");
 
 //   [[maybe_unused]] int iter = 0;
@@ -2371,17 +2371,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store!
-//         tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64(i, j, k));
+//         tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64(i, j, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2407,10 +2407,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 89 44 01 0c");
 
-//   auto instr = IGen::store16_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2434,17 +2434,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
+//         tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2470,10 +2470,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "66 44 89 84 01 0c 00 00 00");
 
-//   auto instr = IGen::store16_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2497,17 +2497,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store16_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
+//         tester.emit(gIGen->store16_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2533,7 +2533,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
+//   tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "44 89 04 08");
 
 //   [[maybe_unused]] int iter = 0;
@@ -2555,17 +2555,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store!
-//         tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64(i, j, k));
+//         tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64(i, j, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2591,10 +2591,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "44 89 44 01 0c");
 
-//   auto instr = IGen::store32_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2618,17 +2618,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
+//         tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2654,10 +2654,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "44 89 84 01 0c 00 00 00");
 
-//   auto instr = IGen::store32_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2681,17 +2681,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store32_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
+//         tester.emit(gIGen->store32_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2717,7 +2717,7 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
+//   tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64(RCX, RAX, R8));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 89 04 08");
 
 //   [[maybe_unused]] int iter = 0;
@@ -2739,17 +2739,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store!
-//         tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64(i, j, k));
+//         tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64(i, j, k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2775,10 +2775,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 89 44 01 0c");
 
-//   auto instr = IGen::store64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s8(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2802,17 +2802,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
+//         tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s8(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2838,10 +2838,10 @@
 //   tester.init_code_buffer(512);
 
 //   tester.clear();
-//   tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
+//   tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, R8, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "4c 89 84 01 0c 00 00 00");
 
-//   auto instr = IGen::store64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
+//   auto instr = gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s32(RAX, RCX, RDX, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s8*)(buff + instr.offset_of_disp()), -3);
@@ -2865,17 +2865,17 @@
 //         tester.clear();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
-//         tester.emit(IGen::pop_gpr64(k));  // k will have the value to store.
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(k));  // k will have the value to store.
 
 //         // store
-//         tester.emit(IGen::store64_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
+//         tester.emit(gIGen->store64_gpr64_gpr64_plus_gpr64_plus_s32(i, j, k, -3));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -2899,12 +2899,12 @@
 // TEST(EmitterLoadsAndStores, load64_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load64_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load64_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 8b 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load64_rip_s32(i, 12));
+//     tester.emit(gIGen->load64_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -2916,12 +2916,12 @@
 // TEST(EmitterLoadsAndStores, load32s_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load32s_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load32s_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 63 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load32s_rip_s32(i, 12));
+//     tester.emit(gIGen->load32s_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -2933,12 +2933,12 @@
 // TEST(EmitterLoadsAndStores, load32u_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load32u_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load32u_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "8b 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load32u_rip_s32(i, 12));
+//     tester.emit(gIGen->load32u_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -2950,12 +2950,12 @@
 // TEST(EmitterLoadsAndStores, load16u_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load16u_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load16u_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b7 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load16u_rip_s32(i, 12));
+//     tester.emit(gIGen->load16u_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -2967,12 +2967,12 @@
 // TEST(EmitterLoadsAndStores, load16s_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load16s_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load16s_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f bf 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load16s_rip_s32(i, 12));
+//     tester.emit(gIGen->load16s_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -2984,12 +2984,12 @@
 // TEST(EmitterLoadsAndStores, load8s_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load8s_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load8s_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f be 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load8s_rip_s32(i, 12));
+//     tester.emit(gIGen->load8s_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3001,12 +3001,12 @@
 // TEST(EmitterLoadsAndStores, load8u_rip) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::load8u_rip_s32(RAX, 12));
+//   tester.emit(gIGen->load8u_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 0f b6 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::load8u_rip_s32(i, 12));
+//     tester.emit(gIGen->load8u_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3018,12 +3018,12 @@
 // TEST(EmitterLoadsAndStores, store64_rip_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::store64_rip_s32(RAX, 12));
+//   tester.emit(gIGen->store64_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "48 89 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::store64_rip_s32(i, 12));
+//     tester.emit(gIGen->store64_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3035,12 +3035,12 @@
 // TEST(EmitterLoadsAndStores, store32_rip_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::store32_rip_s32(RAX, 12));
+//   tester.emit(gIGen->store32_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "89 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::store32_rip_s32(i, 12));
+//     tester.emit(gIGen->store32_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3052,12 +3052,12 @@
 // TEST(EmitterLoadsAndStores, store16_rip_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::store16_rip_s32(RAX, 12));
+//   tester.emit(gIGen->store16_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "66 89 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::store16_rip_s32(i, 12));
+//     tester.emit(gIGen->store16_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3069,12 +3069,12 @@
 // TEST(EmitterLoadsAndStores, store8_rip_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(256);
-//   tester.emit(IGen::store8_rip_s32(RAX, 12));
+//   tester.emit(gIGen->store8_rip_s32(RAX, 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "88 05 0c 00 00 00");
 
 //   tester.clear();
 //   for (int i = 0; i < 16; i++) {
-//     tester.emit(IGen::store8_rip_s32(i, 12));
+//     tester.emit(gIGen->store8_rip_s32(i, 12));
 //   }
 
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
@@ -3094,14 +3094,14 @@
 
 //     tester.clear();
 //     tester.emit_push_all_gprs(true);
-//     tester.emit(IGen::mov_gpr64_u64(i, 12345));  // load test reg with junk
+//     tester.emit(gIGen->mov_gpr64_u64(i, 12345));  // load test reg with junk
 //     int start_of_lea = tester.size();
-//     auto lea_instr = IGen::static_addr(i, INT32_MAX);
+//     auto lea_instr = gIGen->static_addr(i, INT32_MAX);
 //     tester.emit(lea_instr);
 //     // patch instruction to lea the start of this code + 1.
 //     tester.write<s32>(-start_of_lea - lea_instr.length() + 1,
 //                       start_of_lea + lea_instr.offset_of_disp());
-//     tester.emit(IGen::mov_gpr64_gpr64(RAX, i));
+//     tester.emit(gIGen->mov_gpr64_gpr64(RAX, i));
 //     tester.emit_pop_all_gprs(true);
 //     tester.emit_return();
 
@@ -3114,7 +3114,7 @@
 // TEST(EmitterXmm32, load32_xmm32_gpr64_plus_gpr64) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64(XMM3, RAX, RBX));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64(XMM3, RAX, RBX));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 10 1c 03");
 
 //   int iter = 0;
@@ -3131,21 +3131,21 @@
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // fill k with junk
-//         tester.emit(IGen::mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // load into k
-//         tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64(XMM0 + k, i, j));
+//         tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64(XMM0 + k, i, j));
 //         // move to return
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + k));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3170,10 +3170,10 @@
 // TEST(EmitterXmm32, load32_xmm32_gpr64_plus_gpr64_plus_s8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM3, RAX, RBX, -1));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM3, RAX, RBX, -1));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 10 5c 03 ff");
 
-//   auto instr = IGen::load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM3, RBX, RSI, -3);
+//   auto instr = gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM3, RBX, RSI, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -3192,21 +3192,21 @@
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // fill k with junk
-//         tester.emit(IGen::mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         // load into k
-//         tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM0 + k, i, j, -3));
+//         tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s8(XMM0 + k, i, j, -3));
 //         // move to return
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + k));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3232,10 +3232,10 @@
 // TEST(EmitterXmm32, load32_xmm32_gpr64_plus_gpr64_plus_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM3, RAX, RBX, -1));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM3, RAX, RBX, -1));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 10 9c 03 ff ff ff ff");
 
-//   auto instr = IGen::load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM3, RBX, RSI, -1234);
+//   auto instr = gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM3, RBX, RSI, -1234);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -1234);
@@ -3254,23 +3254,23 @@
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));
 
 //         // fill k with junk
-//         tester.emit(IGen::mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->mov_gpr64_u64(i, (iter & 1) ? 0 : UINT64_MAX));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop args into appropriate register
-//         tester.emit(IGen::pop_gpr64(i));  // i will have offset 0
-//         tester.emit(IGen::pop_gpr64(j));  // j will have offset 1
+//         tester.emit(gIGen->pop_gpr64(i));  // i will have offset 0
+//         tester.emit(gIGen->pop_gpr64(j));  // j will have offset 1
 
 //         s64 offset = (iter & 1) ? INT32_MAX : INT32_MIN;
 
 //         // load into k
-//         tester.emit(IGen::load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM0 + k, i, j, offset));
+//         tester.emit(gIGen->load32_xmm32_gpr64_plus_gpr64_plus_s32(XMM0 + k, i, j, offset));
 //         // move to return
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + k));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3313,7 +3313,7 @@
 // TEST(EmitterXmm32, store32_xmm32_gpr64_plus_gpr64) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64(RAX, RBX, XMM7));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64(RAX, RBX, XMM7));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 11 3c 03");
 
 //   int iter = 0;
@@ -3333,21 +3333,21 @@
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
 
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
 
 //         // pop value into addr1 GPR
-//         tester.emit(IGen::pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(i));
 //         // move to XMM
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop addrs
-//         tester.emit(IGen::pop_gpr64(i));
-//         tester.emit(IGen::pop_gpr64(j));
+//         tester.emit(gIGen->pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(j));
 
 //         // store
-//         tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64(i, j, XMM0 + k));
+//         tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64(i, j, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3372,10 +3372,10 @@
 // TEST(EmitterXmm32, store32_xmm32_gpr64_plus_gpr64_plus_s8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64_plus_s8(RAX, RBX, XMM3, -1));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s8(RAX, RBX, XMM3, -1));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 11 5c 03 ff");
 
-//   auto instr = IGen::store32_xmm32_gpr64_plus_gpr64_plus_s8(RBX, RSI, XMM3, -3);
+//   auto instr = gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s8(RBX, RSI, XMM3, -3);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(s8(buff[instr.offset_of_disp()]), -3);
@@ -3394,26 +3394,26 @@
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
 
 //         // pop value into addr1 GPR
-//         tester.emit(IGen::pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(i));
 //         // move to XMM
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop addrs
-//         tester.emit(IGen::pop_gpr64(i));
-//         tester.emit(IGen::pop_gpr64(j));
+//         tester.emit(gIGen->pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(j));
 
 //         s64 offset = (iter & 1) ? INT8_MAX : INT8_MIN;
 
 //         // load into k
-//         tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64_plus_s8(i, j, XMM0 + k, offset));
+//         tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s8(i, j, XMM0 + k, offset));
 
 //         // move to return
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + k));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3438,10 +3438,10 @@
 // TEST(EmitterXmm32, store32_xmm32_gpr64_plus_gpr64_plus_s32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64_plus_s32(RAX, RBX, XMM3, -1));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s32(RAX, RBX, XMM3, -1));
 //   EXPECT_EQ(tester.dump_to_hex_string(), "f3 0f 11 9c 03 ff ff ff ff");
 
-//   auto instr = IGen::store32_xmm32_gpr64_plus_gpr64_plus_s32(RBX, RSI, XMM3, -1234);
+//   auto instr = gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s32(RBX, RSI, XMM3, -1234);
 //   u8 buff[256];
 //   instr.emit(buff);
 //   EXPECT_EQ(*(s32*)(buff + instr.offset_of_disp()), -1234);
@@ -3460,26 +3460,26 @@
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
 //         // push args to the stack
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
-//         tester.emit(IGen::push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(1)));  // addr2
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(0)));  // addr1
+//         tester.emit(gIGen->push_gpr64(tester.get_c_abi_arg_reg(2)));  // value
 
 //         // pop value into addr1 GPR
-//         tester.emit(IGen::pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(i));
 //         // move to XMM
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + k, i));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + k, i));
 
 //         // pop addrs
-//         tester.emit(IGen::pop_gpr64(i));
-//         tester.emit(IGen::pop_gpr64(j));
+//         tester.emit(gIGen->pop_gpr64(i));
+//         tester.emit(gIGen->pop_gpr64(j));
 
 //         s64 offset = (iter & 1) ? INT32_MAX : INT32_MIN;
 
 //         // load into k
-//         tester.emit(IGen::store32_xmm32_gpr64_plus_gpr64_plus_s32(i, j, XMM0 + k, offset));
+//         tester.emit(gIGen->store32_xmm32_gpr64_plus_gpr64_plus_s32(i, j, XMM0 + k, offset));
 
 //         // move to return
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + k));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + k));
 
 //         // return!
 //         tester.emit_pop_all_gprs(true);
@@ -3510,10 +3510,10 @@
 //     tester.emit_push_all_gprs(true);
 
 //     auto loc_of_load = tester.size();
-//     auto load_instr = IGen::static_load_xmm32(XMM0 + i, INT32_MAX);
+//     auto load_instr = gIGen->static_load_xmm32(XMM0 + i, INT32_MAX);
 
 //     tester.emit(load_instr);
-//     tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + i));
+//     tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + i));
 //     tester.emit_pop_all_gprs(true);
 //     tester.emit_pop_all_xmms();
 //     tester.emit_return();
@@ -3535,10 +3535,10 @@
 //     tester.clear();
 //     tester.emit_push_all_xmms();
 //     tester.emit_push_all_gprs(true);
-//     tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, tester.get_c_abi_arg_reg(0)));
+//     tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, tester.get_c_abi_arg_reg(0)));
 
 //     auto loc_of_store = tester.size();
-//     auto store_instr = IGen::static_store_xmm32(XMM0 + i, INT32_MAX);
+//     auto store_instr = gIGen->static_store_xmm32(XMM0 + i, INT32_MAX);
 
 //     tester.emit(store_instr);
 //     tester.emit_pop_all_gprs(true);
@@ -3556,7 +3556,7 @@
 // TEST(EmitterXmm32, ucomiss) {
 //   CodeTester tester;
 //   tester.init_code_buffer(512);
-//   tester.emit(IGen::cmp_flt_flt(XMM13, XMM14));
+//   tester.emit(gIGen->cmp_flt_flt(XMM13, XMM14));
 //   EXPECT_EQ("45 0f 2e ee", tester.dump_to_hex_string());
 // }
 
@@ -3579,13 +3579,13 @@
 //           tester.emit_push_all_gprs(true);
 //           u64 val = 0;
 //           memcpy(&val, &f, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, RAX));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, RAX));
 //           memcpy(&val, &g, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + j, RAX));
-//           tester.emit(IGen::mulss_xmm_xmm(XMM0 + j, XMM0 + i));
-//           tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + j));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + j, RAX));
+//           tester.emit(gIGen->mulss_xmm_xmm(XMM0 + j, XMM0 + i));
+//           tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + j));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_pop_all_xmms();
 //           tester.emit_return();
@@ -3616,13 +3616,13 @@
 //           tester.emit_push_all_gprs(true);
 //           u64 val = 0;
 //           memcpy(&val, &f, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, RAX));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, RAX));
 //           memcpy(&val, &g, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + j, RAX));
-//           tester.emit(IGen::divss_xmm_xmm(XMM0 + j, XMM0 + i));
-//           tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + j));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + j, RAX));
+//           tester.emit(gIGen->divss_xmm_xmm(XMM0 + j, XMM0 + i));
+//           tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + j));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_pop_all_xmms();
 //           tester.emit_return();
@@ -3652,13 +3652,13 @@
 //           tester.emit_push_all_gprs(true);
 //           u64 val = 0;
 //           memcpy(&val, &f, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, RAX));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, RAX));
 //           memcpy(&val, &g, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + j, RAX));
-//           tester.emit(IGen::addss_xmm_xmm(XMM0 + j, XMM0 + i));
-//           tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + j));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + j, RAX));
+//           tester.emit(gIGen->addss_xmm_xmm(XMM0 + j, XMM0 + i));
+//           tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + j));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_pop_all_xmms();
 //           tester.emit_return();
@@ -3689,13 +3689,13 @@
 //           tester.emit_push_all_gprs(true);
 //           u64 val = 0;
 //           memcpy(&val, &f, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, RAX));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, RAX));
 //           memcpy(&val, &g, sizeof(float));
-//           tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//           tester.emit(IGen::movd_xmm32_gpr32(XMM0 + j, RAX));
-//           tester.emit(IGen::subss_xmm_xmm(XMM0 + j, XMM0 + i));
-//           tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + j));
+//           tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//           tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + j, RAX));
+//           tester.emit(gIGen->subss_xmm_xmm(XMM0 + j, XMM0 + i));
+//           tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + j));
 //           tester.emit_pop_all_gprs(true);
 //           tester.emit_pop_all_xmms();
 //           tester.emit_return();
@@ -3726,10 +3726,10 @@
 //         tester.emit_push_all_gprs(true);
 //         u64 val = 0;
 //         memcpy(&val, &g, sizeof(float));
-//         tester.emit(IGen::mov_gpr64_u64(RAX, val));
-//         tester.emit(IGen::movd_xmm32_gpr32(XMM0 + i, RAX));
-//         tester.emit(IGen::float_to_int32(j, XMM0 + i));
-//         tester.emit(IGen::mov_gpr64_gpr64(RAX, j));
+//         tester.emit(gIGen->mov_gpr64_u64(RAX, val));
+//         tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + i, RAX));
+//         tester.emit(gIGen->float_to_int32(j, XMM0 + i));
+//         tester.emit(gIGen->mov_gpr64_gpr64(RAX, j));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_pop_all_xmms();
 //         tester.emit_return();
@@ -3756,9 +3756,9 @@
 //         tester.clear();
 //         tester.emit_push_all_xmms();
 //         tester.emit_push_all_gprs(true);
-//         tester.emit(IGen::mov_gpr64_u64(j, g));
-//         tester.emit(IGen::int32_to_float(XMM0 + i, j));
-//         tester.emit(IGen::movd_gpr32_xmm32(RAX, XMM0 + i));
+//         tester.emit(gIGen->mov_gpr64_u64(j, g));
+//         tester.emit(gIGen->int32_to_float(XMM0 + i, j));
+//         tester.emit(gIGen->movd_gpr32_xmm32(RAX, XMM0 + i));
 //         tester.emit_pop_all_gprs(true);
 //         tester.emit_pop_all_xmms();
 //         tester.emit_return();
@@ -3791,15 +3791,15 @@
 //             tester.emit_push_all_xmms();
 //             tester.emit_push_all_gprs(true);
 //             // move constant to gpr
-//             tester.emit(IGen::mov_gpr64_u32(r1, constant));
+//             tester.emit(gIGen->mov_gpr64_u32(r1, constant));
 //             // move gpr to xmm
-//             tester.emit(IGen::movd_xmm32_gpr32(XMM0 + r3, r1));
+//             tester.emit(gIGen->movd_xmm32_gpr32(XMM0 + r3, r1));
 //             // move xmm to xmm
-//             tester.emit(IGen::mov_xmm32_xmm32(XMM0 + r4, XMM0 + r3));
+//             tester.emit(gIGen->mov_xmm32_xmm32(XMM0 + r4, XMM0 + r3));
 //             // move xmm to gpr
-//             tester.emit(IGen::movd_gpr32_xmm32(r2, XMM0 + r4));
+//             tester.emit(gIGen->movd_gpr32_xmm32(r2, XMM0 + r4));
 //             // return!
-//             tester.emit(IGen::mov_gpr64_gpr64(RAX, r2));
+//             tester.emit(gIGen->mov_gpr64_gpr64(RAX, r2));
 //             tester.emit_pop_all_gprs(true);
 //             tester.emit_pop_all_xmms();
 //             tester.emit_return();
@@ -3815,14 +3815,14 @@
 // TEST(Emitter, LEA) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::lea_reg_plus_off(RDI, RSP, -3));
-//   tester.emit(IGen::lea_reg_plus_off(RDI, R12, -3));
-//   tester.emit(IGen::lea_reg_plus_off(R13, RSP, -3));
-//   tester.emit(IGen::lea_reg_plus_off(R13, R12, -3));
-//   tester.emit(IGen::lea_reg_plus_off(RDI, RSP, -300));
-//   tester.emit(IGen::lea_reg_plus_off(RDI, R12, -300));
-//   tester.emit(IGen::lea_reg_plus_off(R13, RSP, -300));
-//   tester.emit(IGen::lea_reg_plus_off(R13, R12, -300));
+//   tester.emit(gIGen->lea_reg_plus_off(RDI, RSP, -3));
+//   tester.emit(gIGen->lea_reg_plus_off(RDI, R12, -3));
+//   tester.emit(gIGen->lea_reg_plus_off(R13, RSP, -3));
+//   tester.emit(gIGen->lea_reg_plus_off(R13, R12, -3));
+//   tester.emit(gIGen->lea_reg_plus_off(RDI, RSP, -300));
+//   tester.emit(gIGen->lea_reg_plus_off(RDI, R12, -300));
+//   tester.emit(gIGen->lea_reg_plus_off(R13, RSP, -300));
+//   tester.emit(gIGen->lea_reg_plus_off(R13, R12, -300));
 //   EXPECT_EQ(tester.dump_to_hex_string(true),
 //             "488D7C24FD498D7C24FD4C8D6C24FD4D8D6C24FD488DBC24D4FEFFFF498DBC24D4FEFFFF4C8DAC24D4FEFF"
 //             "FF4D8DAC24D4FEFFFF");
@@ -3831,73 +3831,73 @@
 // TEST(EmitterXMM, StackLoad32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_s32(XMM0 + 3, RSP, -1234));
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_s32(XMM0 + 13, RSP, -1234));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_s32(XMM0 + 3, RSP, -1234));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_s32(XMM0 + 13, RSP, -1234));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "F30F109C242EFBFFFFF3440F10AC242EFBFFFF");
 // }
 
 // TEST(EmitterXMM, StackLoad8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_s8(XMM0 + 3, RSP, -12));
-//   tester.emit(IGen::load32_xmm32_gpr64_plus_s8(XMM0 + 13, RSP, -12));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_s8(XMM0 + 3, RSP, -12));
+//   tester.emit(gIGen->load32_xmm32_gpr64_plus_s8(XMM0 + 13, RSP, -12));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "F30F105C24F4F3440F106C24F4");
 // }
 
 // TEST(EmitterXMM, StackLoadFull32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::load128_xmm128_gpr64_s32(XMM0 + 3, RSP, -1234));
-//   tester.emit(IGen::load128_xmm128_gpr64_s32(XMM0 + 13, RSP, -1234));
+//   tester.emit(gIGen->load128_xmm128_gpr64_s32(XMM0 + 3, RSP, -1234));
+//   tester.emit(gIGen->load128_xmm128_gpr64_s32(XMM0 + 13, RSP, -1234));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "660F6F9C242EFBFFFF66440F6FAC242EFBFFFF");
 // }
 
 // TEST(EmitterXMM, StackLoadFull8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::load128_xmm128_gpr64_s8(XMM0 + 3, RSP, -12));
-//   tester.emit(IGen::load128_xmm128_gpr64_s8(XMM0 + 13, RSP, -12));
+//   tester.emit(gIGen->load128_xmm128_gpr64_s8(XMM0 + 3, RSP, -12));
+//   tester.emit(gIGen->load128_xmm128_gpr64_s8(XMM0 + 13, RSP, -12));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "660F6F5C24F466440F6F6C24F4");
 // }
 
 // TEST(EmitterXMM, StackStore32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_s32(RSP, XMM0 + 3, -1234));
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_s32(RSP, XMM0 + 13, -1234));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_s32(RSP, XMM0 + 3, -1234));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_s32(RSP, XMM0 + 13, -1234));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "F30F119C242EFBFFFFF3440F11AC242EFBFFFF");
 // }
 
 // TEST(EmitterXMM, StackStore8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_s8(RSP, XMM0 + 3, -12));
-//   tester.emit(IGen::store32_xmm32_gpr64_plus_s8(RSP, XMM0 + 13, -12));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_s8(RSP, XMM0 + 3, -12));
+//   tester.emit(gIGen->store32_xmm32_gpr64_plus_s8(RSP, XMM0 + 13, -12));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "F30F115C24F4F3440F116C24F4");
 // }
 
 // TEST(EmitterXMM, StackStoreFull32) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::store128_gpr64_xmm128_s32(RSP, XMM0 + 3, -1234));
-//   tester.emit(IGen::store128_gpr64_xmm128_s32(RSP, XMM0 + 13, -1234));
+//   tester.emit(gIGen->store128_gpr64_xmm128_s32(RSP, XMM0 + 3, -1234));
+//   tester.emit(gIGen->store128_gpr64_xmm128_s32(RSP, XMM0 + 13, -1234));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "660F7F9C242EFBFFFF66440F7FAC242EFBFFFF");
 // }
 
 // TEST(EmitterXMM, StackStoreFull8) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::store128_gpr64_xmm128_s8(RSP, XMM0 + 3, -12));
-//   tester.emit(IGen::store128_gpr64_xmm128_s8(RSP, XMM0 + 13, -12));
+//   tester.emit(gIGen->store128_gpr64_xmm128_s8(RSP, XMM0 + 3, -12));
+//   tester.emit(gIGen->store128_gpr64_xmm128_s8(RSP, XMM0 + 13, -12));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "660F7F5C24F466440F7F6C24F4");
 // }
 
 // TEST(EmitterXMM, SqrtS) {
 //   CodeTester tester;
 //   tester.init_code_buffer(1024);
-//   tester.emit(IGen::sqrts_xmm(XMM0 + 1, XMM0 + 2));
-//   tester.emit(IGen::sqrts_xmm(XMM0 + 11, XMM0 + 2));
-//   tester.emit(IGen::sqrts_xmm(XMM0 + 1, XMM0 + 12));
-//   tester.emit(IGen::sqrts_xmm(XMM0 + 11, XMM0 + 12));
+//   tester.emit(gIGen->sqrts_xmm(XMM0 + 1, XMM0 + 2));
+//   tester.emit(gIGen->sqrts_xmm(XMM0 + 11, XMM0 + 2));
+//   tester.emit(gIGen->sqrts_xmm(XMM0 + 1, XMM0 + 12));
+//   tester.emit(gIGen->sqrts_xmm(XMM0 + 11, XMM0 + 12));
 //   EXPECT_EQ(tester.dump_to_hex_string(true), "F30F51CAF3440F51DAF3410F51CCF3450F51DC");
 // }

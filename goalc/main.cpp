@@ -13,6 +13,7 @@
 #include "common/versions/versions.h"
 
 #include "goalc/compiler/Compiler.h"
+#include "goalc/emitter/IGen.h"
 #include "goalc/emitter/Register.h"
 
 #include "fmt/color.h"
@@ -110,6 +111,9 @@ int main(int argc, char** argv) {
 
   // Init global RegisterInfo
   emitter::gRegInfo = emitter::RegisterInfo::make_register_info();
+
+  // Init global IGen
+  emitter::gIGen = emitter::IGen::make_igen();
 
   // Init Compiler
   std::unique_ptr<Compiler> compiler;
