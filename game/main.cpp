@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
   bool show_version = false;
   std::string game_name = "jak1";
   bool verbose_logging = false;
+  std::string target_arch = "";
   bool disable_avx2 = false;
   bool disable_display = false;
   bool enable_profiling = false;
@@ -112,6 +113,8 @@ int main(int argc, char** argv) {
   app.add_flag(
       "--port", port_number,
       "Specify port number for listener connection (default is 8112 for Jak 1 and 8113 for Jak 2)");
+  app.add_option("--target-arch", target_arch,
+                 "Target architecture to compile for ('x86_64' or 'arm64')");
   app.add_flag("--no-avx2", disable_avx2, "Disable AVX2 for testing");
   app.add_flag("--no-display", disable_display, "Disable video display");
   app.add_flag("--profile", enable_profiling, "Enables profiling immediately from startup");
@@ -177,6 +180,7 @@ int main(int argc, char** argv) {
 
   // Figure out if the CPU has AVX2 to enable higher performance AVX2 versions of functions.
   setup_cpu_info();
+#if defined __x86_64__ || defined _M_X64
   // If the CPU doesn't have AVX, GOAL code won't work and we exit.
   if (!get_cpu_info().has_avx) {
     lg::info("Your CPU does not support AVX, which is required for OpenGOAL.");
@@ -184,6 +188,24 @@ int main(int argc, char** argv) {
         "Unmet Requirements", "Your CPU does not support AVX, which is required for OpenGOAL.");
     return -1;
   }
+#endif
+
+#if defined CROSS_ARCH_COMPILER
+  if (target_arch == "x86_64") {
+    lg::info("Goal will be compiled to x86_64");
+    get_cpu_info().target_arch = cpu_arch_x86_64;
+  } else if (target_arch == "arm64") {
+    lg::info("Goal will be compiled to arm64");
+    get_cpu_info().target_arch = cpu_arch_arm64;
+  } else if (target_arch != "") {
+    lg::info("Target \"{}\" not recognized. Using CPU architecture.", target_arch.c_str());
+  }
+#else
+  if (target_arch != "") {
+    lg::info("Cross compilation for Goal is not enabled. Target \"{}\" will be ignored.",
+             target_arch.c_str());
+  }
+#endif
 
   // set up file paths for resources. This is the full repository when developing, and the data
   // directory (a subset of the full repo) in release versions

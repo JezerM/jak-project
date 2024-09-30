@@ -443,9 +443,9 @@ const std::vector<emitter::Register>& get_default_alloc_order_for_var_spill(int 
   ASSERT(info.reg_class != RegClass::INVALID);
   auto hw_kind = emitter::reg_class_to_hw(info.reg_class);
   if (hw_kind == emitter::HWRegKind::GPR) {
-    return emitter::gRegInfo.get_gpr_spill_alloc_order();
+    return emitter::gRegInfo->get_gpr_spill_alloc_order();
   } else if (hw_kind == emitter::HWRegKind::XMM) {
-    return emitter::gRegInfo.get_xmm_spill_alloc_order();
+    return emitter::gRegInfo->get_xmm_spill_alloc_order();
   } else {
     throw std::runtime_error("Unsupported HWRegKind");
   }
@@ -459,15 +459,15 @@ const std::vector<emitter::Register>& get_default_alloc_order_for_var(int v,
   auto hw_kind = emitter::reg_class_to_hw(info.reg_class);
   if (hw_kind == emitter::HWRegKind::GPR || hw_kind == emitter::HWRegKind::INVALID) {
     if (!get_all && cache->is_asm_func) {
-      return emitter::gRegInfo.get_gpr_temp_alloc_order();
+      return emitter::gRegInfo->get_gpr_temp_alloc_order();
     } else {
-      return emitter::gRegInfo.get_gpr_alloc_order();
+      return emitter::gRegInfo->get_gpr_alloc_order();
     }
   } else if (hw_kind == emitter::HWRegKind::XMM) {
     if (!get_all && cache->is_asm_func) {
-      return emitter::gRegInfo.get_xmm_temp_alloc_order();
+      return emitter::gRegInfo->get_xmm_temp_alloc_order();
     } else {
-      return emitter::gRegInfo.get_xmm_alloc_order();
+      return emitter::gRegInfo->get_xmm_alloc_order();
     }
   } else {
     throw std::runtime_error("Unsupported HWRegKind");
@@ -817,7 +817,7 @@ AllocationResult allocate_registers(const AllocationInput& input) {
   result.stack_slots_for_vars = input.stack_slots_for_stack_vars;
 
   // check for use of saved registers
-  for (auto sr : emitter::gRegInfo.get_all_saved()) {
+  for (auto sr : emitter::gRegInfo->get_all_saved()) {
     bool uses_sr = false;
     for (auto& lr : cache.live_ranges) {
       for (int instr_idx = lr.min; instr_idx <= lr.max; instr_idx++) {

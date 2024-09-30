@@ -2,77 +2,182 @@
 
 #include <stdexcept>
 
+#include "common/util/os.h"
+
 namespace emitter {
-RegisterInfo RegisterInfo::make_register_info() {
-  RegisterInfo info;
 
-  info.m_info[RAX] = {false, false, "rax"};  // return, temp
-  info.m_info[RCX] = {false, false, "rcx"};  // gpr arg 3, temp
-  info.m_info[RDX] = {false, false, "rdx"};  // gpr arg 2, temp
-  info.m_info[RBX] = {true, false, "rbx"};   // saved
-  info.m_info[RSP] = {false, true, "rsp"};   // stack pointer
-  info.m_info[RBP] = {true, false, "rbp"};   // saved
-  info.m_info[RSI] = {false, false, "rsi"};  // gpr arg 1, temp
-  info.m_info[RDI] = {false, false, "rdi"};  // gpr arg 0, temp
+bool Register::is_128bit_simd() const {
+  // printf("ID 128: %d - %d - %d\n", m_id, XMM0, Q0);
+  return m_id >= XMM0 && m_id <= XMM15;
+}
 
-  info.m_info[R8] = {false, false, "r8"};   // gpr arg 4, temp
-  info.m_info[R9] = {false, false, "r9"};   // gpr arg 5, temp
-  info.m_info[R10] = {true, false, "r10"};  // gpr arg 6, saved
-  info.m_info[R11] = {true, false, "r11"};  // gpr arg 7, saved
-  info.m_info[R12] = {true, false, "r12"};  // saved
-  info.m_info[R13] = {false, true, "r13"};  // pp
-  info.m_info[R14] = {false, true, "r14"};  // st
-  info.m_info[R15] = {false, true, "r15"};  // offset.
+bool Register::is_gpr() const {
+  // printf("ID GPR: %d - %d - %d\n", m_id, R15, X30);
+  return m_id >= R0 && m_id <= SP;
+}
 
-  info.m_info[XMM0] = {false, false, "xmm0"};
-  info.m_info[XMM1] = {false, false, "xmm1"};
-  info.m_info[XMM2] = {false, false, "xmm2"};
-  info.m_info[XMM3] = {false, false, "xmm3"};
-  info.m_info[XMM4] = {false, false, "xmm4"};
-  info.m_info[XMM5] = {false, false, "xmm5"};
-  info.m_info[XMM6] = {false, false, "xmm6"};
-  info.m_info[XMM7] = {false, false, "xmm7"};
-  info.m_info[XMM8] = {true, false, "xmm8"};
-  info.m_info[XMM9] = {true, false, "xmm9"};
-  info.m_info[XMM10] = {true, false, "xmm10"};
-  info.m_info[XMM11] = {true, false, "xmm11"};
-  info.m_info[XMM12] = {true, false, "xmm12"};
-  info.m_info[XMM13] = {true, false, "xmm13"};
-  info.m_info[XMM14] = {true, false, "xmm14"};
-  info.m_info[XMM15] = {true, false, "xmm15"};
+int real_id_x86(int m_id) {
+  switch (m_id) {
+    case R0:
+      return X86_RAX;
+    case R1:
+      return X86_RDI;
+    case R2:
+      return X86_RSI;
+    case R3:
+      return X86_RDX;
+    case R4:
+      return X86_RCX;
+    case R5:
+      return X86_R8;
+    case R6:
+      return X86_R9;
+    case R7:
+      return X86_R10;
+    case R8:
+      return X86_R11;
 
-  info.m_gpr_arg_regs = std::array<Register, N_ARGS>({RDI, RSI, RDX, RCX, R8, R9, R10, R11});
-  // skip xmm0 so it can be used for return.
-  info.m_xmm_arg_regs =
+    case R9:
+      return X86_RBX;
+    case R10:
+      return X86_RBP;
+    case R11:
+      return X86_R12;
+    case PP:
+      return X86_R13;
+    case ST:
+      return X86_R14;
+    case OF:
+      return X86_R15;
+    case SP:
+      return X86_RSP;
+  }
+  return m_id;
+}
+int real_id_arm64(int m_id) {
+  switch (m_id) {
+    case R0:
+      return ARM_X8;
+    case R1:
+      return ARM_X0;
+    case R2:
+      return ARM_X1;
+    case R3:
+      return ARM_X2;
+    case R4:
+      return ARM_X3;
+    case R5:
+      return ARM_X4;
+    case R6:
+      return ARM_X5;
+    case R7:
+      return ARM_X6;
+    case R8:
+      return ARM_X7;
+
+    case R9:
+      return ARM_X23;
+    case R10:
+      return ARM_X24;
+    case R11:
+      return ARM_X19;
+    case PP:
+      return ARM_X20;
+    case ST:
+      return ARM_X21;
+    case OF:
+      return ARM_X22;
+    case SP:
+      return ARM_SP;
+  }
+  if (m_id > SP) {
+    return m_id - SP + ARM_SP;
+  }
+  return m_id;
+}
+
+int Register::real_id() const {
+  switch (get_cpu_info().target_arch) {
+    case cpu_arch_arm64:
+      return real_id_arm64(m_id);
+    case cpu_arch_x86_64:
+      return real_id_x86(m_id);
+    default:
+      return m_id;
+  }
+}
+
+int Register::hw_id() const {
+  int real_id = Register::real_id();
+  switch (get_cpu_info().target_arch) {
+    case cpu_arch_arm64:
+      if (is_128bit_simd()) {
+        return real_id - ARM_Q0;
+      } else if (is_gpr()) {
+        return real_id - ARM_X0;
+      } else {
+        ASSERT(false);
+      }
+    case cpu_arch_x86_64:
+      if (is_128bit_simd()) {
+        return real_id - X86_XMM0;
+      } else if (is_gpr()) {
+        return real_id - X86_RAX;
+      } else {
+        ASSERT(false);
+      }
+    default:
+      break;
+  }
+  return 0xff;
+}
+
+std::unique_ptr<RegisterInfo> RegisterInfo::make_register_info() {
+  std::unique_ptr<RegisterInfo> info = NULL;
+  switch (get_cpu_info().target_arch) {
+    case cpu_arch_arm64:
+      info = RegisterInfoArm64::make_register_info();
+      break;
+    case cpu_arch_x86_64:
+      info = RegisterInfoX86::make_register_info();
+      break;
+    default:
+      return NULL;
+  }
+
+  // skip R0 and XMM0 so they can be used for return.
+  info->m_gpr_arg_regs = std::array<Register, N_ARGS>({R1, R2, R3, R4, R5, R6, R7, R8});
+  info->m_xmm_arg_regs =
       std::array<Register, N_ARGS>({XMM1, XMM2, XMM3, XMM4, XMM5, XMM6, XMM7, XMM8});
-  info.m_saved_gprs = std::array<Register, N_SAVED_GPRS>({RBX, RBP, R10, R11, R12});
-  info.m_saved_xmms =
+
+  info->m_saved_gprs = std::array<Register, N_SAVED_GPRS>({R9, R10, R11});
+  info->m_saved_xmms =
       std::array<Register, N_SAVED_XMMS>({XMM8, XMM9, XMM10, XMM11, XMM12, XMM13, XMM14, XMM15});
 
   for (size_t i = 0; i < N_SAVED_GPRS; i++) {
-    info.m_saved_all[i] = info.m_saved_gprs[i];
+    info->m_saved_all[i] = info->m_saved_gprs[i];
   }
   for (size_t i = 0; i < N_SAVED_XMMS; i++) {
-    info.m_saved_all[i + N_SAVED_GPRS] = info.m_saved_xmms[i];
+    info->m_saved_all[i + N_SAVED_GPRS] = info->m_saved_xmms[i];
   }
 
-  // todo - experiment with better orders for allocation.
-  info.m_gpr_alloc_order = {RAX, RCX, RDX, RBX, RBP, RSI, RDI, R8, R9, R10};  // arbitrary
-  info.m_xmm_alloc_order = {XMM0, XMM1, XMM2, XMM3,  XMM4,  XMM5,  XMM6,
-                            XMM7, XMM8, XMM9, XMM10, XMM11, XMM12, XMM13};
+  info->m_gpr_alloc_order = {R0, R1, R2, R3, R4, R5, R6, R7};  // arbitrary
+  info->m_xmm_alloc_order = {XMM0, XMM1, XMM2, XMM3,  XMM4,  XMM5,  XMM6,
+                             XMM7, XMM8, XMM9, XMM10, XMM11, XMM12, XMM13};
 
   // these should only be temp registers!
-  info.m_gpr_temp_only_alloc_order = {RAX, RCX, RDX, RSI, RDI, R8, R9};
-  info.m_xmm_temp_only_alloc_order = {XMM0, XMM1, XMM2, XMM3, XMM4, XMM5, XMM6, XMM7};
+  info->m_gpr_temp_only_alloc_order = {R0, R1, R2, R3, R4, R5, R6, R7, R8};
+  info->m_xmm_temp_only_alloc_order = {XMM0, XMM1, XMM2, XMM3, XMM4, XMM5, XMM6, XMM7};
 
-  info.m_gpr_spill_temp_alloc_order = {RAX, RCX, RDX, RBX, RBP, RSI,
-                                       RDI, R8,  R9,  R10, R11, R12};  // arbitrary
-  info.m_xmm_spill_temp_alloc_order = {XMM0, XMM1, XMM2,  XMM3,  XMM4,  XMM5,  XMM6,  XMM7,
-                                       XMM8, XMM9, XMM10, XMM11, XMM12, XMM13, XMM14, XMM15};
+  info->m_gpr_spill_temp_alloc_order = {R0, R1, R2, R3, R4,  R5,
+                                        R6, R7, R8, R9, R10, R11};  // arbitrary
+  info->m_xmm_spill_temp_alloc_order = {XMM0, XMM1, XMM2,  XMM3,  XMM4,  XMM5,  XMM6,  XMM7,
+                                        XMM8, XMM9, XMM10, XMM11, XMM12, XMM13, XMM14, XMM15};
+
   return info;
 }
 
-RegisterInfo gRegInfo = RegisterInfo::make_register_info();
+std::unique_ptr<RegisterInfo> gRegInfo;
 
 std::string to_string(HWRegKind kind) {
   switch (kind) {
@@ -100,7 +205,7 @@ HWRegKind reg_class_to_hw(RegClass reg_class) {
 }
 
 std::string Register::print() const {
-  return gRegInfo.get_info(*this).name;
+  return gRegInfo->get_info(*this).name;
 }
 
 }  // namespace emitter

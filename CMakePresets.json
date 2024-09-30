@@ -79,6 +79,16 @@
       }
     },
     {
+      "name": "base-macos-debug",
+      "hidden": true,
+      "inherits": "base",
+      "binaryDir": "${sourceDir}/build/Debug/bin",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}"
+      }
+    },
+    {
       "name": "base-clang",
       "hidden": true,
       "cacheVariables": {
@@ -163,6 +173,32 @@
       "displayName": "MacOS Release (clang)",
       "description": "Build with Clang as Release without Debug Symbols",
       "inherits": ["base-macos-release", "base-clang"]
+    },
+    {
+      "name": "Debug-macos-clang",
+      "displayName": "MacOS ARM64 Debug (clang)",
+      "description": "Build with Clang with Debug Symbols.",
+      "inherits": ["base-macos-debug", "base-clang"]
+    },
+    {
+      "name": "Release-macos-arm64-clang",
+      "displayName": "MacOS ARM64 Release (clang)",
+      "description": "Build with Clang, cross compiled for ARM64, as Release without Debug Symbols",
+      "inherits": ["base-macos-release", "base-clang"],
+      "cacheVariables": {
+        "CMAKE_C_COMPILER_TARGET": "arm64-apple-darwin",
+        "CMAKE_CXX_COMPILER_TARGET": "arm64-apple-darwin"
+      }
+    },
+    {
+      "name": "Debug-macos-arm64-clang",
+      "displayName": "MacOS ARM64 Debug (clang)",
+      "description": "Build with Clang, cross compiled for ARM64 with Debug Symbols.",
+      "inherits": ["base-macos-debug", "base-clang"],
+      "cacheVariables": {
+        "CMAKE_C_COMPILER_TARGET": "arm64-apple-darwin",
+        "CMAKE_CXX_COMPILER_TARGET": "arm64-apple-darwin"
+      }
     },
     {
       "name": "Release-macos-clang-static",

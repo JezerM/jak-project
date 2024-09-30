@@ -176,7 +176,7 @@ std::unique_ptr<FunctionEnv> Compiler::compile_top_level_function(const std::str
   // only move to return register if we actually got a result
   if (!dynamic_cast<const None*>(result)) {
     fe->emit_ir<IR_Return>(code, fe->make_gpr(result->type()), result->to_gpr(code, fe.get()),
-                           emitter::gRegInfo.get_gpr_ret_reg());
+                           emitter::gRegInfo->get_gpr_ret_reg());
   }
 
   if (!fe->code().empty()) {

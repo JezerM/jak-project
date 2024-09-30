@@ -190,7 +190,7 @@ TEST(Jak1Debugger, SimpleBreakpoint) {
       EXPECT_TRUE(rip > expected_instr_before_rip && rip < expected_instr_before_rip + 15);
 
       // check rsp in goal code to make sure the GOAL stack is in the right space.
-      auto rsp = compiler.get_debugger().get_regs().gprs[emitter::RSP];
+      auto rsp = compiler.get_debugger().get_regs().gprs[emitter::SP];
       EXPECT_TRUE(rsp < compiler.get_debugger().get_x86_base_addr() + EE_MAIN_MEM_SIZE);
       EXPECT_TRUE(rsp >
                   compiler.get_debugger().get_x86_base_addr() + EE_MAIN_MEM_SIZE - (16 * 1024));

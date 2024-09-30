@@ -16,6 +16,7 @@
 #include "ObjectGenerator.h"
 
 #include "common/goal_constants.h"
+#include "common/log/log.h"
 #include "common/type_system/TypeSystem.h"
 #include "common/versions/versions.h"
 
@@ -60,7 +61,7 @@ ObjectFileData ObjectGenerator::generate_data_v3(const TypeSystem* ts) {
       for (size_t instr_idx = 0; instr_idx < function.instructions.size(); instr_idx++) {
         const auto& instr = function.instructions[instr_idx];
         u8 temp[128];
-        auto count = instr.emit(temp);
+        auto count = instr->emit(temp);
         ASSERT(count < 128);
         function.instruction_to_byte_in_data.push_back(data.size());
         function.debug->instructions.at(instr_idx).offset =
@@ -108,9 +109,13 @@ ObjectFileData ObjectGenerator::generate_data_v3(const TypeSystem* ts) {
   // step 4.5, collect final result of code/object generation for compiler debugging disassembly
   for (int seg = 0; seg < N_SEG; seg++) {
     for (auto& function : m_function_data_by_seg.at(seg)) {
-      auto start = m_data_by_seg.at(seg).begin() + function.instruction_to_byte_in_data.at(0);
-      auto end = start + function.debug->length;
-      function.debug->generated_code = {start, end};
+      try {
+        auto start = m_data_by_seg.at(seg).begin() + function.instruction_to_byte_in_data.at(0);
+        auto end = start + function.debug->length;
+        function.debug->generated_code = {start, end};
+      } catch (std::out_of_range e) {
+        lg::error("Out of range vector: {}", e.what());
+      }
     }
   }
 
@@ -182,7 +187,7 @@ IR_Record ObjectGenerator::get_future_ir_record_in_same_func(const IR_Record& ir
 /*!
  * Add a new Instruction for the given IR instruction.
  */
-InstructionRecord ObjectGenerator::add_instr(Instruction inst, IR_Record ir) {
+InstructionRecord ObjectGenerator::add_instr(Instruction* inst, IR_Record ir) {
   // only this second condition is an actual error.
   ASSERT(ir.ir_id ==
          int(m_function_data_by_seg.at(ir.seg).at(ir.func_id).ir_to_instruction.size()) - 1);
@@ -200,7 +205,7 @@ InstructionRecord ObjectGenerator::add_instr(Instruction inst, IR_Record ir) {
 }
 
 void ObjectGenerator::add_instr_no_ir(FunctionRecord func,
-                                      Instruction inst,
+                                      Instruction* inst,
                                       InstructionInfo::Kind kind) {
   auto info = InstructionInfo(inst, kind);
   m_function_data_by_seg.at(func.seg).at(func.func_id).instructions.emplace_back(inst);
@@ -395,12 +400,13 @@ void ObjectGenerator::handle_temp_jump_links(int seg) {
     ASSERT(link.jump_instr.func_id == link.dest.func_id);
     ASSERT(link.jump_instr.seg == seg);
     ASSERT(link.dest.seg == seg);
-    const auto& jump_instr = function.instructions.at(link.jump_instr.instr_id);
-    ASSERT(jump_instr.get_imm_size() == 4);
+    const auto& jump_instr =
+        (const InstructionX86*)function.instructions.at(link.jump_instr.instr_id);
+    ASSERT(jump_instr->get_imm_size() == 4);
 
     // 1). patch = instruction location + location of imm in instruction.
     int patch_location = function.instruction_to_byte_in_data.at(link.jump_instr.instr_id) +
-                         jump_instr.offset_of_imm();
+                         jump_instr->offset_of_imm();
 
     // 2). source rip = jump instr + 1 location
     int source_rip = function.instruction_to_byte_in_data.at(link.jump_instr.instr_id + 1);
@@ -424,14 +430,14 @@ void ObjectGenerator::handle_temp_instr_sym_links(int seg) {
     for (const auto& link : links.second) {
       ASSERT(seg == link.rec.seg);
       const auto& function = m_function_data_by_seg.at(seg).at(link.rec.func_id);
-      const auto& instruction = function.instructions.at(link.rec.instr_id);
+      const auto& instruction = (const InstructionX86*)function.instructions.at(link.rec.instr_id);
       int offset_of_instruction = function.instruction_to_byte_in_data.at(link.rec.instr_id);
       int offset_in_instruction =
-          link.is_mem_access ? instruction.offset_of_disp() : instruction.offset_of_imm();
+          link.is_mem_access ? instruction->offset_of_disp() : instruction->offset_of_imm();
       if (link.is_mem_access) {
-        ASSERT(instruction.get_disp_size() == 4);
+        ASSERT(instruction->get_disp_size() == 4);
       } else {
-        ASSERT(instruction.get_imm_size() == 4);
+        ASSERT(instruction->get_imm_size() == 4);
       }
       m_sym_links_by_seg.at(seg)[sym_name].push_back(offset_of_instruction + offset_in_instruction);
     }
@@ -559,10 +565,10 @@ void ObjectGenerator::emit_link_rip(int seg) {
     ASSERT(rec.offset_in_segment >= 0);
     push_data<u32>(rec.offset_in_segment, out);
     // patch location
-    const auto& src_instr = src_func.instructions.at(rec.instr.instr_id);
-    ASSERT(src_instr.get_disp_size() == 4);
+    const auto& src_instr = (const InstructionX86*)src_func.instructions.at(rec.instr.instr_id);
+    ASSERT(src_instr->get_disp_size() == 4);
     push_data<u32>(
-        src_func.instruction_to_byte_in_data.at(rec.instr.instr_id) + src_instr.offset_of_disp(),
+        src_func.instruction_to_byte_in_data.at(rec.instr.instr_id) + src_instr->offset_of_disp(),
         out);
   }
 }

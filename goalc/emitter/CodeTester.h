@@ -8,6 +8,7 @@
  * The CodeTester can't be used for tests requiring the full GOAL language/linking.
  */
 
+#include <vector>
 #ifndef JAK_CODETESTER_H
 #define JAK_CODETESTER_H
 
@@ -26,12 +27,12 @@ class CodeTester {
   CodeTester();
   std::string dump_to_hex_string(bool nospace = false);
   void init_code_buffer(int capacity);
-  void emit_push_all_gprs(bool exclude_rax = false);
-  void emit_pop_all_gprs(bool exclude_rax = false);
+  void emit_push_all_gprs(bool exclude_r0 = false);
+  void emit_pop_all_gprs(bool exclude_r0 = false);
   void emit_push_all_xmms();
   void emit_pop_all_xmms();
   void emit_return();
-  void emit(const Instruction& instr);
+  void emit(const Instruction* instr);
   u64 execute();
   u64 execute(u64 in0, u64 in1, u64 in2, u64 in3);
 
@@ -65,28 +66,28 @@ class CodeTester {
 #ifdef _WIN32
     switch (i) {
       case 0:
-        return RCX;
+        return R4;
       case 1:
-        return RDX;
+        return R3;
       case 2:
-        return R8;
+        return R5;
       case 3:
-        return R9;
+        return R6;
       default:
         throw std::runtime_error("Invalid arg register index");
     }
 #else
     switch (i) {
       case 0:
-        return RDI;
+        return R0;
       case 1:
-        return RSI;
+        return R1;
       case 2:
-        return RDX;
+        return R2;
       case 3:
-        return RCX;
+        return R3;
       default:
-        throw std::runtime_error("Invaid arg register index");
+        throw std::runtime_error("Invalid arg register index");
     }
 #endif
   }
@@ -94,7 +95,7 @@ class CodeTester {
   /*!
    * Get the name of the given register, for debugging.
    */
-  std::string reg_name(Register x) { return m_info.get_info(x).name; }
+  std::string reg_name(Register x) { return m_info->get_info(x).name; }
 
   /*!
    * Get number of bytes currently in use (offset of the next thing to be added)
@@ -131,7 +132,9 @@ class CodeTester {
   int code_buffer_size = 0;
   int code_buffer_capacity = 0;
   u8* code_buffer = nullptr;
-  RegisterInfo m_info;
+  std::unique_ptr<RegisterInfo> m_info;
 };
+
+extern const std::vector<Register> alloc_order;
 }  // namespace emitter
 #endif  // JAK_CODETESTER_H

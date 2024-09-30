@@ -4,7 +4,10 @@ add_library(compiler
         emitter/ObjectFileData.cpp
         emitter/ObjectGenerator.cpp
         emitter/Register.cpp
+        emitter/RegisterX86.cpp
+        emitter/RegisterArm64.cpp
         debugger/disassemble.cpp
+        debugger/disassemble_arm64.cpp
         build_level/common/build_level.cpp
         build_actor/common/animation_processing.cpp
         build_actor/common/MercExtract.cpp
@@ -63,6 +66,9 @@ add_library(compiler
         build_actor/jak1/build_actor.cpp
         debugger/Debugger.cpp
         debugger/DebugInfo.cpp
+        emitter/IGen.cpp
+        emitter/IGenX86.cpp
+        emitter/IGenArm64.cpp
         listener/Listener.cpp
         listener/MemoryMap.cpp
         make/MakeSystem.cpp
@@ -74,7 +80,7 @@ add_library(compiler
         regalloc/Allocator_v2.cpp
         compiler/docs/DocTypes.cpp)
 
-target_link_libraries(compiler common Zydis tiny_gltf decomp)
+target_link_libraries(compiler common Zydis capstone tiny_gltf decomp)
 
 if (WIN32)
     target_link_libraries(compiler mman)
@@ -86,7 +92,7 @@ add_executable(goalc-simple simple_main.cpp)
 add_executable(build_level build_level/main.cpp)
 add_executable(build_actor build_actor/main.cpp)
 
-target_link_libraries(goalc common Zydis compiler)
-target_link_libraries(goalc-simple common Zydis compiler)
-target_link_libraries(build_level common Zydis compiler)
-target_link_libraries(build_actor common Zydis compiler)
+target_link_libraries(goalc common Zydis capstone compiler)
+target_link_libraries(goalc-simple common Zydis capstone compiler)
+target_link_libraries(build_level common Zydis capstone compiler)
+target_link_libraries(build_actor common Zydis capstone compiler)
