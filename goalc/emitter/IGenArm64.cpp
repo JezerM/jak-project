@@ -467,17 +467,8 @@ Instruction* load_reg_offset_xmm32(Register xmm_dest, Register base, s64 offset)
 
 Instruction* store128_gpr64_xmm128(Register gpr_addr, Register xmm_value) {
   // str q0, [x0, #-0x10]!
-  // 00 1111 00 100 111110000 01 00001 00001
-  ASSERT(gpr_addr.is_gpr());
-  ASSERT(xmm_value.is_128bit_simd());
-  u32 instruction = 0b001111 << 26;
-  instruction |= 0b1 << 23;
-  instruction |= 0b11111 << 16;
-  instruction |= 0b11 << 10;
-  instruction |= gpr_addr.hw_id() << 5;
-  instruction |= xmm_value.hw_id();
-
-  return new InstructionARM64(instruction);
+  // Offset: -16
+  return store128_xmm128_reg_offset(gpr_addr, xmm_value, 0b111110000);
 }
 
 Instruction* store128_gpr64_xmm128_s32(Register gpr_addr, Register xmm_value, s64 offset) {
@@ -490,17 +481,8 @@ Instruction* store128_gpr64_xmm128_s8(Register gpr_addr, Register xmm_value, s64
 
 Instruction* load128_xmm128_gpr64(Register xmm_dest, Register gpr_addr) {
   // ldr q0, [x0], #0x10
-  // 00 1111 00 110 000010000 01 00001 00001
-  ASSERT(xmm_dest.is_128bit_simd());
-  ASSERT(gpr_addr.is_gpr());
-  u32 instruction = 0b001111 << 26;
-  instruction |= 0b11 << 22;
-  instruction |= 0b00001 << 16;
-  instruction |= 0b01 << 10;
-  instruction |= gpr_addr.hw_id() << 5;
-  instruction |= xmm_dest.hw_id();
-
-  return new InstructionARM64(instruction);
+  // Offset: 16
+  return load128_xmm128_reg_offset(xmm_dest, gpr_addr, 0b10000);
 }
 
 Instruction* load128_xmm128_gpr64_s32(Register xmm_dest, Register gpr_addr, s64 offset) {
@@ -512,11 +494,33 @@ Instruction* load128_xmm128_gpr64_s8(Register xmm_dest, Register gpr_addr, s64 o
 }
 
 Instruction* load128_xmm128_reg_offset(Register xmm_dest, Register base, s64 offset) {
-  return new InstructionARM64(0b0);
+  // ldr q0, [x0], #0x10
+  // 00 1111 00 110 000010000 01 00001 00001
+  ASSERT(xmm_dest.is_128bit_simd());
+  ASSERT(base.is_gpr());
+  u32 instruction = 0b001111 << 26;
+  instruction |= 0b11 << 22;
+  instruction |= offset << 12;
+  instruction |= 0b01 << 10;
+  instruction |= base.hw_id() << 5;
+  instruction |= xmm_dest.hw_id();
+
+  return new InstructionARM64(instruction);
 }
 
 Instruction* store128_xmm128_reg_offset(Register base, Register xmm_val, s64 offset) {
-  return new InstructionARM64(0b0);
+  // str q0, [x0, #-0x10]!
+  // 00 1111 00 100 111110000 01 00001 00001
+  ASSERT(base.is_gpr());
+  ASSERT(xmm_val.is_128bit_simd());
+  u32 instruction = 0b001111 << 26;
+  instruction |= 0b1 << 23;
+  instruction |= 0b11111 << 16;
+  instruction |= 0b11 << 10;
+  instruction |= base.hw_id() << 5;
+  instruction |= xmm_val.hw_id();
+
+  return new InstructionARM64(instruction);
 }
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -660,19 +664,41 @@ Instruction* jmp_r64(Register reg_) {
 //   INTEGER MATH
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Instruction* sub_gpr64_imm8s(Register reg, int64_t imm) {
-  return new InstructionARM64(0b0);
+  // sub sp, sp, #8
+  // 110 1000100 000000001000 11111 11111
+  if (imm < 0) {
+    return add_gpr64_imm8s(reg, -imm);
+  }
+  ASSERT(reg.is_gpr());
+  ASSERT(imm <= UINT8_MAX);
+  u32 instruction = 0b1101000100 << 22;
+  instruction |= imm << 10;
+  instruction |= reg.hw_id() << 5;
+  instruction |= reg.hw_id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* sub_gpr64_imm32s(Register reg, int64_t imm) {
-  return new InstructionARM64(0b0);
+  return sub_gpr64_imm8s(reg, imm);
 }
 
 Instruction* add_gpr64_imm8s(Register reg, int64_t v) {
-  return new InstructionARM64(0b0);
+  // add sp, sp, #8
+  // 100 1000100 000000001000 11111 11111
+  if (v < 0) {
+    return sub_gpr64_imm8s(reg, -v);
+  }
+  ASSERT(reg.is_gpr());
+  ASSERT(v <= UINT8_MAX);
+  u32 instruction = 0b1001000100 << 22;
+  instruction |= v << 10;
+  instruction |= reg.hw_id() << 5;
+  instruction |= reg.hw_id();
+  return new InstructionARM64(instruction);
 }
 
 Instruction* add_gpr64_imm32s(Register reg, int64_t v) {
-  return new InstructionARM64(0b0);
+  return add_gpr64_imm8s(reg, v);
 }
 
 Instruction* add_gpr64_imm(Register reg, int64_t imm) {
